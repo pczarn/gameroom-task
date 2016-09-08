@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Game, type: :model do
-  let(:game) { create(:game) }
+  let(:game) { create(:game_with_matches) }
 
   describe ".name" do
     it "is a string" do
@@ -10,7 +10,6 @@ RSpec.describe Game, type: :model do
   end
 
   describe "associations" do
-    let(:game) { create(:game_with_matches) }
     it "includes matches" do
       expect(game.match).not_to be_empty
     end
@@ -18,9 +17,16 @@ RSpec.describe Game, type: :model do
 
   describe "validations" do
     context ".name" do
-      subject { game }
-      let(:game) { build(:game, name: "") }
-      it "is not blank" do
+      subject { built_game }
+      before { create(:game, name: "our_game") }
+
+      let(:built_game) { build(:game, name: "") }
+      it "is present" do
+        is_expected.to be_invalid
+      end
+
+      let(:built_game) { build(:game, name: "our_game") }
+      it "must be unique" do
         is_expected.to be_invalid
       end
     end
