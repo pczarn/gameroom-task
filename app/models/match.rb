@@ -7,11 +7,13 @@ class Match < ApplicationRecord
   belongs_to :team_two, class_name: Team
 
   validates :played_at, presence: true
-  validate :teams_not_empty, :no_repeated_player_in_different_teams
+  validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 }
+
+  validate :teams_not_empty, :no_repeated_members_across_teams
 
   private
 
-  # Teams not empty
+  # Teams not empty.
 
   def teams_not_empty
     team_not_empty(:team_one)
@@ -23,17 +25,17 @@ class Match < ApplicationRecord
     errors.add(team_field, "Can't be empty") if UserTeam.where(team: team).empty?
   end
 
-  # No repeated players
+  # No repeated members in different teams.
 
-  def no_repeated_player_in_different_teams
-    # self-join?! no. pluck user ids for intersection.
-    # There are two approaches. This one goes through UserTeam.
+  def no_repeated_members_across_teams
+    # There are at least two approaches. This one goes through UserTeam.
+    # Pluck team member collections to check their intersection.
     users_in_team_one = UserTeam.where(team: team_one).pluck(:user_id)
     users_in_team_two = UserTeam.where(team: team_two).pluck(:user_id)
-    common_players = users_in_team_one & users_in_team_two
-    if not common_players.empty?
+    common_members = users_in_team_one & users_in_team_two
+    if not common_members.empty?
       [:team_one, :team_two].each do |team_sym|
-        errors.add(team_sym, "Can't have players in both teams")
+        errors.add(team_sym, "Can't have common members in both teams")
       end
     end
   end

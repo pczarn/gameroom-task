@@ -20,7 +20,13 @@ RSpec.describe Game, type: :model do
     context ".name" do
       subject { game }
       let(:game) { build(:game, name: "") }
-      it "is not blank" do
+      it "is present" do
+        is_expected.to be_invalid
+      end
+
+      before { create(:game, name: "our_game") }
+      let(:game) { build(:game, name: "our_game") }
+      it "must be unique" do
         is_expected.to be_invalid
       end
     end

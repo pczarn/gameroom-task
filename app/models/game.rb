@@ -3,5 +3,5 @@
 class Game < ApplicationRecord
   has_many :match
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 end

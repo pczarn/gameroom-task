@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :game do
-    sequence(:name) { |n| "Our Game #{n}" }
+    sequence(:name) { |n| "Civilization #{n}" }
 
     factory :game_with_matches do
       transient do
