@@ -1,9 +1,12 @@
+# Matches are played between teams.
+# Add friendly and unfriendly matches later.
+#
 class Match < ApplicationRecord
   belongs_to :game
   belongs_to :team_one, class_name: Team
   belongs_to :team_two, class_name: Team
 
-  validates_presence_of :played_at
+  validates :played_at, presence: true
   validate :teams_not_empty, :no_repeated_player_in_different_teams
 
   private
@@ -16,10 +19,8 @@ class Match < ApplicationRecord
   end
 
   def team_not_empty(team_field)
-    team = self.send(team_field)
-    if UserTeam.where(team: team).empty?
-      errors.add(team_field, "Can't be empty")
-    end
+    team = send(team_field)
+    errors.add(team_field, "Can't be empty") if UserTeam.where(team: team).empty?
   end
 
   # No repeated players

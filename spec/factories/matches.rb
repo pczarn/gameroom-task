@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :match do
     game
-    played_at { Faker::Time.between(1.year.ago, Date.today, :all) }
+    played_at { Faker::Time.between(1.year.ago, Time.zone.today, :all) }
     association :team_one, factory: :team_with_players
     association :team_two, factory: :team_with_players
     team_one_score { Faker::Number.between(0, 100) }
