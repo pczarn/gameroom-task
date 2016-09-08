@@ -1,26 +1,26 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Game, type: :model do
   let(:game) { create(:game) }
 
-  describe '.name' do
-    it 'is a string' do
+  describe ".name" do
+    it "is a string" do
       expect(game.name).to be_a(String)
     end
   end
 
-  describe 'associations' do
+  describe "associations" do
     let(:game) { create(:game_with_matches) }
-    it 'includes matches' do
+    it "includes matches" do
       expect(game.match).not_to be_empty
     end
   end
 
-  describe 'validations' do
-    context '.name' do
-      let(:game) { build(:game, name: '') }
-      it 'is not blank' do
+  describe "validations" do
+    context ".name" do
       subject { game }
+      let(:game) { build(:game, name: "") }
+      it "is not blank" do
         is_expected.to be_invalid
       end
     end
