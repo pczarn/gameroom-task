@@ -2,11 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Game, type: :model do
   let(:game) { create(:game) }
-  subject { game }
 
   describe '.name' do
     it 'is a string' do
-      expect(subject.name).to be_a(String)
+      expect(game.name).to be_a(String)
     end
   end
 
@@ -21,7 +20,8 @@ RSpec.describe Game, type: :model do
     context '.name' do
       let(:game) { build(:game, name: '') }
       it 'is not blank' do
-        expect(game).to be_invalid
+      subject { game }
+        is_expected.to be_invalid
       end
     end
   end

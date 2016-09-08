@@ -1,4 +1,5 @@
 # Teams represent collections of players.
+#
 class Team < ApplicationRecord
   has_many :user_teams
   has_many :users, through: :user_teams
@@ -11,7 +12,7 @@ class Team < ApplicationRecord
 
   validates_associated :user_teams
 
-  validates_presence_of :name
+  validates :name, presence: true
 
   validate :unique_user_collections_for_teams
 

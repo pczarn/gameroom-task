@@ -1,5 +1,7 @@
+# Games are video games, foosball, beer pong etc.
+#
 class Game < ApplicationRecord
   has_many :match
 
-  validates_presence_of :name
+  validates :name, presence: true
 end
