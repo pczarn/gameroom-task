@@ -1,7 +1,73 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 #
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+
+monte_kombat = Game.create(name: "Monte Kombat")
+beer_pong = Game.create(name: "Beer Pong")
+ufc = Game.create(name: "UFC")
+
+users = [
+  User.create(name: "Michal the First"),
+  User.create(name: "Michal the Second"),
+  User.create(name: "Piotr"),
+  User.create(name: "Igor"),
+  User.create(name: "Rafal"),
+  User.create(name: "Daniel"),
+  User.create(name: "Emmanuel"),
+]
+
+michals = Team.create(name: "The Michals", members: users[0..1])
+internal = Team.create(name: "Internal", members: users[2..4])
+daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
+emmanuel_team = Team.create(name: "Just Emmanuel", members: [users[6]])
+
+# ongoing
+
+Match.create(
+  game: beer_pong,
+  team_one: michals,
+  team_two: internal,
+)
+
+# finished
+
+Match.create(
+  game: beer_pong,
+  team_one: michals,
+  team_two: daniel_team,
+  team_one_score: 75,
+  team_two_score: 52,
+  played_at: "2016-09-01 18:12".to_time(:utc),
+)
+Match.create(
+  game: beer_pong,
+  team_one: internal,
+  team_two: daniel_team,
+  team_one_score: 77,
+  team_two_score: 59,
+  played_at: "2016-09-13 11:12".to_time(:utc),
+)
+Match.create(
+  game: monte_kombat,
+  team_one: michals,
+  team_two: daniel_team,
+  team_one_score: 8,
+  team_two_score: 54,
+  played_at: "2016-09-13 12:12".to_time(:utc),
+)
+Match.create(
+  game: monte_kombat,
+  team_one: michals,
+  team_two: daniel_team,
+  team_one_score: 7,
+  team_two_score: 5,
+  played_at: "2016-09-13 13:12".to_time(:utc),
+)
+Match.create(
+  game: ufc,
+  team_one: daniel_team,
+  team_two: emmanuel_team,
+  team_one_score: 22,
+  team_two_score: 33,
+  played_at: "2016-09-13 14:12".to_time(:utc),
+)
