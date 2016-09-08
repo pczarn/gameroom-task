@@ -29,7 +29,7 @@ class Team < ApplicationRecord
   def unique_user_collections_for_teams
     # Check whether any two teams have equal collections of users.
     if contain_duplicates?(this_and_related_teams.map(&:user_ids))
-      errors.add(:users, 'Teams with these exact users exist')
+      errors.add(:users, "Teams with these exact users exist")
     end
   end
 
