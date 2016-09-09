@@ -1,0 +1,28 @@
+Played at:
+<%= f.time_field :played_at %>
+<fieldset>
+  Select the game:
+  <% game_ids_names.map do |(id, name)| %>
+    <%= f.radio_button :game_id, id %>
+    <%= f.label :game_id, name %>
+  <% end %>
+</fieldset>
+<fieldset>
+  Select the first team:
+  <% team_ids_names.map do |(id, name)| %>
+    <%= f.radio_button :team_one_id, id %>
+    <%= f.label :team_one_id, name %>
+  <% end %>
+</fieldset>
+<fieldset>
+  Select the second team:
+  <% team_ids_names.map do |(id, name)| %>
+    <%= f.radio_button :team_two_id, id %>
+    <%= f.label :team_two_id, name %>
+  <% end %>
+</fieldset>
+Score
+<%= f.number_field :team_one_score %>
+:
+<%= f.number_field :team_two_score %>
+<%= f.submit "Submit" %>

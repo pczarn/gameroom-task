@@ -1,0 +1,15 @@
+<h1>Matches<h1>
+<h2>Add a match</h2>
+  <%=
+    form_for @new_match, url: { action: "create" } do |f|
+      render partial: "edit", locals: { f: f, team_ids_names: @team_ids_names, game_ids_names: @game_ids_names }
+    end
+  %>
+<h2>Most recent</h2>
+<ul>
+  <% @recent.all.each do |match| %>
+    <li>
+      <%= render partial: "display_short", locals: { match: match } %>
+    </li>
+  <% end %>
+</ul>
