@@ -24,7 +24,7 @@ class Match < ApplicationRecord
     users_in_team_one = UserTeam.where(team: team_one).pluck(:user_id)
     users_in_team_two = UserTeam.where(team: team_two).pluck(:user_id)
     common_members = users_in_team_one & users_in_team_two
-    if not common_members.empty?
+    unless common_members.empty?
       [:team_one, :team_two].each do |team_sym|
         errors.add(team_sym, "Can't have common members in both teams")
       end
