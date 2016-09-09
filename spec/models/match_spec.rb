@@ -26,20 +26,13 @@ RSpec.describe Match, type: :model do
     end
   end
 
-  context "with valid data" do
-    context ".no_repeated_members_across_teams" do
-      let(:match) { build(:match, team_one: team_a, team_two: team_b) }
-      it "can have teams with distinct players" do
-        expect(match).to be_valid
-      end
-    end
-  end
-
   describe "validations" do
     context ".played_at" do
-      let(:match) { build(:match, played_at: nil) }
-      it "is not missing" do
-        expect(match).to be_invalid
+      context "when missing" do
+        let(:match) { build(:match, played_at: nil) }
+        it "is invalid" do
+          expect(match).to be_invalid
+        end
       end
     end
 
@@ -59,6 +52,11 @@ RSpec.describe Match, type: :model do
     end
 
     context ".no_repeated_members_across_teams" do
+      let(:match) { build(:match, team_one: team_a, team_two: team_b) }
+      it "can have teams with distinct players" do
+        expect(match).to be_valid
+      end
+
       let(:match) { build(:match, team_one: team_a, team_two: team_a) }
       it "cannot have common players" do
         expect { match.valid? }
