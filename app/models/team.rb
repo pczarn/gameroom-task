@@ -17,16 +17,20 @@ class Team < ApplicationRecord
   private
 
   def unique_member_collections_for_teams
-    if contains_duplicates?(this_and_related_teams.map { |team| team.members.map(&:id) })
+    if contains_duplicates?(this_and_related_team_member_ids)
       errors.add(:members, "Teams with these exact members exist")
     end
   end
 
-  def this_and_related_teams
-    [self] + Team.related_to(members.map(&:id)).includes(:members)
-  end
-
   def contains_duplicates?(ary)
     ary.uniq.length != ary.length
+  end
+
+  def this_and_related_team_member_ids
+    this_and_related_teams.map { |team| team.members.map(&:id) }
+  end
+
+  def this_and_related_teams
+    [self] + Team.related_to(members.map(&:id)).includes(:members)
   end
 end
