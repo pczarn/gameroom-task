@@ -15,12 +15,6 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  describe "associations" do
-    it "includes matches" do
-      expect(game.match).not_to be_empty
-    end
-  end
-
   describe "validations" do
     context ".name" do
       subject { built_game }
