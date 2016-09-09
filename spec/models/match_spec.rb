@@ -37,9 +37,14 @@ RSpec.describe Match, type: :model do
     end
 
     context "score" do
-      let(:match) { build(:match, team_one_score: -666, team_two_score: 3) }
-      it "must be positive" do
-        expect(match).to be_invalid
+      context "when positive" do
+        let(:match) { build(:match, team_one_score: 3, team_two_score: 4) }
+        it { is_expected.to be_valid }
+      end
+
+      context "when negative" do
+        let(:match) { build(:match, team_one_score: -666, team_two_score: 3) }
+        it { is_expected.to be_invalid }
       end
     end
 
@@ -52,16 +57,20 @@ RSpec.describe Match, type: :model do
     end
 
     context ".no_repeated_members_across_teams" do
-      let(:match) { build(:match, team_one: team_a, team_two: team_b) }
-      it "can have teams with distinct players" do
-        expect(match).to be_valid
+      context "teams do not overlap" do
+        let(:match) { build(:match, team_one: team_a, team_two: team_b) }
+        it "is valid" do
+          expect(match).to be_valid
+        end
       end
 
-      let(:match) { build(:match, team_one: team_a, team_two: team_a) }
-      it "cannot have common players" do
-        expect { match.valid? }
-          .to change { match.errors[:team_one] }
-          .to include("Can't have common members in both teams")
+      context "teams have common players" do
+        let(:match) { build(:match, team_one: team_a, team_two: team_a) }
+        it "is invalid" do
+          expect { match.valid? }
+            .to change { match.errors[:team_one] }
+            .to include("Can't have common members in both teams")
+        end
       end
     end
   end
