@@ -5,11 +5,11 @@ FactoryGirl.define do
     # can there be 'empty_team' instead?
     factory :team_with_members do
       transient do
-        players_count 4
+        members_count 4
       end
 
       after(:create) do |team, evaluator|
-        create_list(:user_team, evaluator.players_count, team: team)
+        create_list(:user_team, evaluator.members_count, team: team)
       end
     end
   end
