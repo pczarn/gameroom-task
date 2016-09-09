@@ -9,6 +9,12 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  describe ".image" do
+    it "is present" do
+      expect(game.image).to be_present
+    end
+  end
+
   describe "associations" do
     it "includes matches" do
       expect(game.match).not_to be_empty
