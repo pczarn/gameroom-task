@@ -18,16 +18,16 @@ RSpec.describe Game, type: :model do
   describe "validations" do
     context ".name" do
       subject { built_game }
-      before { create(:game, name: "our_game") }
 
-      let(:built_game) { build(:game, name: "") }
-      it "is present" do
-        is_expected.to be_invalid
+      context "when missing" do
+        let(:built_game) { build(:game, name: "") }
+        it { is_expected.to be_invalid }
       end
 
+      before { create(:game, name: "our_game") }
       let(:built_game) { build(:game, name: "our_game") }
-      it "must be unique" do
-        is_expected.to be_invalid
+      context "when not unique" do
+        it { is_expected.to be_invalid }
       end
     end
   end
