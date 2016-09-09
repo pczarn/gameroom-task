@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20160908134719) do
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "image"
@@ -24,10 +24,10 @@ ActiveRecord::Schema.define(version: 20160908134719) do
   end
 
   create_table "matches", force: :cascade do |t|
-    t.time     "played_at",      null: false
-    t.integer  "game_id"
-    t.integer  "team_one_id"
-    t.integer  "team_two_id"
+    t.datetime "played_at",      null: false
+    t.integer  "game_id",        null: false
+    t.integer  "team_one_id",    null: false
+    t.integer  "team_two_id",    null: false
     t.integer  "team_one_score"
     t.integer  "team_two_score"
     t.datetime "created_at",     null: false
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20160908134719) do
   end
 
   create_table "user_teams", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "team_id"
+    t.integer  "user_id",    null: false
+    t.integer  "team_id",    null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["team_id"], name: "index_user_teams_on_team_id", using: :btree
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20160908134719) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree

@@ -1,5 +1,3 @@
-# Teams represent collections of players.
-#
 class Team < ApplicationRecord
   has_many :user_teams
   has_many :members, through: :user_teams, source: :user, class_name: User
@@ -10,38 +8,31 @@ class Team < ApplicationRecord
       .distinct
   end
 
-  validates_associated :user_teams
-
   validates :name, presence: true, uniqueness: true
 
-  validate :unique_member_collections_for_teams
-
-  # Returns a collection of user ids.
-  # Must be public to be used through `map`.
-  def member_ids
-    members.map(&:id)
-  end
+  validate :members_not_empty, :unique_member_collections_for_teams
 
   private
 
-  # All teams must be distinct.
+  def members_not_empty
+    errors.add(:members, "can't be empty") if members.empty?
+  end
 
   def unique_member_collections_for_teams
-    # Check whether any two teams have equal collections of members.
-    if contain_duplicates?(this_and_related_teams.map(&:member_ids))
+    if contains_duplicates?(this_and_related_team_member_ids)
       errors.add(:members, "Teams with these exact members exist")
     end
   end
 
-  # Returns all teams that have members in common with the current team.
-  def this_and_related_teams
-    # Include the current team, and be careful not to start more validations.
-    [self] + Team.related_to(member_ids).includes(:members)
+  def contains_duplicates?(ary)
+    ary.uniq.length != ary.length
   end
-end
 
-private
+  def this_and_related_team_member_ids
+    this_and_related_teams.map { |team| team.members.map(&:id) }
+  end
 
-def contain_duplicates?(ary)
-  ary.uniq.length != ary.length
+  def this_and_related_teams
+    [self] + Team.related_to(members.map(&:id)).includes(:members)
+  end
 end

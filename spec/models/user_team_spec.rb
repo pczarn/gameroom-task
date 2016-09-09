@@ -1,6 +1,5 @@
 require "rails_helper"
 
-# should this go to team_spec?
 RSpec.describe UserTeam, type: :model do
   let(:player) { create(:user) }
   let(:team) { create(:team) }

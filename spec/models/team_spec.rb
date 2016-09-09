@@ -6,7 +6,7 @@ RSpec.describe Team, type: :model do
   let(:third_player) { create(:user) }
   let(:fourth_player) { create(:user) }
 
-  describe ".name" do
+  describe "#name" do
     let(:team) { build(:team) }
     it "is a string" do
       expect(team.name).to be_a(String)
@@ -14,10 +14,31 @@ RSpec.describe Team, type: :model do
   end
 
   describe "validations" do
-    context ".unique_member_collections_for_teams" do
+    context "#members_not_empty" do
+      context "when members are empty" do
+        let(:team) { build(:team) }
+        before { team.members = [] }
+
+        it "is invalid" do
+          expect { team.valid? }
+            .to change { team.errors[:members] }.to include("can't be empty")
+        end
+      end
+
+      context "when members are not empty" do
+        let(:team) { build(:team) }
+
+        it "is valid" do
+          expect(team).to be_valid
+        end
+      end
+    end
+
+    context "#unique_member_collections_for_teams" do
       context "when collections are equal" do
         before { create(:team, members: [player]) }
         let(:built_team) { build(:team, members: [player]) }
+
         it "cannot pass validation" do
           expect { built_team.valid? }
             .to change { built_team.errors[:members] }
