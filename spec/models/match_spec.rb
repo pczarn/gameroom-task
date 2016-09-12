@@ -34,7 +34,9 @@ RSpec.describe Match, type: :model do
     context "score" do
       context "when positive" do
         let(:match) { build(:match, team_one_score: 3, team_two_score: 4) }
-        it { is_expected.to be_valid }
+        it "is valid" do
+          expect(match).to be_valid
+        end
       end
 
       context "when negative" do
