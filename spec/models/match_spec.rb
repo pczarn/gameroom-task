@@ -22,21 +22,19 @@ RSpec.describe Match, type: :model do
   end
 
   describe "validations" do
+    subject { match }
+
     context ".played_at" do
       context "when missing" do
         let(:match) { build(:match, played_at: nil) }
-        it "is invalid" do
-          expect(match).to be_invalid
-        end
+        it { is_expected.to be_invalid }
       end
     end
 
     context "score" do
       context "when positive" do
         let(:match) { build(:match, team_one_score: 3, team_two_score: 4) }
-        it "is valid" do
-          expect(match).to be_valid
-        end
+        it { is_expected.to be_valid }
       end
 
       context "when negative" do
@@ -46,6 +44,11 @@ RSpec.describe Match, type: :model do
             .to change { match.errors.full_messages }
             .to include("Team one score must be greater than or equal to 0")
         end
+      end
+
+      context "when absent" do
+        let(:match) { build(:ongoing_match) }
+        it { is_expected.to be_valid }
       end
     end
 
@@ -60,9 +63,7 @@ RSpec.describe Match, type: :model do
     context ".no_repeated_members_across_teams" do
       context "teams do not overlap" do
         let(:match) { build(:match, team_one: team_a, team_two: team_b) }
-        it "is valid" do
-          expect(match).to be_valid
-        end
+        it { is_expected.to be_valid }
       end
 
       context "teams have common players" do
