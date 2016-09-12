@@ -9,6 +9,17 @@ class Match < ApplicationRecord
 
   validate :no_repeated_members_across_teams
 
+  def teams_in_order
+    teams = [
+      TeamInMatch.new(team_one.name, team_one_score || "—"),
+      TeamInMatch.new(team_two.name, team_two_score || "—"),
+    ]
+    if team_one_score && team_two_score
+      teams.reverse! if team_one_score < team_two_score
+    end
+    teams
+  end
+
   private
 
   def no_repeated_members_across_teams
@@ -20,3 +31,5 @@ class Match < ApplicationRecord
     end
   end
 end
+
+TeamInMatch = Struct.new(:name, :score)
