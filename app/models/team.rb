@@ -8,8 +8,6 @@ class Team < ApplicationRecord
       .distinct
   end
 
-  validates_associated :user_teams
-
   validates :name, presence: true, uniqueness: true
 
   validate :unique_member_collections_for_teams

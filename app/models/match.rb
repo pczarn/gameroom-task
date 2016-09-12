@@ -3,7 +3,7 @@ class Match < ApplicationRecord
   belongs_to :team_one, class_name: Team
   belongs_to :team_two, class_name: Team
 
-  validates :played_at, presence: true
+  validates :played_at, :team_one, :team_two, presence: true
   validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 },
                                               allow_nil: true
 
