@@ -11,7 +11,7 @@ class MatchesController < ApplicationController
 
   def index
     @new_match = Match.new
-    @recent = Match.order(played_at: :desc).limit(10)
+    @recent = Match.order(played_at: :desc).page(params[:page])
     @game_ids_names = Game.all.pluck(:id, :name)
     @team_ids_names = Team.all.pluck(:id, :name)
   end
