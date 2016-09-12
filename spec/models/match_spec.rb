@@ -5,15 +5,6 @@ RSpec.describe Match, type: :model do
   let(:team_a) { teams[0] }
   let(:team_b) { teams[1] }
 
-  describe "score" do
-    context "ongoing match" do
-      let(:match) { build(:ongoing_match) }
-      it "is absent" do
-        expect(match.team_one_score).to be_nil
-      end
-    end
-  end
-
   describe ".played_at" do
     let(:match) { build(:match) }
     it "is a time" do
@@ -53,7 +44,7 @@ RSpec.describe Match, type: :model do
     end
 
     context ".teams_not_empty" do
-      let(:match) { build(:match, team_one: nil) }
+      let(:match) { build(:match, team_one: create(:team)) }
       it "neither of the teams can empty" do
         expect { match.valid? }
           .to change { match.errors[:team_one] }.to include("can't be empty")

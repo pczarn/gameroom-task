@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Game, type: :model do
   let(:game) { create(:game_with_matches) }
 
-  describe ".name" do
+  describe "#name" do
     it "is a string" do
       expect(game.name).to be_a(String)
     end
