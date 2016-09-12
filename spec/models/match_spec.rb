@@ -6,11 +6,6 @@ RSpec.describe Match, type: :model do
   let(:team_b) { teams[1] }
 
   describe "score" do
-    let(:match) { build(:match, team_one_score: 3) }
-    it "is present" do
-      expect(match.team_one_score).to eq(3)
-    end
-
     context "ongoing match" do
       let(:match) { build(:ongoing_match) }
       it "is absent" do
