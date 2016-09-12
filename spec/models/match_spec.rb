@@ -53,7 +53,7 @@ RSpec.describe Match, type: :model do
       let(:match) { build(:match, team_one: nil) }
       it "neither of the teams can empty" do
         expect { match.valid? }
-          .to change { match.errors[:team_one] }.to include("Can't be empty")
+          .to change { match.errors[:team_one] }.to include("can't be empty")
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe Match, type: :model do
         it "is invalid" do
           expect { match.valid? }
             .to change { match.errors[:team_one] }
-            .to include("Can't have common members in both teams")
+            .to include("can't have members in common with the other team")
         end
       end
     end

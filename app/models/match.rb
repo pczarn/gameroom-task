@@ -18,7 +18,7 @@ class Match < ApplicationRecord
 
   def team_not_empty(team_field)
     team = send(team_field)
-    errors.add(team_field, "Can't be empty") if UserTeam.where(team: team).empty?
+    errors.add(team_field, "can't be empty") if UserTeam.where(team: team).empty?
   end
 
   def no_repeated_members_across_teams
@@ -27,7 +27,7 @@ class Match < ApplicationRecord
     common_members = users_in_team_one & users_in_team_two
     unless common_members.empty?
       [:team_one, :team_two].each do |team_sym|
-        errors.add(team_sym, "Can't have common members in both teams")
+        errors.add(team_sym, "can't have members in common with the other team")
       end
     end
   end
