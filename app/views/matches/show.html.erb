@@ -6,8 +6,14 @@
 
 <h2>update</h2>
 
+<% flash.each do |name, msg| %>
+  <%= msg %>
+<% end %>
+
 <%=
   form_for @match, url: { action: "update" } do |f|
     render partial: "edit", locals: { f: f, team_ids_names: @team_ids_names, game_ids_names: @game_ids_names }
   end
 %>
+
+<%= link_to 'Back', url_for(:back) %>

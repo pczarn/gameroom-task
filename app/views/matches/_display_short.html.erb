@@ -1,14 +1,14 @@
 <span>
   <%= match.game.name %>
 </span>
-<%= match.team_one.name %>
+<%= match.teams_in_order[0].name %>
 vs
-<%= match.team_two.name %>
+<%= match.teams_in_order[1].name %>
+with score
+<%= match.teams_in_order[0].score %>:<%= match.teams_in_order[1].score %>
 at
 <time>
   <%= match.played_at %>
 </time>
-with score
-<%= match.team_one_score %>:<%= match.team_two_score %>
 
 <%= link_to "show", match %>

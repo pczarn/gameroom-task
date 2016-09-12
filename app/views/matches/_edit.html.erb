@@ -1,28 +1,30 @@
 Played at:
-<%= f.time_field :played_at %>
+<%= f.datetime_field :played_at %>
 <fieldset>
-  Select the game:
+  <legend>The game</legend>
   <% game_ids_names.map do |(id, name)| %>
     <%= f.radio_button :game_id, id %>
-    <%= f.label :game_id, name %>
+    <%= f.label :game_id, name, value: id %>
   <% end %>
 </fieldset>
 <fieldset>
-  Select the first team:
+  <legend>The first team</legend>
   <% team_ids_names.map do |(id, name)| %>
     <%= f.radio_button :team_one_id, id %>
-    <%= f.label :team_one_id, name %>
+    <%= f.label :team_one_id, name, value: id %>
   <% end %>
 </fieldset>
 <fieldset>
-  Select the second team:
+  <legend>The second team</legend>
   <% team_ids_names.map do |(id, name)| %>
     <%= f.radio_button :team_two_id, id %>
-    <%= f.label :team_two_id, name %>
+    <%= f.label :team_two_id, name, value: id %>
   <% end %>
 </fieldset>
-Score
-<%= f.number_field :team_one_score %>
-:
-<%= f.number_field :team_two_score %>
+<fieldset>
+  <legend>Score</legend>
+    <%= f.number_field :team_one_score %>
+    :
+    <%= f.number_field :team_two_score %>
+</fieldset>
 <%= f.submit "Submit" %>

@@ -1,5 +1,8 @@
-<h1>Matches<h1>
+<h1>Matches</h1>
 <h2>Add a match</h2>
+  <% flash.each do |name, msg| %>
+    <%= msg %>
+  <% end %>
   <%=
     form_for @new_match, url: { action: "create" } do |f|
       render partial: "edit", locals: { f: f, team_ids_names: @team_ids_names, game_ids_names: @game_ids_names }

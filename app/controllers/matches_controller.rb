@@ -4,6 +4,7 @@ class MatchesController < ApplicationController
     if @match.save
       redirect_to @match
     else
+      flash[:error] = @match.errors.full_messages
       redirect_to action: :index
     end
   end
@@ -23,18 +24,26 @@ class MatchesController < ApplicationController
 
   def update
     match = Match.find(params[:id])
-    match.update!(match_params)
+    flash[:error] = match.errors.full_messages unless match.update(match_params)
     redirect_to match
   end
 
   def destroy
     Match.find(params[:id]).destroy
+    flash[:success] = "Match deleted"
     redirect_to action: :index
   end
 
   private
 
   def match_params
-    params.require(:match).permit(:played_at, :game_id, :team_one_id, :team_two_id, :team_one_score, :team_two_score)
+    params.require(:match).permit(
+      :played_at,
+      :game_id,
+      :team_one_id,
+      :team_two_id,
+      :team_one_score,
+      :team_two_score,
+    )
   end
 end
