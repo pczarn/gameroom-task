@@ -4,7 +4,8 @@ class Match < ApplicationRecord
   belongs_to :team_two, class_name: Team
 
   validates :played_at, presence: true
-  validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 }
+  validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 },
+                                              allow_nil: true
 
   validate :teams_not_empty, :no_repeated_members_across_teams
 
