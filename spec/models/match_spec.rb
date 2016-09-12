@@ -41,7 +41,11 @@ RSpec.describe Match, type: :model do
 
       context "when negative" do
         let(:match) { build(:match, team_one_score: -666, team_two_score: 3) }
-        it { is_expected.to be_invalid }
+        it "is invalid" do
+          expect { match.valid? }
+            .to change { match.errors.full_messages }
+            .to include("Team one score must be greater than or equal to 0")
+        end
       end
     end
 
