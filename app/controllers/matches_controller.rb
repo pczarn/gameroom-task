@@ -10,8 +10,11 @@ class MatchesController < ApplicationController
   end
 
   def index
+    sanitize_param
     @new_match = Match.new
-    @recent = Match.order(played_at: :desc).page(params[:page])
+    @recent = Match.order(played_at: :desc)
+    @recent = @recent.involving(params[:involving_user]) if params[:involving_user]
+    @recent = @recent.page(params[:page])
     @game_ids_names = Game.all.pluck(:id, :name)
     @team_ids_names = Team.all.pluck(:id, :name)
   end
@@ -45,5 +48,9 @@ class MatchesController < ApplicationController
       :team_one_score,
       :team_two_score,
     )
+  end
+
+  def sanitize_param
+    params[:involving_user] &&= params[:involving_user].to_i
   end
 end

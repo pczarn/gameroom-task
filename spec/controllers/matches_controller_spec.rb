@@ -11,6 +11,25 @@ RSpec.describe MatchesController, type: :controller do
       get :index
       expect(response.content_type).to eq "text/html"
     end
+
+    describe "list of matches" do
+      let(:player) { create(:user) }
+      let(:user_team) { create(:user_team, user: player) }
+      before { create(:match, team_one: user_team.team) }
+      before { create(:match) }
+
+      it "shows both matches" do
+        get :index
+        expect(assigns(:recent).length).to be(2)
+      end
+
+      context "with a ?involving_user=ID parameter" do
+        it "shows only my match" do
+          get :index, params: { involving_user: player.id }
+          expect(assigns(:recent).length).to be(1)
+        end
+      end
+    end
   end
 
   describe "#create" do
