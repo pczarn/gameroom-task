@@ -1,4 +1,6 @@
 class MatchesController < ApplicationController
+  before_filter :load_match, only: [:show, :update, :destroy]
+
   def create
     @match = Match.create(match_params)
     if @match.save
@@ -20,24 +22,26 @@ class MatchesController < ApplicationController
   end
 
   def show
-    @match = Match.find(params[:id])
     @game_ids_names = Game.all.pluck(:id, :name)
     @team_ids_names = Team.all.pluck(:id, :name)
   end
 
   def update
-    match = Match.find(params[:id])
-    flash[:error] = match.errors.full_messages unless match.update(match_params)
-    redirect_to match
+    flash[:error] = @match.errors.full_messages unless @match.update(match_params)
+    redirect_to @match
   end
 
   def destroy
-    Match.find(params[:id]).destroy
+    @match.destroy
     flash[:success] = "Match deleted"
     redirect_to action: :index
   end
 
   private
+
+  def load_match
+    @match = Match.find(params[:id])
+  end
 
   def match_params
     params.require(:match).permit(
