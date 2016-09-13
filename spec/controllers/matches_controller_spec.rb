@@ -15,18 +15,23 @@ RSpec.describe MatchesController, type: :controller do
     describe "list of matches" do
       let(:player) { create(:user) }
       let(:user_team) { create(:user_team, user: player) }
-      before { create(:match, team_one: user_team.team) }
-      before { create(:match) }
+      let!(:my_match) { create(:match, team_one: user_team.team) }
+      let!(:other_match) { create(:match) }
 
       it "shows both matches" do
         get :index
-        expect(assigns(:recent).length).to be(2)
+        expect(assigns(:recent)).to include(my_match, other_match)
       end
 
       context "with a ?involving_user=ID parameter" do
-        it "shows only my match" do
+        it "shows the match involving the specified user" do
           get :index, params: { involving_user: player.id }
-          expect(assigns(:recent).length).to be(1)
+          expect(assigns(:recent)).to include(my_match)
+        end
+
+        it "does not show matches not involving the specified user" do
+          get :index, params: { involving_user: player.id }
+          expect(assigns(:recent)).not_to include(other_match)
         end
       end
     end
