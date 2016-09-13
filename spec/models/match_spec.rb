@@ -5,7 +5,7 @@ RSpec.describe Match, type: :model do
   let(:team_a) { teams[0] }
   let(:team_b) { teams[1] }
 
-  describe ".played_at" do
+  describe "#played_at" do
     let(:match) { build(:match) }
     it "is a time" do
       expect(match.played_at).to be_a(Time)
@@ -15,7 +15,7 @@ RSpec.describe Match, type: :model do
   describe "validations" do
     subject { match }
 
-    context ".played_at" do
+    context "#played_at" do
       context "when missing" do
         let(:match) { build(:match, played_at: nil) }
         it { is_expected.to be_invalid }
@@ -43,7 +43,7 @@ RSpec.describe Match, type: :model do
       end
     end
 
-    context ".teams_not_empty" do
+    context "#teams_not_empty" do
       let(:match) { build(:match, team_one: create(:team)) }
       it "neither of the teams can empty" do
         expect { match.valid? }
@@ -51,7 +51,7 @@ RSpec.describe Match, type: :model do
       end
     end
 
-    context ".no_repeated_members_across_teams" do
+    context "#no_repeated_members_across_teams" do
       context "teams do not overlap" do
         let(:match) { build(:match, team_one: team_a, team_two: team_b) }
         it { is_expected.to be_valid }

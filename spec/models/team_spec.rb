@@ -6,7 +6,7 @@ RSpec.describe Team, type: :model do
   let(:third_player) { create(:user) }
   let(:fourth_player) { create(:user) }
 
-  describe ".name" do
+  describe "#name" do
     let(:team) { build(:team) }
     it "is a string" do
       expect(team.name).to be_a(String)
@@ -14,7 +14,7 @@ RSpec.describe Team, type: :model do
   end
 
   describe "validations" do
-    context ".unique_member_collections_for_teams" do
+    context "#unique_member_collections_for_teams" do
       context "when collections are equal" do
         before { create(:team, members: [player]) }
         let(:built_team) { build(:team, members: [player]) }
