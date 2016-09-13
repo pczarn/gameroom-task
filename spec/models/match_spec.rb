@@ -62,6 +62,7 @@ RSpec.describe Match, type: :model do
 
   describe "associations" do
     let(:match) { build(:match) }
+
     it "belongs to a game" do
       expect(match.game).to be_a(Game)
     end
