@@ -1,0 +1,20 @@
+<div>
+  <span>
+    <%= team.name %>
+  </span>
+  with <%= team.members.count %> members,
+  created at
+  <time>
+    <%= team.created_at %>
+  </time>
+</div>
+
+<ul>
+  <% team.members.each do |member| %>
+    <li>
+      <%= member.name %>
+      <%= button_to "Remove member", { action: "remove_member", member_id: member.id }, method: :delete %>
+      <%# or method: :post ? %>
+    </li>
+  <% end %>
+</ul>
