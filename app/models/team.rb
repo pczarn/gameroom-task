@@ -10,9 +10,13 @@ class Team < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  validate :unique_member_collections_for_teams
+  validate :members_not_empty, :unique_member_collections_for_teams
 
   private
+
+  def members_not_empty
+    errors.add(:members, "can't be empty") if user_teams.empty?
+  end
 
   def unique_member_collections_for_teams
     if contains_duplicates?(this_and_related_team_member_ids)

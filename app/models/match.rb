@@ -7,19 +7,9 @@ class Match < ApplicationRecord
   validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 },
                                               allow_nil: true
 
-  validate :teams_not_empty, :no_repeated_members_across_teams
+  validate :no_repeated_members_across_teams
 
   private
-
-  def teams_not_empty
-    team_not_empty(:team_one)
-    team_not_empty(:team_two)
-  end
-
-  def team_not_empty(team_field)
-    team = send(team_field)
-    errors.add(team_field, "can't be empty") if UserTeam.where(team: team).empty?
-  end
 
   def no_repeated_members_across_teams
     users_in_team_one = UserTeam.where(team: team_one).pluck(:user_id)
