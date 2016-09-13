@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Match, type: :model do
-  let(:teams) { create_list(:team_with_members, 2) }
+  let(:teams) { create_list(:team, 2) }
   let(:team_a) { teams[0] }
   let(:team_b) { teams[1] }
 
@@ -40,14 +40,6 @@ RSpec.describe Match, type: :model do
       context "when absent" do
         let(:match) { build(:ongoing_match) }
         it { is_expected.to be_valid }
-      end
-    end
-
-    context "#teams_not_empty" do
-      let(:match) { build(:match, team_one: create(:team)) }
-      it "neither of the teams can empty" do
-        expect { match.valid? }
-          .to change { match.errors[:team_one] }.to include("can't be empty")
       end
     end
 
