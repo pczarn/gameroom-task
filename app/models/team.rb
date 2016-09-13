@@ -15,7 +15,7 @@ class Team < ApplicationRecord
   private
 
   def members_not_empty
-    errors.add(:members, "can't be empty") if user_teams.empty?
+    errors.add(:members, "can't be empty") if members.empty?
   end
 
   def unique_member_collections_for_teams

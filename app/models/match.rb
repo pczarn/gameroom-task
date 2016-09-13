@@ -12,9 +12,7 @@ class Match < ApplicationRecord
   private
 
   def no_repeated_members_across_teams
-    users_in_team_one = UserTeam.where(team: team_one).pluck(:user_id)
-    users_in_team_two = UserTeam.where(team: team_two).pluck(:user_id)
-    common_members = users_in_team_one & users_in_team_two
+    common_members = team_one.member_ids & team_two.member_ids
     if common_members.any?
       [:team_one, :team_two].each do |team_sym|
         errors.add(team_sym, "can't have members in common with the other team")

@@ -17,7 +17,7 @@ RSpec.describe Team, type: :model do
     context "#members_not_empty" do
       context "when members are empty" do
         let(:team) { build(:team) }
-        before { team.user_teams = [] }
+        before { team.members = [] }
 
         it "is invalid" do
           expect { team.valid? }

@@ -7,7 +7,9 @@ FactoryGirl.define do
     end
 
     after(:build) do |team, evaluator|
-      team.user_teams << build_list(:user_team, evaluator.members_count, team: team, user: build(:user))
+      if team.members.empty?
+        team.members << build_list(:user_team, evaluator.members_count, team: team).map(&:user)
+      end
     end
   end
 end
