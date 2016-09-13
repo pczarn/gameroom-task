@@ -13,7 +13,7 @@
   <% team.members.each do |member| %>
     <li>
       <%= member.name %>
-      <%= button_to "Remove member", { action: "remove_member", member_id: member.id }, method: :delete %>
+      <%= button_to "Remove member", team_remove_member_path(team, member_id: member.id), method: :delete %>
       <%# or method: :post ? %>
     </li>
   <% end %>
