@@ -12,7 +12,7 @@
 
 <%=
   form_for @match, url: { action: "update" } do |f|
-    render partial: "edit", locals: { f: f, team_ids_names: @team_ids_names, game_ids_names: @game_ids_names }
+    render partial: "edit", locals: { f: f }
   end
 %>
 
