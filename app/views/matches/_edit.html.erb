@@ -2,21 +2,21 @@ Played at:
 <%= f.datetime_field :played_at %>
 <fieldset>
   <legend>The game</legend>
-  <% game_ids_names.map do |(id, name)| %>
+  <% game_ids_and_names.map do |(id, name)| %>
     <%= f.radio_button :game_id, id %>
     <%= f.label :game_id, name, value: id %>
   <% end %>
 </fieldset>
 <fieldset>
   <legend>The first team</legend>
-  <% team_ids_names.map do |(id, name)| %>
+  <% team_ids_and_names.map do |(id, name)| %>
     <%= f.radio_button :team_one_id, id %>
     <%= f.label :team_one_id, name, value: id %>
   <% end %>
 </fieldset>
 <fieldset>
   <legend>The second team</legend>
-  <% team_ids_names.map do |(id, name)| %>
+  <% team_ids_and_names.map do |(id, name)| %>
     <%= f.radio_button :team_two_id, id %>
     <%= f.label :team_two_id, name, value: id %>
   <% end %>

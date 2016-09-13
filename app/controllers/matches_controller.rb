@@ -17,13 +17,9 @@ class MatchesController < ApplicationController
     @recent = Match.order(played_at: :desc)
     @recent = @recent.involving(params[:involving_user]) if params[:involving_user]
     @recent = @recent.page(params[:page])
-    @game_ids_names = Game.all.pluck(:id, :name)
-    @team_ids_names = Team.all.pluck(:id, :name)
   end
 
   def show
-    @game_ids_names = Game.all.pluck(:id, :name)
-    @team_ids_names = Team.all.pluck(:id, :name)
   end
 
   def update
