@@ -5,7 +5,7 @@
 vs
 <%= match.teams_in_order[1].name %>
 with score
-<%= match.teams_in_order[0].score %>:<%= match.teams_in_order[1].score %>
+<%= [match.teams_in_order[0].score, match.teams_in_order[1].score].join(":") %>
 at
 <time>
   <%= match.played_at %>
