@@ -19,8 +19,8 @@
 <h2>Add a member</h2>
 
 <%=
-  form_for @team, url: { action: "add_member" } do |f|
-    render partial: "add_member", locals: { f: f, user_ids_names: @user_ids_names }
+  form_tag team_add_member_path(@team), action: "add_member", method: :post do
+    render partial: "add_member", locals: { team: @team, user_ids_names: @user_ids_names }
   end
 %>
 

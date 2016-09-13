@@ -1,7 +1,9 @@
 <fieldset>
   <legend>Add a member</legend>
   <% user_ids_names.map do |(id, name)| %>
-    <%= f.radio_button :user_id, id %>
-    <%= f.label :user_id, name, value: id %>
+    <%= radio_button_tag :member_id, id %>
+    <%= label_tag :member_id, name, value: id %>
   <% end %>
 </fieldset>
+<%= hidden_field_tag :id, team.id %>
+<%= submit_tag "Submit" %>
