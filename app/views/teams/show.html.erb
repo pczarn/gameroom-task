@@ -1,0 +1,27 @@
+<h1>Match</h1>
+
+<%= render partial: "display_long", locals: { team: @team } %>
+
+<%= link_to "delete...", @team, method: :delete %>
+
+<h2>Update</h2>
+
+<% flash.each do |name, msg| %>
+  <%= msg %>
+<% end %>
+
+<%=
+  form_for @team, url: { action: "update" } do |f|
+    render partial: "edit", locals: { f: f }
+  end
+%>
+
+<h2>Add a member</h2>
+
+<%=
+  form_for @team, url: { action: "add_member" } do |f|
+    render partial: "add_member", locals: { f: f, user_ids_names: @user_ids_names }
+  end
+%>
+
+<%= link_to 'Back', url_for(:back) %>
