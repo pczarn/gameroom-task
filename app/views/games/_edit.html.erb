@@ -1,0 +1,9 @@
+<fieldset>
+  <legend>Name</legend>
+  <%= f.text_field :name %>
+</fieldset>
+<fieldset>
+  <legend>Image</legend>
+  <%= f.file_field :image, multiple: true %>
+</fieldset>
+<%= f.submit "Submit" %>
