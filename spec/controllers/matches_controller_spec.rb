@@ -52,13 +52,13 @@ RSpec.describe MatchesController, type: :controller do
     end
 
     context "with invalid data" do
-      let(:match) { build(:match, team_one: create(:team), played_at: nil) }
+      let(:match) { build(:match, played_at: nil) }
 
       it "gives an error message" do
         expect do
           post :create, params: { match: match.attributes }
         end.to change { flash[:error] }
-          .to include("Team one can't be empty", "Played at can't be blank")
+          .to include("Played at can't be blank")
       end
 
       it "redirects to the index" do
