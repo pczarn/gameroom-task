@@ -1,0 +1,19 @@
+<h1>Teams</h1>
+<h2>Add a team</h2>
+  <% flash.each do |name, msg| %>
+    <%= msg %>
+  <% end %>
+  <%=
+    form_for @new_team, url: { action: "create" } do |f|
+      render partial: "edit", locals: { f: f, user_ids_names: @user_ids_names }
+    end
+  %>
+<h2>List of teams</h2>
+<ul>
+  <% @teams.each do |game| %>
+    <li>
+      <%= render partial: "display_short", locals: { game: game } %>
+    </li>
+  <% end %>
+</ul>
+<%= paginate @teams %>
