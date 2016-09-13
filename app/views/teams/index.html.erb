@@ -10,9 +10,9 @@
   %>
 <h2>List of teams</h2>
 <ul>
-  <% @teams.each do |game| %>
+  <% @teams.each do |team| %>
     <li>
-      <%= render partial: "display_short", locals: { game: game } %>
+      <%= render partial: "display_short", locals: { team: team } %>
     </li>
   <% end %>
 </ul>
