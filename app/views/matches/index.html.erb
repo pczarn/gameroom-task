@@ -18,4 +18,5 @@
     </li>
   <% end %>
 </ul>
+<%= "Nothing to show." if @recent.empty? %>
 <%= paginate @recent %>
