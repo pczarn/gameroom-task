@@ -2,24 +2,23 @@ class MatchesController < ApplicationController
   before_action :load_match, only: [:show, :update, :destroy]
 
   def create
-    @match = Match.create(match_params)
+    @match = Match.new(match_params)
     if @match.save
       redirect_to @match
     else
       flash[:error] = @match.errors.full_messages
-      redirect_to action: :index
+      render "index"
     end
   end
 
   def index
-    sanitize_param
-    @new_match = Match.new
+    @new_match = Match.new(played_at: Time.zone.now)
     @recent = Match.order(played_at: :desc)
     @recent = @recent.involving(params[:involving_user]) if params[:involving_user]
     @recent = @recent.page(params[:page])
   end
 
-  def show
+  def edit
   end
 
   def update
@@ -48,9 +47,5 @@ class MatchesController < ApplicationController
       :team_one_score,
       :team_two_score,
     )
-  end
-
-  def sanitize_param
-    params[:involving_user] &&= params[:involving_user].to_i
   end
 end

@@ -61,9 +61,9 @@ RSpec.describe MatchesController, type: :controller do
           .to include("Played at can't be blank")
       end
 
-      it "redirects to the index" do
+      it "renders" do
         post :create, params: { match: match.attributes }
-        expect(response).to redirect_to(:matches)
+        expect(response).to be_success
       end
     end
   end
