@@ -23,5 +23,7 @@ PEOPLE = %w(
 FactoryGirl.define do
   factory :user do
     sequence(:name) { |n| "#{Faker::Name.prefix} #{PEOPLE.sample} #{n}" }
+    email { Faker::Internet.email }
+    password { Faker::Internet.password(7, 10) }
   end
 end
