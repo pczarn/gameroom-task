@@ -42,7 +42,6 @@ RSpec.describe MatchesController, type: :controller do
     let(:match) { build(:match) }
 
     it "succeeds" do
-
       is_expected.to redirect_to(assigns(:match))
     end
 
