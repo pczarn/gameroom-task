@@ -96,7 +96,7 @@ RSpec.describe MatchesController, type: :controller do
     end
 
     it "gives a message that everything is ok" do
-      expect { destruction }.to change(flash[:success]).to include("Match deleted")
+      expect { destruction }.to change { flash[:success] }.to include("Match deleted")
     end
   end
 end
