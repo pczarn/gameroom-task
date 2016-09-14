@@ -41,8 +41,8 @@ RSpec.describe MatchesController, type: :controller do
     subject(:creation) { post :create, params: { match: match.attributes } }
     let(:match) { build(:match) }
 
-    it "succeeds" do
-      is_expected.to redirect_to(assigns(:match))
+    it "succeeds and redirects to editing" do
+      is_expected.to redirect_to(edit_match_path(assigns(:match)))
     end
 
     it "stores a new match" do

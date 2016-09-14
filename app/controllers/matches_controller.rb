@@ -4,7 +4,7 @@ class MatchesController < ApplicationController
   def create
     @match = Match.new(match_params)
     if @match.save
-      redirect_to @match
+      redirect_to edit_match_path(@match)
     else
       flash[:error] = @match.errors.full_messages
       render "index"
@@ -23,7 +23,7 @@ class MatchesController < ApplicationController
 
   def update
     if @match.update(match_params)
-      redirect_to @match
+      redirect_to edit_match_path(@match)
     else
       flash[:error] = @match.errors.full_messages
       render "edit"
