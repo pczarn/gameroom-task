@@ -59,3 +59,6 @@ gem "mini_magick"
 
 # Pagination
 gem "kaminari"
+
+# Authentication
+gem "argon2"

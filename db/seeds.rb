@@ -6,14 +6,17 @@ monte_kombat = Game.create(name: "Monte Kombat")
 beer_pong = Game.create(name: "Beer Pong")
 ufc = Game.create(name: "UFC")
 
+pass = Argon2::Password.create("hunter2")
+pass_h = { password: pass, password_hashed: pass }
+
 users = [
-  User.create(name: "Michal the First"),
-  User.create(name: "Michal the Second"),
-  User.create(name: "Piotr"),
-  User.create(name: "Igor"),
-  User.create(name: "Rafal"),
-  User.create(name: "Daniel"),
-  User.create(name: "Emmanuel"),
+  User.create(name: "Michal the First", email: "m1@monterail.com", **pass_h),
+  User.create(name: "Michal the Second", email: "m2@monterail.com", **pass_h),
+  User.create(name: "Piotr", email: "p@monterail.com", **pass_h),
+  User.create(name: "Igor", email: "i@monterail.com", **pass_h),
+  User.create(name: "Rafal", email: "r@monterail.com", **pass_h),
+  User.create(name: "Daniel", email: "d@monterail.com", **pass_h),
+  User.create(name: "Emmanuel", email: "e@monterail.com", **pass_h),
 ]
 
 michals = Team.create(name: "The Michals", members: users[0..1])

@@ -1,0 +1,30 @@
+<h1>Register</h1>
+<%= form_for @user do |f| -%>
+  <% if @user.errors.any? %>
+    <div class="error_messages">
+      <h2>Invalid form</h2>
+      <ul>
+        <% for message in @user.errors.full_messages %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <fieldset>
+    <%= f.label :name, "Name" %>
+    <%= f.text_field :name %>
+  </fieldset>
+  <fieldset>
+    <%= f.label :email, "Email" %>
+    <%= f.text_field :email %>
+  </fieldset>
+  <fieldset>
+    <%= f.label :password, "Password" %>
+    <%= f.password_field :password %>
+  </fieldset>
+  <fieldset>
+    <%= f.label :password_confirmation, "Password confirmation" %>
+    <%= f.password_field :password_confirmation %>
+  </fieldset>
+  <%= f.submit "Submit", :disable_with => 'Submiting...' %>
+<% end -%>
