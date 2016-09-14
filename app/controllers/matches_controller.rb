@@ -1,5 +1,5 @@
 class MatchesController < ApplicationController
-  before_action :load_match, only: [:show, :update, :destroy]
+  before_action :load_match, only: [:edit, :update, :destroy]
 
   def create
     @match = Match.new(match_params)

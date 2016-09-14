@@ -5,7 +5,7 @@
   <% end %>
   <%=
     form_for @new_match, url: { action: "create" } do |f|
-      render partial: "edit", locals: { f: f }
+      render partial: "form", locals: { f: f }
     end
   %>
 <h2>Most recent</h2>

@@ -68,11 +68,11 @@ RSpec.describe MatchesController, type: :controller do
     end
   end
 
-  describe "#show" do
+  describe "#edit" do
     let(:match) { create(:match) }
 
     it "responds successfully" do
-      get :show, params: { id: match.id }
+      get :edit, params: { id: match.id }
       expect(response).to be_success
     end
   end
