@@ -17,8 +17,8 @@ class Match < ApplicationRecord
 
   def teams_in_order
     teams = [
-      TeamInMatch.new(team_one.name, team_one_score || "—"),
-      TeamInMatch.new(team_two.name, team_two_score || "—"),
+      TeamInMatch.new(team_one.id, team_one.name, team_one_score || "—"),
+      TeamInMatch.new(team_two.id, team_two.name, team_two_score || "—"),
     ]
     if team_one_score && team_two_score
       teams.reverse! if team_one_score < team_two_score
@@ -38,4 +38,4 @@ class Match < ApplicationRecord
   end
 end
 
-TeamInMatch = Struct.new(:name, :score)
+TeamInMatch = Struct.new(:id, :name, :score)

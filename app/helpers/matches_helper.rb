@@ -7,7 +7,7 @@ module MatchesHelper
     Team.all.pluck(:id, :name)
   end
 
-  def member_names(team)
-    team.members.pluck(:name)
+  def member_names(team_in_match)
+    Team.find(team_in_match.id).members.pluck(:name)
   end
 end
