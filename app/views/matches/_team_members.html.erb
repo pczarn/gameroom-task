@@ -1,0 +1,10 @@
+<h3>
+  Members of <%= team.name %>
+</h3>
+<li>
+  <% member_names(team).each do |name| %>
+    <ul>
+      <%= name %>
+    </ul>
+  <% end %>
+</li>

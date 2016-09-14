@@ -1,10 +1,16 @@
 <strong>
   <%= match.game.name %>
 </strong>
-<%= match.teams_in_order[0].name %>
-vs
-<%= match.teams_in_order[1].name %>
-with score
-<%= [match.teams_in_order[0].score, match.teams_in_order[1].score].join(":") %>
-at
+
+<h2>
+  <%= match.teams_in_order[0].name %>
+  vs
+  <%= match.teams_in_order[1].name %>
+  <%= [match.teams_in_order[0].score, match.teams_in_order[1].score].join(":") %>
+</h2>
+
+<%= render partial: "team_members", locals: { team: match.teams_in_order[0] } %>
+<%= render partial: "team_members", locals: { team: match.teams_in_order[1] } %>
+
+Match played at
 <%= time_tag match.played_at %>

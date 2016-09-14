@@ -6,4 +6,8 @@ module MatchesHelper
   def team_ids_and_names
     Team.all.pluck(:id, :name)
   end
+
+  def member_names(team)
+    team.members.pluck(:name)
+  end
 end
