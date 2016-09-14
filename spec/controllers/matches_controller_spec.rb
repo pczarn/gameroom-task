@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe MatchesController, type: :controller do
+  before { sign_in }
+
   describe "#index" do
     it "responds successfully" do
       get :index
