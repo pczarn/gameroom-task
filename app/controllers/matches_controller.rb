@@ -22,8 +22,12 @@ class MatchesController < ApplicationController
   end
 
   def update
-    flash[:error] = @match.errors.full_messages unless @match.update(match_params)
-    redirect_to @match
+    if @match.update(match_params)
+      redirect_to @match
+    else
+      flash[:error] = @match.errors.full_messages
+      render "edit"
+    end
   end
 
   def destroy
