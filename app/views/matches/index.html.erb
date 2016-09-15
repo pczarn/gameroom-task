@@ -10,7 +10,7 @@
   %>
 <h2>Most recent</h2>
 <%= link_to "All matches", matches_path %>
-<%= link_to "My matches", matches_path(involving_user: 1) %>
+<%= link_to "My matches", matches_path(involving_user: current_user.id) %>
 <ul>
   <% @recent.all.each do |match| %>
     <li>
