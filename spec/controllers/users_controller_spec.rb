@@ -14,10 +14,7 @@ RSpec.describe UsersController, type: :controller do
     subject(:creation) { post :create, params: register_params }
 
     context "with correct confirmation" do
-      let(:user_attrs_with_confirmation) do
-        user_attrs.merge(password_confirmation: user_attrs[:password])
-      end
-      let(:register_params) { { user: user_attrs_with_confirmation } }
+      let(:register_params) { { user: user_attrs } }
 
       it "does not give an error message" do
         creation
