@@ -1,0 +1,12 @@
+<strong>
+  <%= match.game.name %>
+</strong>
+<%= match.winning_team.name %>
+vs
+<%= match.defeated_team.name %>
+with score
+<%= [match.winning_team.score || "—", match.defeated_team.score || "—"].join(":") %>
+at
+<%= time_tag match.played_at %>
+
+<%= link_to "(edit)", edit_match_path(match) %>

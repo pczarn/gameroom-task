@@ -36,6 +36,7 @@ group :development, :test do
   gem "factory_girl_rails"
   gem "pry-rails"
   gem "faker"
+  gem "rails-controller-testing"
 end
 
 group :development do
@@ -55,3 +56,6 @@ gem "rubocop-rspec"
 
 gem "carrierwave", ">= 1.0.0.beta", "< 2.0"
 gem "mini_magick"
+
+# Pagination
+gem "kaminari"
