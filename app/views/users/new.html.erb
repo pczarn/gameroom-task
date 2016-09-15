@@ -1,15 +1,6 @@
 <h1>Register</h1>
 <%= form_for @user do |f| -%>
-  <% if @user.errors.any? %>
-    <div class="error_messages">
-      <h2>Invalid form</h2>
-      <ul>
-        <% for message in @user.errors.full_messages %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render partial: "error_messages", locals: { errors: @user.errors } %>
   <fieldset>
     <%= f.label :name, "Name" %>
     <%= f.text_field :name %>
