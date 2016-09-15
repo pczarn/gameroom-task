@@ -1,4 +1,4 @@
-PEOPLE = %w(
+PEOPLE ||= %w(
   Krzysztof
   Jan
   Dariusz
@@ -20,8 +20,8 @@ PEOPLE = %w(
   Bartosz
 ).freeze
 
-PASS = "password".freeze
-PASS_HASHED = Argon2::Password.create(PASS)
+PASS ||= "password".freeze
+PASS_HASHED ||= Argon2::Password.create(PASS)
 
 FactoryGirl.define do
   factory :user do
