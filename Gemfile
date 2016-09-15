@@ -61,4 +61,4 @@ gem "mini_magick"
 gem "kaminari"
 
 # Authentication
-gem "argon2"
+gem "argon2", "~> 1.1"
