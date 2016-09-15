@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160914083715) do
+ActiveRecord::Schema.define(version: 20160915075853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,16 @@ ActiveRecord::Schema.define(version: 20160914083715) do
     t.datetime "updated_at", null: false
     t.string   "image"
     t.index ["name"], name: "index_games_on_name", unique: true, using: :btree
+  end
+
+  create_table "match_tournaments", force: :cascade do |t|
+    t.integer  "match_id",      null: false
+    t.integer  "tournament_id", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["match_id", "tournament_id"], name: "index_match_tournaments_on_match_id_and_tournament_id", unique: true, using: :btree
+    t.index ["match_id"], name: "index_match_tournaments_on_match_id", using: :btree
+    t.index ["tournament_id"], name: "index_match_tournaments_on_tournament_id", using: :btree
   end
 
   create_table "matches", force: :cascade do |t|
@@ -44,6 +54,16 @@ ActiveRecord::Schema.define(version: 20160914083715) do
     t.index ["name"], name: "index_teams_on_name", unique: true, using: :btree
   end
 
+  create_table "tournaments", force: :cascade do |t|
+    t.string   "title",                      null: false
+    t.integer  "number_of_teams",            null: false
+    t.datetime "started_at",                 null: false
+    t.integer  "number_of_members_per_team"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["title"], name: "index_tournaments_on_title", unique: true, using: :btree
+  end
+
   create_table "user_teams", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.integer  "team_id",    null: false
@@ -65,6 +85,8 @@ ActiveRecord::Schema.define(version: 20160914083715) do
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
 
+  add_foreign_key "match_tournaments", "matches"
+  add_foreign_key "match_tournaments", "tournaments"
   add_foreign_key "matches", "games"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
