@@ -20,16 +20,17 @@ users = [
 ]
 
 michals = Team.create(name: "The Michals", members: users[0..1])
-internal = Team.create(name: "Internal", members: users[2..4])
+middle = Team.create(name: "The Middle", members: users[2..4])
 daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
 emmanuel_team = Team.create(name: "Just Emmanuel", members: [users[6]])
+internal = Team.create(name: "Internal", members: users[0..4])
 
 # ongoing
 
 Match.create(
   game: beer_pong,
   team_one: michals,
-  team_two: internal,
+  team_two: middle,
 )
 
 # finished
@@ -44,7 +45,7 @@ Match.create(
 )
 Match.create(
   game: beer_pong,
-  team_one: internal,
+  team_one: middle,
   team_two: daniel_team,
   team_one_score: 77,
   team_two_score: 59,
@@ -73,4 +74,17 @@ Match.create(
   team_one_score: 22,
   team_two_score: 33,
   played_at: "2016-09-13 14:12".to_time(:utc),
+)
+
+Tournament.create(
+  title: "first one",
+  number_of_teams: 4,
+  started_at: "2016-09-01 18:12".to_time(:utc),
+  teams: [michals, middle, daniel_team, emmanuel_team],
+)
+Tournament.create(
+  title: "wrong",
+  number_of_teams: 2,
+  started_at: "2016-09-01 18:12".to_time(:utc),
+  teams: [michals, middle],
 )
