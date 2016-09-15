@@ -8,6 +8,8 @@ class User < ApplicationRecord
 
   has_many :user_teams
   has_many :teams, through: :user_teams
+  has_many :team_tournaments
+  has_many :tournaments, through: :team_tournaments
 
   before_save :encrypt_password
 
