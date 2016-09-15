@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   attr_accessor :password
 
+  enum role: [:user, :admin]
+
   has_many :user_teams
   has_many :teams, through: :user_teams
 
@@ -17,9 +19,5 @@ class User < ApplicationRecord
 
   def encrypt_password
     self.password_hashed = Argon2::Password.create(password) if password.present?
-  end
-
-  def admin?
-    role == 1
   end
 end
