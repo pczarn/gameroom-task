@@ -15,15 +15,26 @@ class Match < ApplicationRecord
 
   validate :no_repeated_members_across_teams
 
+  def winning_team
+    @winning_team ||= teams_in_order[0]
+  end
+
+  def defeated_team
+    @defeated_team ||= teams_in_order[1]
+  end
+
   def teams_in_order
-    teams = [
-      TeamInMatch.new(team_one.id, team_one.name, team_one_score || "—"),
-      TeamInMatch.new(team_two.id, team_two.name, team_two_score || "—"),
-    ]
-    if team_one_score && team_two_score
-      teams.reverse! if team_one_score < team_two_score
+    @teams_in_order ||= begin
+      return teams unless team_one_score && team_two_score
+      team_one_score < team_two_score ? teams.reverse : teams
     end
-    teams
+  end
+
+  def teams
+    @teams ||= [
+      TeamInMatch.new(team_one.id, team_one.name, team_one_score),
+      TeamInMatch.new(team_two.id, team_two.name, team_two_score),
+    ]
   end
 
   private
