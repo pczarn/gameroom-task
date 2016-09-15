@@ -3,8 +3,8 @@ class Match < ApplicationRecord
   belongs_to :team_one, class_name: Team
   belongs_to :team_two, class_name: Team
 
-  has_many :match_tournaments
-  has_many :tournaments, through: :match_tournaments
+  has_many :team_tournaments
+  has_many :tournaments, through: :team_tournaments
 
   scope :involving, -> (user_id) do
     joins(team_one: :user_teams, team_two: :user_teams)

@@ -9,19 +9,8 @@ FactoryGirl.define do
     end
 
     after(:build) do |tournament, evaluator|
-      if tournament.matches.empty?
-        tournament.matches << build_list(:match, evaluator.number_of_teams / 2)
-      end
-    end
-
-    factory :tournament_with_number_of_members do
-      number_of_members_per_team { Faker::Number.between(1, 30) }
-
-      after(:build) do |tournament, evaluator|
-        teams = tournament.matches.flat_map { |match| [match.team_one, match.team_two] }
-        teams.each do |team|
-          team.members = build_list(:user, evaluator.number_of_members_per_team)
-        end
+      if tournament.teams.empty?
+        tournament.teams << build_list(:team, evaluator.number_of_teams)
       end
     end
   end

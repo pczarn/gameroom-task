@@ -1,6 +1,6 @@
 class Tournament < ApplicationRecord
-  has_many :match_tournaments
-  has_many :matches, through: :match_tournaments
+  has_many :team_tournaments
+  has_many :teams, through: :team_tournaments
 
   validates :title, presence: true, uniqueness: true
   validates :number_of_teams, numericality: { greater_than_or_equal_to: 2 }

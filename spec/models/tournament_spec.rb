@@ -4,34 +4,20 @@ RSpec.describe Tournament, type: :model do
   describe "validations" do
     subject { tournament }
 
-    describe "#matches" do
+    describe "#teams" do
       let(:tournament) { create(:tournament) }
 
-      context "with no matches" do
-        before { tournament.matches = [] }
+      context "with no teams" do
+        before { tournament.teams = [] }
 
         it { is_expected.not_to be_invalid }
       end
 
-      context "with one match" do
-        let(:match) { create(:match) }
-        let(:tournament) { build(:tournament, matches: [match]) }
+      context "with two teams" do
+        let(:teams) { create_list(:team, 2) }
+        let(:tournament) { build(:tournament, teams: teams) }
 
         it { is_expected.to be_valid }
-
-        let(:match) { create(:match, played_at: match_played_at) }
-
-        context "when played before the tournament starts" do
-          let(:match_played_at) { tournament.started_at - 1.day }
-
-          it { is_expected.to be_invalid }
-        end
-
-        context "when played after the tournament starts" do
-          let(:match_played_at) { tournament.started_at + 1.day }
-
-          it { is_expected.to be_valid }
-        end
       end
     end
 
