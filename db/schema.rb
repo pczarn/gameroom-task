@@ -23,16 +23,6 @@ ActiveRecord::Schema.define(version: 20160915120436) do
     t.index ["name"], name: "index_games_on_name", unique: true, using: :btree
   end
 
-  create_table "match_tournaments", force: :cascade do |t|
-    t.integer  "match_id",      null: false
-    t.integer  "tournament_id", null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.index ["match_id", "tournament_id"], name: "index_match_tournaments_on_match_id_and_tournament_id", unique: true, using: :btree
-    t.index ["match_id"], name: "index_match_tournaments_on_match_id", using: :btree
-    t.index ["tournament_id"], name: "index_match_tournaments_on_tournament_id", using: :btree
-  end
-
   create_table "matches", force: :cascade do |t|
     t.datetime "played_at",      null: false
     t.integer  "game_id",        null: false
@@ -96,8 +86,6 @@ ActiveRecord::Schema.define(version: 20160915120436) do
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
 
-  add_foreign_key "match_tournaments", "matches"
-  add_foreign_key "match_tournaments", "tournaments"
   add_foreign_key "matches", "games"
   add_foreign_key "team_tournaments", "teams"
   add_foreign_key "team_tournaments", "tournaments"
