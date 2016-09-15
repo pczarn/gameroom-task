@@ -21,6 +21,9 @@ class User < ApplicationRecord
   end
 
   def encrypt_password
-    self.password_hashed = Argon2::Password.create(password) if password.present?
+    unless Rails.env.test?
+      hasher = Argon2::Password.new(t_cost: cost)
+      self.password_hashed = hasher.create(password) if password.present?
+    end
   end
 end
