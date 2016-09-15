@@ -18,4 +18,8 @@ class User < ApplicationRecord
   def encrypt_password
     self.password_hashed = Argon2::Password.create(password) if password.present?
   end
+
+  def admin?
+    role == 1
+  end
 end
