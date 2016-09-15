@@ -2,22 +2,22 @@ require "rails_helper"
 
 RSpec.describe Tournament, type: :model do
   describe "validations" do
-    subject { build(:tournament) }
+    subject { tournament }
 
-    describe "#matches" do
+    describe "#teams" do
       let(:tournament) { create(:tournament) }
 
-      context "with no matches" do
-        before { tournament.matches = [] }
+      context "with no teams" do
+        before { tournament.teams = [] }
 
         it { is_expected.not_to be_invalid }
       end
 
-      context "with one match" do
-        let(:match) { create(:match) }
-        let(:tournament) { build(:tournament, matches: [match]) }
+      context "with two teams" do
+        let(:teams) { create_list(:team, 2) }
+        let(:tournament) { build(:tournament, teams: teams) }
 
-        it { is_expected.not_to be_valid }
+        it { is_expected.to be_valid }
       end
     end
 
@@ -39,7 +39,7 @@ RSpec.describe Tournament, type: :model do
         before { create(:tournament, title: title) }
         let(:tournament) { build(:tournament, title: title) }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_invalid }
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe Tournament, type: :model do
       let(:tournament) { build(:tournament, number_of_teams: number_of_teams) }
 
       context "with no teams" do
-        let(:number_of_teams) { 1 }
+        let(:number_of_teams) { 0 }
 
         it { is_expected.to be_invalid }
       end
@@ -58,26 +58,18 @@ RSpec.describe Tournament, type: :model do
         it { is_expected.to be_invalid }
       end
 
-      context "with two teams" do
-        let(:number_of_teams) { 1 }
+      context "when even" do
+        context "when a power of two" do
+          let(:number_of_teams) { 4 }
 
-        it { is_expected.to be_valid }
-      end
-    end
+          it { is_expected.to be_valid }
+        end
 
-    describe "#number_of_members_per_team" do
-      let(:tournament) { build(:tournament, number_of_members_per_team: number_of_members) }
+        context "when not a power of two" do
+          let(:number_of_teams) { 6 }
 
-      context "with no members" do
-        let(:number_of_members) { 0 }
-
-        it { is_expected.to be_invalid }
-      end
-
-      context "with one member per team" do
-        let(:number_of_members) { 1 }
-
-        it { is_expected.to be_valid }
+          it { is_expected.to be_invalid }
+        end
       end
     end
   end
