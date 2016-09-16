@@ -8,6 +8,7 @@ class CreateRounds < ActiveRecord::Migration[5.0]
     end
 
     add_reference :matches, :round, foreign_key: true
+    change_column_null :matches, :played_at, true
     add_index :rounds, [:tournament_id, :number], unique: true
   end
 end

@@ -3,7 +3,7 @@ class CreateTeamTournaments < ActiveRecord::Migration[5.0]
     create_table :team_tournaments do |t|
       t.references :team, foreign_key: true, null: false
       t.references :tournament, foreign_key: true, null: false
-      t.integer :size_limit
+      t.integer :team_size_limit
 
       t.timestamps
     end
