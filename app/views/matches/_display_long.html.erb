@@ -13,4 +13,8 @@
 <%= render partial: "team_members", locals: { team: match.defeated_team } %>
 
 Match played at
-<%= time_tag match.played_at %>
+<% if match.played_at %>
+  <%= time_tag match.played_at %>
+<% else %>
+  an unspecified date
+<% end %>
