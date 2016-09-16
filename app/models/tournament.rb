@@ -1,3 +1,5 @@
+# The implemented tournament type is deathmatch.
+#
 class Tournament < ApplicationRecord
   belongs_to :game
   belongs_to :owner, class_name: User
