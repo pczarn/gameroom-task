@@ -80,12 +80,14 @@ Match.create(
 
 Tournament.create(
   title: "first one",
+  game: monte_kombat,
   number_of_teams: 4,
   started_at: "2016-09-01 18:12".to_time(:utc),
   teams: [michals, middle, daniel_team, emmanuel_team],
 )
 Tournament.create(
   title: "wrong",
+  game: beer_pong,
   number_of_teams: 2,
   started_at: "2016-09-01 18:12".to_time(:utc),
   teams: [michals, middle],
