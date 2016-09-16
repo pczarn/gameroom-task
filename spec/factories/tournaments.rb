@@ -10,10 +10,6 @@ FactoryGirl.define do
       Rack::Test::UploadedFile.new(image_path)
     end
 
-    transient do
-      members_count 4
-    end
-
     after(:build) do |tournament, evaluator|
       if tournament.teams.empty?
         tournament.teams << build_list(:team, evaluator.number_of_teams)
