@@ -1,5 +1,6 @@
 class Tournament < ApplicationRecord
   belongs_to :game
+  belongs_to :owner, class_name: User
   has_many :team_tournaments
   has_many :teams, through: :team_tournaments
   has_many :rounds
@@ -12,7 +13,7 @@ class Tournament < ApplicationRecord
 
   mount_uploader :image, ImageUploader
 
-  validates :game, :status, presence: true
+  validates :game, :owner, :status, presence: true
   validates :title, presence: true, uniqueness: true
   validates :number_of_teams, presence: true, numericality: { greater_than_or_equal_to: 2 }
 

@@ -68,15 +68,18 @@ ActiveRecord::Schema.define(version: 20160916101106) do
 
   create_table "tournaments", force: :cascade do |t|
     t.string   "title",                                  null: false
+    t.string   "description"
     t.integer  "game_id",                                null: false
+    t.integer  "owner_id",                               null: false
     t.integer  "status",                     default: 0, null: false
     t.integer  "number_of_teams",                        null: false
-    t.datetime "started_at",                             null: false
     t.integer  "number_of_members_per_team"
+    t.datetime "started_at",                             null: false
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
     t.string   "image"
     t.index ["game_id"], name: "index_tournaments_on_game_id", using: :btree
+    t.index ["owner_id"], name: "index_tournaments_on_owner_id", using: :btree
     t.index ["title"], name: "index_tournaments_on_title", unique: true, using: :btree
   end
 
@@ -107,6 +110,7 @@ ActiveRecord::Schema.define(version: 20160916101106) do
   add_foreign_key "team_tournaments", "teams"
   add_foreign_key "team_tournaments", "tournaments"
   add_foreign_key "tournaments", "games"
+  add_foreign_key "tournaments", "users", column: "owner_id"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
 end
