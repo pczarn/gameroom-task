@@ -90,6 +90,41 @@ RSpec.describe Tournament, type: :model do
         end
       end
     end
+
+    describe "#matches played at" do
+      let(:round) { create(:round) }
+      let(:match) { create(:match, played_at: match_played_at) }
+
+      let(:tournament) do
+        build(
+          :tournament,
+          started_at: "2016-01-01".to_time,
+          number_of_teams: 2,
+          status: 1,
+        )
+      end
+
+      before do
+        round.matches = [match]
+        tournament.rounds << round
+      end
+
+      context "when after the tournament starts" do
+        let(:match_played_at) { "2017-01-01".to_time }
+
+        it { is_expected.to be_valid }
+      end
+
+      context "when before the tournament starts" do
+        let(:match_played_at) { "2015-01-01".to_time }
+
+        it "is invalid" do
+          expect { tournament.valid? }
+            .to change { tournament.errors.full_messages }
+            .to include("Rounds can't have matches played before the tournament starts")
+        end
+      end
+    end
   end
 
   describe "#started_at" do

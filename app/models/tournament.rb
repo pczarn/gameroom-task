@@ -6,6 +6,7 @@ class Tournament < ApplicationRecord
   has_many :team_tournaments
   has_many :teams, through: :team_tournaments
   has_many :rounds
+  has_many :matches, through: :rounds
 
   enum status: {
     open: 0,
@@ -19,7 +20,9 @@ class Tournament < ApplicationRecord
   validates :title, presence: true, uniqueness: true
   validates :number_of_teams, presence: true, numericality: { greater_than_or_equal_to: 2 }
 
-  validate :number_of_teams_is_power_of_2, :no_repeated_members_across_teams
+  validate :number_of_teams_is_power_of_2,
+           :no_repeated_members_across_teams,
+           :matches_played_at
 
   private
 
@@ -38,5 +41,15 @@ class Tournament < ApplicationRecord
 
   def power_of_2?(number)
     number && number.nonzero? && (number & (number - 1)).zero?
+  end
+
+  def matches_played_at
+    rounds.each do |round|
+      round.matches.each do |match|
+        if match.played_at && match.played_at < started_at
+          errors.add(:rounds, "can't have matches played before the tournament starts")
+        end
+      end
+    end
   end
 end
