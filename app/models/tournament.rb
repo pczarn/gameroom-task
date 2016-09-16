@@ -5,6 +5,7 @@ class Tournament < ApplicationRecord
 
   mount_uploader :image, ImageUploader
 
+  validates :game, presence: true
   validates :title, presence: true, uniqueness: true
   validates :number_of_teams, numericality: { greater_than_or_equal_to: 2 }
 
