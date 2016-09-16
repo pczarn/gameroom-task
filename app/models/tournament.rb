@@ -18,7 +18,8 @@ class Tournament < ApplicationRecord
   end
 
   def all_members_unique?
-    teams.joins(:members).group(:user_id).count.values.all? { |num| num == 1 }
+    ids = teams.map(&:id)
+    Team.where(id: ids).joins(:members).group(:user_id).count.values.all? { |num| num == 1 }
   end
 
   def number_of_teams_is_power_of_2
