@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :tournament do
     title { "Tournament #{Faker::Space.star_cluster}" }
     game
+    association :owner, factory: :user
     number_of_teams { 2**Faker::Number.between(1, 6) }
     started_at { Faker::Time.between(1.year.ago, 1.year.from_now, :all) }
 
