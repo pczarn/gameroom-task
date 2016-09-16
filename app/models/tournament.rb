@@ -3,11 +3,17 @@ class Tournament < ApplicationRecord
   has_many :team_tournaments
   has_many :teams, through: :team_tournaments
 
+  enum status: {
+    open: 0,
+    started: 1,
+    ended: 2,
+  }
+
   mount_uploader :image, ImageUploader
 
-  validates :game, presence: true
+  validates :game, :status, presence: true
   validates :title, presence: true, uniqueness: true
-  validates :number_of_teams, numericality: { greater_than_or_equal_to: 2 }
+  validates :number_of_teams, presence: true, numericality: { greater_than_or_equal_to: 2 }
 
   validate :number_of_teams_is_power_of_2, :no_repeated_members_across_teams
 
@@ -27,6 +33,6 @@ class Tournament < ApplicationRecord
   end
 
   def power_of_2?(number)
-    number.nonzero? && (number & (number - 1)).zero?
+    number && number.nonzero? && (number & (number - 1)).zero?
   end
 end
