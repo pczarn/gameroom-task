@@ -23,8 +23,8 @@ class User < ApplicationRecord
   end
 
   def encrypt_password
-    unless Rails.env.test?
-      self.password_hashed = Argon2::Password.create(password) if password.present?
+    if password_hashed.blank? && password.present?
+      self.password_hashed = Argon2::Password.create(password)
     end
   end
 end
