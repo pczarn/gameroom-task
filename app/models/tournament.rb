@@ -2,6 +2,7 @@ class Tournament < ApplicationRecord
   belongs_to :game
   has_many :team_tournaments
   has_many :teams, through: :team_tournaments
+  has_many :rounds
 
   enum status: {
     open: 0,
