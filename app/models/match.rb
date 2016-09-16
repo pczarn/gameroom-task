@@ -4,9 +4,6 @@ class Match < ApplicationRecord
   belongs_to :team_two, class_name: Team
   belongs_to :round
 
-  has_many :team_tournaments
-  has_many :tournaments, through: :team_tournaments
-
   scope :involving, -> (user_id) do
     joins(team_one: :user_teams, team_two: :user_teams)
       .where(user_teams: { user_id: user_id })
