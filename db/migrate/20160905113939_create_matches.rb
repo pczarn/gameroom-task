@@ -1,7 +1,7 @@
 class CreateMatches < ActiveRecord::Migration[5.0]
   def change
     create_table :matches do |t|
-      t.datetime :played_at, null: false
+      t.datetime :played_at
       t.references :game, foreign_key: true, null: false
       t.references :team_one, references: :team, null: false
       t.references :team_two, references: :team, null: false
