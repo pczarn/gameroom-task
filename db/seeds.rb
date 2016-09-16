@@ -25,8 +25,6 @@ daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
 emmanuel_team = Team.create(name: "Just Emmanuel", members: [users[6]])
 internal = Team.create(name: "Internal", members: users[0..4])
 
-binding.pry
-
 # ongoing
 
 Match.create(
