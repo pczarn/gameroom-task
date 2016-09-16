@@ -111,10 +111,4 @@ RSpec.describe Tournament, type: :model do
       expect { tournament.ended! }.to change { tournament.ended? }.to(true)
     end
   end
-
-  describe "#image" do
-    it "is present" do
-      expect(tournament.image).to be_present
-    end
-  end
 end
