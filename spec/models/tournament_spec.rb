@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Tournament, type: :model do
+  let(:tournament) { create(:tournament) }
+
   describe "validations" do
     subject { tournament }
 
     describe "#teams" do
-      let(:tournament) { create(:tournament) }
-
       context "with no teams" do
         before { tournament.teams = [] }
 
@@ -75,10 +75,14 @@ RSpec.describe Tournament, type: :model do
   end
 
   describe "#started_at" do
-    let(:tournament) { create(:tournament) }
-
     it "is a time" do
       expect(tournament.started_at).to be_a(Time)
+    end
+  end
+
+  describe "#image" do
+    it "is present" do
+      expect(tournament.image).to be_present
     end
   end
 end
