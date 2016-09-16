@@ -52,16 +52,16 @@ RSpec.describe MatchesController, type: :controller do
     end
 
     context "with invalid data" do
-      let(:match) { build(:match, played_at: nil) }
+      let(:match) { build(:match, team_one_score: -1) }
 
       it "gives an error message" do
         expect { creation }
           .to change { flash[:error] }
-          .to include("Played at can't be blank")
+          .to include("Team one score must be greater than or equal to 0")
       end
 
-      it "renders successfully" do
-        is_expected.to be_success
+      it "renders the index" do
+        is_expected.to render_template "matches/index"
       end
     end
   end
