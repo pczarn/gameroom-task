@@ -1,4 +1,5 @@
 class MatchesController < ApplicationController
+  before_action :authenticate!
   before_action :load_match, only: [:edit, :update, :destroy]
 
   def create
