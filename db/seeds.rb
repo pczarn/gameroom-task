@@ -12,7 +12,7 @@ pass_h = { password: pass, password_hashed: pass }
 users = [
   User.create(name: "Michal the First", email: "m1@monterail.com", **pass_h),
   User.create(name: "Michal the Second", email: "m2@monterail.com", **pass_h),
-  User.create(name: "Piotr", email: "p@monterail.com", **pass_h),
+  User.create(name: "Piotr", email: "p@monterail.com", **pass_h, role: 1),
   User.create(name: "Igor", email: "i@monterail.com", **pass_h),
   User.create(name: "Rafal", email: "r@monterail.com", **pass_h),
   User.create(name: "Daniel", email: "d@monterail.com", **pass_h),
