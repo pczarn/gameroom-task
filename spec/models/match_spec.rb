@@ -64,6 +64,18 @@ RSpec.describe Match, type: :model do
     it "belongs to a game" do
       expect(match.game).to be_a(Game)
     end
+
+    context "when outside of a tournament" do
+      it "does not have a tournament" do
+        expect(match.tournament).to be_nil
+      end
+    end
+
+    context "when in a tournament" do
+      it "belongs to a tournament" do
+        expect(match.tournament).to be_a(Tournament)
+      end
+    end
   end
 
   describe "#teams" do
