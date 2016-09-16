@@ -53,10 +53,10 @@ gem "rubocop"
 gem "rubocop-rspec"
 
 gem "carrierwave", ">= 1.0.0.beta", "< 2.0"
-gem "mini_magick"
+gem "mini_magick", "~> 4.5"
 
 # Pagination
-gem "kaminari"
+gem "kaminari", "~> 0.17"
 
 # Authentication
 gem "argon2", "~> 1.1"
