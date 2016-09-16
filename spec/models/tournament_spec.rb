@@ -14,10 +14,28 @@ RSpec.describe Tournament, type: :model do
       end
 
       context "with two teams" do
-        let(:teams) { create_list(:team, 2) }
-        let(:tournament) { build(:tournament, teams: teams) }
+        context "with unique members in teams" do
+          let(:teams) { create_list(:team, 2) }
+          let(:tournament) { build(:tournament, teams: teams) }
 
-        it { is_expected.to be_valid }
+          it { is_expected.to be_valid }
+        end
+
+        context "with common members in teams" do
+          let(:teams) { create_list(:team, 2) }
+          let(:tournament) { build(:tournament, teams: teams) }
+          let(:members) { create_list(:user, 2) }
+          before do
+            tournament.teams << create(:team, members: [members.first])
+            tournament.teams << create(:team, members: members)
+          end
+
+          it "is invalid" do
+            expect { tournament.valid? }
+              .to change { tournament.errors.full_messages }
+              .to include("Teams can't have members in common")
+          end
+        end
       end
     end
 
