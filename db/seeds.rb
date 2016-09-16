@@ -76,8 +76,10 @@ Match.create(
   played_at: "2016-09-13 14:12".to_time(:utc),
 )
 
+# open
+
 Tournament.create(
-  title: "first one",
+  title: "first open one",
   game: monte_kombat,
   number_of_teams: 4,
   started_at: "2016-09-01 18:12".to_time(:utc),
@@ -88,5 +90,27 @@ Tournament.create(
   game: beer_pong,
   number_of_teams: 2,
   started_at: "2016-09-01 18:12".to_time(:utc),
+  teams: [michals, middle],
+)
+
+# started
+
+Tournament.create(
+  title: "this started",
+  game: beer_pong,
+  status: 1,
+  number_of_teams: 2,
+  started_at: "2016-09-02 18:12".to_time(:utc),
+  teams: [michals, middle],
+)
+
+# ended
+
+Tournament.create(
+  title: "this ended",
+  game: beer_pong,
+  status: 2,
+  number_of_teams: 2,
+  started_at: "2016-09-03 18:12".to_time(:utc),
   teams: [michals, middle],
 )

@@ -98,6 +98,20 @@ RSpec.describe Tournament, type: :model do
     end
   end
 
+  describe "#status" do
+    it "is open by default" do
+      expect(tournament.open?).to eq(true)
+    end
+
+    it "can be started" do
+      expect { tournament.started! }.to change { tournament.started? }.to(true)
+    end
+
+    it "can be ended" do
+      expect { tournament.ended! }.to change { tournament.ended? }.to(true)
+    end
+  end
+
   describe "#image" do
     it "is present" do
       expect(tournament.image).to be_present
