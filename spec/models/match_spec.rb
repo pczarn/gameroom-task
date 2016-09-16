@@ -18,7 +18,7 @@ RSpec.describe Match, type: :model do
     context "#played_at" do
       context "when missing" do
         let(:match) { build(:match, played_at: nil) }
-        it { is_expected.to be_invalid }
+        it { is_expected.to be_valid }
       end
     end
 
@@ -66,14 +66,16 @@ RSpec.describe Match, type: :model do
     end
 
     context "when outside of a tournament" do
-      it "does not have a tournament" do
-        expect(match.tournament).to be_nil
+      it "does not have a round" do
+        expect(match.round).to be_nil
       end
     end
 
     context "when in a tournament" do
-      it "belongs to a tournament" do
-        expect(match.tournament).to be_a(Tournament)
+      let(:match) { build(:match_with_round) }
+
+      it "belongs to a round" do
+        expect(match.round).to be_a(Round)
       end
     end
   end

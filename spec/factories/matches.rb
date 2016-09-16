@@ -11,5 +11,9 @@ FactoryGirl.define do
       team_one_score { nil }
       team_two_score { nil }
     end
+
+    factory :match_with_round do
+      round
+    end
   end
 end
