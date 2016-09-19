@@ -10,5 +10,5 @@ Rails.application.routes.draw do
 
   resources :matches, except: :show
 
-  resources :tournaments, only: [:index, :create]
+  resources :tournaments, only: [:index, :create, :edit, :update]
 end
