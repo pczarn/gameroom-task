@@ -10,7 +10,11 @@ class User < ApplicationRecord
   has_many :teams, through: :user_teams
   has_many :team_tournaments
   has_many :tournaments, through: :team_tournaments
-  has_many :owned_tournaments, source: :tournament, class_name: Tournament, foreign_key: :owner_id
+
+  has_many :owned_tournaments, source: :tournament,
+                               class_name: Tournament,
+                               foreign_key: :owner_id,
+                               inverse_of: :owner
 
   before_save :encrypt_password
 
