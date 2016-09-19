@@ -75,9 +75,9 @@ ActiveRecord::Schema.define(version: 20160919095227) do
     t.integer  "number_of_teams",                        null: false
     t.integer  "number_of_members_per_team"
     t.datetime "started_at",                             null: false
+    t.string   "image"
     t.datetime "created_at",                             null: false
     t.datetime "updated_at",                             null: false
-    t.string   "image"
     t.index ["game_id"], name: "index_tournaments_on_game_id", using: :btree
     t.index ["owner_id"], name: "index_tournaments_on_owner_id", using: :btree
     t.index ["title"], name: "index_tournaments_on_title", unique: true, using: :btree

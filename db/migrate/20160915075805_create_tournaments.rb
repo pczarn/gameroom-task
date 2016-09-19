@@ -9,6 +9,7 @@ class CreateTournaments < ActiveRecord::Migration[5.0]
       t.integer :number_of_teams, null: false
       t.integer :number_of_members_per_team
       t.datetime :started_at, null: false
+      t.string :image
 
       t.timestamps
     end
