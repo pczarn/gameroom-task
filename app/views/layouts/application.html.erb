@@ -20,8 +20,9 @@
       <% end %>
     </div>
 
-    <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, :id => "flash_#{name}" %>
+    <% if flash.alert %>
+      <h1>Alert</h1>
+      <%= content_tag :div, flash.alert, id: "flash_alert" %>
     <% end %>
 
     <%= yield %>

@@ -13,3 +13,9 @@
  *= require_tree .
  *= require_self
  */
+
+.has-error input {
+  padding: 2px;
+  border: 2px solid red;
+  display: table;
+}

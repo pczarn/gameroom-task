@@ -10,7 +10,7 @@ class TournamentsController < ApplicationController
     if @tournament.save
       redirect_to tournaments_path
     else
-      flash.alert = @tournament.errors.full_messages
+      flash.now.alert = @tournament.errors.full_messages.to_sentence
       render "index"
     end
   end
