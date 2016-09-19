@@ -9,7 +9,8 @@ FactoryGirl.define do
 
     after(:build) do |round, evaluator|
       if round.matches.empty?
-        round.matches << build_list(:match, evaluator.matches_count)
+        played_after = round.tournament.started_at + 1
+        round.matches << build_list(:match, evaluator.matches_count, played_after: played_after)
       end
     end
   end

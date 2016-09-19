@@ -22,17 +22,11 @@ RSpec.describe Match, type: :model do
       end
 
       context "when in a tournament" do
-        let(:round) { build(:round) }
-        let(:match) { build(:match, round: round, played_at: match_played_at) }
-
         let(:tournament) do
-          build(
-            :tournament,
-            started_at: Time.local(2016).utc,
-            number_of_teams: 2,
-            status: 1,
-          )
+          build(:tournament, started_at: Time.local(2016).utc, number_of_teams: 2, status: 1)
         end
+        let(:round) { build(:round, tournament: tournament) }
+        let(:match) { build(:match, round: round, played_at: match_played_at) }
 
         context "when played after the tournament starts" do
           let(:match_played_at) { Time.local(2017).utc }

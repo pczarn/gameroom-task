@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Round, type: :model do
   describe "validations" do
     subject { built_round }
-    let(:tournament) { create(:tournament) }
+    let(:tournament) { build(:tournament) }
     let(:round_attrs) { attributes_for(:round).merge(tournament: tournament) }
     let(:built_round) { build(:round, round_attrs) }
 
