@@ -24,5 +24,14 @@ class TournamentStartWorker
     end
     tournament.started!
     tournament.save!
+    notify_members_about_start(tournament)
+  end
+
+  def notify_members_about_start(tournament)
+    tournament.teams.each do |team|
+      team.members.each do |member|
+        UserMailer.notify_about_tournament_start(member, tournament)
+      end
+    end
   end
 end
