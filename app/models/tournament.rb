@@ -8,6 +8,10 @@ class Tournament < ApplicationRecord
   has_many :rounds
   has_many :matches, through: :rounds
 
+  after_save do
+    TournamentStartWorker.perform_at(started_at, id, started_at) if open?
+  end
+
   enum status: {
     open: 0,
     started: 1,
@@ -49,7 +53,26 @@ class Tournament < ApplicationRecord
     owner.id == user.id
   end
 
+  def can_be_started?
+    team_sizes_within_tournament_setting && team_sizes_within_per_team_setting
+  end
+
   private
+
+  def team_sizes_within_tournament_setting
+    if team_size = number_of_members_per_team
+      teams.all? { |team| team.members.length == team_size }
+    else
+      true
+    end
+  end
+
+  def team_sizes_within_per_team_setting
+    team_tournaments.all? do |team_tournament|
+      size_limit = team_tournament.team_size_limit
+      size_limit.nil? || team_tournament.team.members.size == size_limit
+    end
+  end
 
   def no_repeated_members_across_teams
     errors.add(:teams, "can't have members in common") unless all_members_unique?
