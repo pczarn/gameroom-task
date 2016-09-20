@@ -8,6 +8,13 @@ class User < ApplicationRecord
 
   has_many :user_teams
   has_many :teams, through: :user_teams
+  has_many :team_tournaments
+  has_many :tournaments, through: :team_tournaments
+
+  has_many :owned_tournaments, source: :tournament,
+                               class_name: Tournament,
+                               foreign_key: :owner_id,
+                               inverse_of: :owner
 
   before_save :encrypt_password
 
@@ -21,6 +28,8 @@ class User < ApplicationRecord
   end
 
   def encrypt_password
-    self.password_hashed = Argon2::Password.create(password) if password.present?
+    if password_hashed.blank? && password.present?
+      self.password_hashed = Argon2::Password.create(password)
+    end
   end
 end

@@ -18,7 +18,31 @@ RSpec.describe Match, type: :model do
     context "#played_at" do
       context "when missing" do
         let(:match) { build(:match, played_at: nil) }
-        it { is_expected.to be_invalid }
+        it { is_expected.to be_valid }
+      end
+
+      context "when in a tournament" do
+        let(:tournament) do
+          build(:tournament, started_at: Time.local(2016).utc, number_of_teams: 2, status: 1)
+        end
+        let(:round) { build(:round, tournament: tournament) }
+        let(:match) { build(:match, round: round, played_at: match_played_at) }
+
+        context "when played after the tournament starts" do
+          let(:match_played_at) { Time.local(2017).utc }
+
+          it { is_expected.to be_valid }
+        end
+
+        context "when played before the tournament starts" do
+          let(:match_played_at) { Time.local(2015).utc }
+
+          it "is invalid" do
+            expect { match.valid? }
+              .to change { match.errors.messages[:played_at] }
+              .to include("Can't be played before the tournament starts")
+          end
+        end
       end
     end
 

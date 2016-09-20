@@ -1,6 +1,8 @@
 class Team < ApplicationRecord
   has_many :user_teams
   has_many :members, through: :user_teams, source: :user, class_name: User
+  has_many :team_tournaments
+  has_many :tournaments, through: :team_tournaments
 
   scope :related_to, -> (user_ids) do
     joins(:user_teams)
@@ -33,6 +35,10 @@ class Team < ApplicationRecord
   end
 
   def this_and_related_teams
-    [self] + Team.related_to(members.map(&:id)).includes(:members)
+    if persisted?
+      Team.related_to(members.map(&:id)).includes(:members)
+    else
+      [self] + Team.related_to(members.map(&:id)).includes(:members)
+    end
   end
 end
