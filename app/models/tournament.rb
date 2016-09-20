@@ -57,6 +57,13 @@ class Tournament < ApplicationRecord
     team_sizes_within_tournament_setting && team_sizes_within_per_team_setting
   end
 
+  def build_first_round
+    round = rounds.build(number: 0)
+    teams.each_slice(2) do |first_team, second_team|
+      round.matches.build(game: game, team_one: first_team, team_two: second_team)
+    end
+  end
+
   private
 
   def team_sizes_within_tournament_setting
