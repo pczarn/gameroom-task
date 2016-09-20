@@ -108,6 +108,22 @@ RSpec.describe Tournament, type: :model do
     it "is a time" do
       expect(tournament.started_at).to be_a(Time)
     end
+
+    context "when created" do
+      it "enqueues a job" do
+        expect(TournamentStartWorker).to receive(:perform_at)
+        create(:tournament)
+      end
+    end
+
+    context "when updated" do
+      before { tournament.save! }
+
+      it "enqueues a job" do
+        expect(TournamentStartWorker).to receive(:perform_at)
+        tournament.save!
+      end
+    end
   end
 
   describe "#status" do
@@ -121,6 +137,40 @@ RSpec.describe Tournament, type: :model do
 
     it "can be ended" do
       expect { tournament.ended! }.to change { tournament.ended? }.to(true)
+    end
+  end
+
+  describe "#can_be_started?" do
+    subject { tournament.can_be_started? }
+
+    context "when team sizes have no limit" do
+      let(:tournament) { create(:tournament) }
+
+      it { is_expected.to be(true) }
+
+      context "when a team size has an individual limit" do
+        let(:team_size) { 7 }
+        let(:team_tournament) { tournament.team_tournaments.first }
+        before { team_tournament.team_size_limit = team_size }
+
+        context "when a team size is within its individual limit" do
+          before { team_tournament.team.members = build_list(:user, team_size) }
+          it { is_expected.to be(true) }
+        end
+
+        context "when a team size is outside its individual limit" do
+          before { team_tournament.team.members = build_list(:user, team_size + 1) }
+          it { is_expected.to be(false) }
+        end
+      end
+    end
+
+    context "when team sizes are limited" do
+      let(:tournament) { create(:tournament, number_of_members_per_team: 666) }
+
+      context "when team sizes are outside the limit" do
+        it { is_expected.to be(false) }
+      end
     end
   end
 end
