@@ -9,6 +9,10 @@ class ApplicationController < ActionController::Base
     redirect_to log_in_path unless session[:user_id]
   end
 
+  def authenticate_admin!
+    redirect_to log_in_path unless current_user && current_user.admin?
+  end
+
   def redirect_if_user_logged_in!
     redirect_to root_path, notice: "You are already logged in." if session[:user_id]
   end
