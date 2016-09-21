@@ -7,6 +7,6 @@ vs
 with score
 <%= [match.winning_team.score || "—", match.defeated_team.score || "—"].join(":") %>
 at
-<%= time_tag match.played_at %>
+<%#= time_tag match.played_at %>
 
 <%= link_to "(edit)", edit_match_path(match) %>
