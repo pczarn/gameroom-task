@@ -12,5 +12,5 @@ Rails.application.routes.draw do
 
   resources :tournaments, only: [:index, :create]
 
-  resources :games
+  resources :games, except: :show
 end
