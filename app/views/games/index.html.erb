@@ -11,10 +11,22 @@
 
 <h1>Games</h1>
 <ul>
-  <% @games.all.each do |game| %>
+  <% @active_games.each do |game| %>
     <li>
       <%= render partial: "display_short", locals: { game: game } %>
+      <%= link_to "(archivize)", game_path_for_archivize(game), method: :put %>
     </li>
   <% end %>
 </ul>
-<%= paginate @games %>
+<%= paginate @active_games, param_name: :active_games_page %>
+
+<h1>Archivized games</h1>
+<ul>
+  <% @archivized_games.each do |game| %>
+    <li>
+      <%= render partial: "display_short", locals: { game: game } %>
+      <%= link_to "(activate)", game_path_for_activate(game), method: :put %>
+    </li>
+  <% end %>
+</ul>
+<%= paginate @archivized_games, param_name: :archivized_games_page %>

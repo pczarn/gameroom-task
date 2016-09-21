@@ -13,7 +13,8 @@ class GamesController < ApplicationController
   end
 
   def index
-    @games = Game.page(params[:page])
+    @active_games = Game.active.page(params[:active_games_page])
+    @archivized_games = Game.archivized.page(params[:archivized_games_page])
     @game = Game.new
   end
 
@@ -22,7 +23,7 @@ class GamesController < ApplicationController
 
   def update
     if @game.update(game_params)
-      redirect_to edit_game_path(@game)
+      redirect_to :back
     else
       flash.now.alert = @game.errors.full_messages.to_sentence
       render "edit"
@@ -44,6 +45,7 @@ class GamesController < ApplicationController
   def game_params
     params.require(:game).permit(
       :name,
+      :state_archivized,
       image: [],
     )
   end
