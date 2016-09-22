@@ -46,7 +46,7 @@ class GamesController < ApplicationController
     params.require(:game).permit(
       :name,
       :state_archivized,
-      image: [],
+      :image,
     )
   end
 end
