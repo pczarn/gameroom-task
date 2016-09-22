@@ -1,6 +1,32 @@
-<h1>
-	Tournament
-</h1>
+<h1>Tournament</h1>
+<h2>Teams</h2>
+
+<% @tournament.team_tournaments.each do |team_tournament| %>
+  <% team = team_tournament.team %>
+  <h3>
+    <%= team_tournament.team.name %>
+  </h3>
+
+  <ul>
+    <% team.members.each do |member| %>
+      <li>
+        <%= member.name %>
+        <%= link_to "(remove)", remove_team_member_path(team, member), method: :put %>
+      </li>
+    <% end %>
+    <% if !team.full? %>
+      <%= select_tag "member", @tournament.potential_members.pluck(:name, :id) %>
+    <% end %>
+  </ul>
+
+  <% if !@tournament.full? %>
+    <%= select_tag "member", @tournament.potential_members.pluck(:name, :id) %>
+    <%= select_tag "team", Team.pluck(:name, :id) %>
+  <% end %>
+<% end %>
+
+<h2>Edit</h2>
+
 <%=
   form_for @tournament, url: { action: "update" } do |f|
     render partial: "form", locals: { f: f }
