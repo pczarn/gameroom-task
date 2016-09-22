@@ -1,6 +1,8 @@
 require "rails_helper"
 
 RSpec.describe GamesController, type: :controller do
+  before { sign_in_admin }
+
   describe "#index" do
     it "responds successfully" do
       get :index
@@ -12,45 +14,68 @@ RSpec.describe GamesController, type: :controller do
       expect(response.content_type).to eq "text/html"
     end
 
-    describe "list of games" do
-      before { create_list(:game, 3) }
+    it "assigns a new game" do
+      get :index
+      expect(assigns(:game)).to be_a(Game)
+    end
 
-      it "shows both matches" do
-        get :index
-        expect(assigns(:games).length).to be(3)
+    describe "list of games" do
+      context "with active games" do
+        before { create_list(:game, 2) }
+
+        it "has all active games" do
+          get :index
+          expect(assigns(:active_games).length).to be(2)
+        end
+
+        it "does not have any archivized games" do
+          get :index
+          expect(assigns(:archivized_games).length).to be(0)
+        end
+      end
+
+      context "with archivized games" do
+        before { create_list(:game, 2, state_archivized: "archivized") }
+
+        it "does not have any active games" do
+          get :index
+          expect(assigns(:active_games).length).to be(0)
+        end
+
+        it "has all archivized games" do
+          get :index
+          expect(assigns(:archivized_games).length).to be(2)
+        end
       end
     end
   end
 
   describe "#create" do
+    subject(:creation) { post :create, params: { game: game.attributes } }
+
     context "with valid data" do
       let(:game) { build(:game) }
 
       it "succeeds" do
-        post :create, params: { game: game.attributes }
-        expect(response).to redirect_to(assigns(:game))
+        expect(creation).to redirect_to(edit_game_path(assigns(:game)))
       end
 
       it "stores a new game" do
-        expect do
-          post :create, params: { game: game.attributes }
-        end.to change(Game, :count).by(1)
+        expect { creation }.to change(Game, :count).by(1)
       end
     end
 
-    context "with invalid data" do
+    context "with incorrect data" do
       let(:game) { build(:game, name: "") }
 
       it "sends an error message" do
-        expect do
-          post :create, params: { game: game.attributes }
-        end.to change { flash[:error] }
+        expect { creation }
+          .to change { flash.alert }
           .to include("Name can't be blank")
       end
 
-      it "redirects to the index" do
-        post :create, params: { game: game.attributes }
-        expect(response).to redirect_to(:games)
+      it "renders the index" do
+        expect(creation).to render_template "games/index"
       end
     end
 
@@ -58,47 +83,75 @@ RSpec.describe GamesController, type: :controller do
       let(:game) { build(:game, image: nil) }
 
       it "succeeds" do
-        post :create, params: { game: game.attributes }
-        expect(response).to redirect_to(assigns(:game))
+        expect(creation).to redirect_to edit_game_path assigns(:game)
       end
     end
   end
 
-  describe "#show" do
+  describe "#edit" do
+    subject(:edit) { get :edit, params: { id: game.id } }
     let(:game) { create(:game) }
 
-    it "responds successfully" do
-      get :show, params: { id: game.id }
-      expect(response).to be_success
+    it "assigns a game" do
+      edit
+      expect(assigns(:game)).to be_a(Game)
+    end
+
+    it "renders editing" do
+      expect(edit).to render_template "games/edit"
     end
   end
 
   describe "#update" do
+    subject(:update) { patch :update, params: params }
+    let(:params) { { id: game.id, game: { name: "bar" } } }
     let(:game) { create(:game, name: "foo") }
 
-    it "updates attributes" do
-      patch :update, params: { id: game.id, game: { name: "bar" } }
-      expect(game.reload.name).to eq("bar")
+    context "with valid params" do
+      it "updates attributes" do
+        update
+        expect(game.reload.name).to eq(params[:game][:name])
+      end
+
+      it "redirects to editing" do
+        expect(update).to redirect_to edit_game_path game
+      end
+    end
+
+    context "with incorrect params" do
+      let(:params) { { id: game.id, game: { name: "" } } }
+
+      it "renders editing" do
+        expect(update).to render_template "games/edit"
+      end
     end
   end
 
   describe "#destroy" do
+    subject(:deletion) { delete :destroy, params: { id: game.id } }
     let!(:game) { create(:game) }
 
-    it "removes a game" do
-      expect do
-        delete :destroy, params: { id: game.id }
-      end.to change(Game, :count).by(-1)
+    context "with valid id" do
+      it "removes a game" do
+        expect { deletion }.to change(Game, :count).by(-1)
+      end
+
+      it "redirects to index" do
+        expect(deletion).to redirect_to(action: :index)
+      end
+
+      it "sends a message that everything is ok" do
+        expect { deletion }
+          .to change { flash[:success] }
+          .to eq("Game deleted")
+      end
     end
 
-    it "redirects to index" do
-      delete :destroy, params: { id: game.id }
-      expect(response).to redirect_to(action: :index)
-    end
-
-    it "sends a message that everything is ok" do
-      delete :destroy, params: { id: game.id }
-      expect(flash[:success]).to eq("Game deleted")
+    context "with incorrect id" do
+      subject(:deletion) { delete :destroy, params: { id: 123 } }
+      it "fails" do
+        expect { deletion }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
   end
 end

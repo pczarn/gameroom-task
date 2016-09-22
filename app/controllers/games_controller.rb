@@ -7,7 +7,7 @@ class GamesController < ApplicationController
     if @game.save
       redirect_to edit_game_path(@game)
     else
-      flash[:error] = game.errors.full_messages
+      flash.now.alert = @game.errors.full_messages.to_sentence
       render "index"
     end
   end
@@ -23,7 +23,7 @@ class GamesController < ApplicationController
 
   def update
     if @game.update(game_params)
-      redirect_to :back
+      redirect_to edit_game_path(@game)
     else
       flash.now.alert = @game.errors.full_messages.to_sentence
       render "edit"
