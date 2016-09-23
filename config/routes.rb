@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-<<<<<<< HEAD
   root "matches#index"
 
   resources :users, only: [:create]
