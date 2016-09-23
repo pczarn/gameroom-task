@@ -1,18 +1,14 @@
-<h1>Match</h1>
+<h1>Team</h1>
 
 <%= render partial: "display_long", locals: { team: @team } %>
 
-<%= link_to "delete...", @team, method: :delete %>
+<%= link_to "delete team!", @team, method: :delete %>
 
-<h2>Update</h2>
-
-<% flash.each do |name, msg| %>
-  <%= msg %>
-<% end %>
+<h2>Edit</h2>
 
 <%=
   form_for @team, url: { action: "update" } do |f|
-    render partial: "edit", locals: { f: f }
+    render partial: "form", locals: { f: f }
   end
 %>
 
@@ -20,8 +16,8 @@
 
 <%=
   form_tag team_add_member_path(@team), action: "add_member", method: :post do
-    render partial: "add_member", locals: { team: @team, user_ids_names: @user_ids_names }
+    render partial: "add_member", locals: { team: @team }
   end
 %>
 
-<%= link_to 'Back to index', teams_path %>
+<%= link_to "Back to index", teams_path %>
