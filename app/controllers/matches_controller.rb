@@ -8,12 +8,12 @@ class MatchesController < ApplicationController
       redirect_to edit_match_path(@match)
     else
       flash[:error] = @match.errors.full_messages
-      render "index"
+      redirect_to matches_path
     end
   end
 
   def index
-    @new_match = Match.new(played_at: Time.zone.now)
+    @match = Match.new(played_at: Time.zone.now)
     @recent = Match.order(played_at: :desc)
     @recent = @recent.involving(params[:involving_user]) if params[:involving_user]
     @recent = @recent.page(params[:page])
@@ -26,7 +26,7 @@ class MatchesController < ApplicationController
     if @match.update(match_params)
       redirect_to edit_match_path(@match)
     else
-      flash[:error] = @match.errors.full_messages
+      flash.now.alert = @match.errors.full_messages
       render "edit"
     end
   end
