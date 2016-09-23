@@ -27,12 +27,10 @@ class TournamentsController < ApplicationController
   def update
     if @tournament.update(tournament_params)
       redirect_to edit_tournament_path(@tournament)
+    elsif @tournament.open?
+      render "edit"
     else
-      if @tournament.open?
-        render "edit"
-      else
-        render "edit_restricted"
-      end
+      render "edit_restricted"
     end
   end
 
