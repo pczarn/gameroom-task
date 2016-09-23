@@ -1,8 +1,5 @@
 <h1>Teams</h1>
 <h2>Add a team</h2>
-  <% flash.each do |name, msg| %>
-    <%= msg %>
-  <% end %>
   <%=
     form_for @team, url: { action: "create" } do |f|
       render partial: "form", locals: { f: f }
