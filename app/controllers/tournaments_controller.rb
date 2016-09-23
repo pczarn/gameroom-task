@@ -78,4 +78,11 @@ class TournamentsController < ApplicationController
             :number_of_members_per_team,
           )
   end
+
+  def expect_tournament_owner!
+    @tournament = Tournament.find(params[:tournament_id])
+    unless current_user && @tournament.owner.id == current_user.id
+      redirect_back fallback_location: teams_path, alert: "You are not the tournament owner."
+    end
+  end
 end
