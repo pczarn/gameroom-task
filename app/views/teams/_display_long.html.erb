@@ -13,8 +13,11 @@
   <% team.members.each do |member| %>
     <li>
       <%= member.name %>
-      <%= button_to "Remove member", team_remove_member_path(team, member_id: member.id), method: :delete %>
-      <%# or method: :post ? %>
+      <%=
+        button_to "Remove member",
+                  team_remove_member_path(team, member_id: member.id),
+                  method: :delete
+      %>
     </li>
   <% end %>
 </ul>

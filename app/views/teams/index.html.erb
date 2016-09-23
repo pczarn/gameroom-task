@@ -4,8 +4,8 @@
     <%= msg %>
   <% end %>
   <%=
-    form_for @new_team, url: { action: "create" } do |f|
-      render partial: "edit", locals: { f: f, user_ids_names: @user_ids_names }
+    form_for @team, url: { action: "create" } do |f|
+      render partial: "form", locals: { f: f }
     end
   %>
 <h2>List of teams</h2>
