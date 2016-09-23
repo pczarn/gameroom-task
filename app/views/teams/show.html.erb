@@ -2,7 +2,7 @@
 
 <%= render partial: "display_long", locals: { team: @team } %>
 
-<%= link_to "delete team!", @team, method: :delete %>
+<%= button_to "Delete team", team_path(@team), method: :delete %>
 
 <h2>Edit</h2>
 
