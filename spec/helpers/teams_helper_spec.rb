@@ -1,15 +1,24 @@
-require 'rails_helper'
+require "rails_helper"
 
-# Specs in this file have access to a helper object that includes
-# the TeamsHelper. For example:
-#
-# describe TeamsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe TeamsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "joining_user_ids_and_names" do
+    let(:team) { build(:team) }
+
+    context "with the user not in the team" do
+      before { create(:user) }
+
+      it { expect(joining_user_ids_and_names(team).size).to eq(1) }
+    end
+
+    context "with the user in the team" do
+      let(:user) { create(:user) }
+
+      before do
+        team.members << user
+        team.save!
+      end
+
+      it { expect(joining_user_ids_and_names(team).size).to eq(0) }
+    end
+  end
 end
