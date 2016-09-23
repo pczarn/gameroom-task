@@ -10,12 +10,13 @@
 </div>
 
 <ul>
-  <% team.members.each do |member| %>
+  <% team.user_teams.each do |user_team| %>
     <li>
-      <%= member.name %>
+      <%= user_team.user.name %>
+      <%= "(owner)" if user_team.owner? %>
       <%=
         button_to "Remove member",
-                  team_remove_member_path(team, member_id: member.id),
+                  team_remove_member_path(team, member_id: user_team.user.id),
                   method: :delete
       %>
     </li>
