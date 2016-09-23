@@ -1,27 +1,49 @@
 <h1>Tournament</h1>
+
+Owner: <%= @tournament.owner.name %>
+
 <h2>Teams</h2>
 
 <% @tournament.team_tournaments.each do |team_tournament| %>
   <% team = team_tournament.team %>
   <h3>
-    <%= team_tournament.team.name %>
+    <%= team.name %>
   </h3>
+
+  <%= button_to "Remove team", tournament_remove_team_path(@tournament, team_id: team.id), method: :delete %>
 
   <ul>
     <% team.members.each do |member| %>
       <li>
         <%= member.name %>
-        <%= link_to "(remove)", remove_team_member_path(team, member), method: :put %>
+        <%= button_to "Remove member", team_remove_member_path(team, member_id: member.id), method: :delete %>
       </li>
     <% end %>
-    <% if !team.full? %>
-      <%= select_tag "member", @tournament.potential_members.pluck(:name, :id) %>
+    <% if !team_tournament.full? %>
+      <%= form_tag team_add_member_path(team) do %>
+        <fieldset>
+          <%= select_tag "member_id", @tournament.potential_members.pluck(:name, :id) %>
+          <%= submit_tag "Add team member" %>
+        </fieldset>
+      <% end %>
     <% end %>
   </ul>
+<% end %>
 
-  <% if !@tournament.full? %>
-    <%= select_tag "member", @tournament.potential_members.pluck(:name, :id) %>
-    <%= select_tag "team", Team.pluck(:name, :id) %>
+<% if !@tournament.full? %>
+  <%= form_tag tournament_add_team_path(@tournament) do %>
+    <fieldset>
+      <legend>Owner of a new team</legend>
+      <%= select_tag "member_id", options_for_select(@tournament.potential_members.pluck(:name, :id)) %>
+      <%= submit_tag "Add team with member" %>
+    </fieldset>
+  <% end %>
+  <%= form_tag tournament_add_team_path(@tournament) do %>
+    <fieldset>
+      <legend>Add an existing team</legend>
+      <%= select_tag "team_id", options_for_select(Team.pluck(:name, :id)) %>
+      <%= submit_tag "Add team" %>
+    </fieldset>
   <% end %>
 <% end %>
 

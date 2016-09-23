@@ -15,7 +15,10 @@ Rails.application.routes.draw do
 
   resources :matches, except: :show
 
-  resources :tournaments, only: [:index, :create, :edit, :update]
+  resources :tournaments, only: [:index, :create, :edit, :update] do
+    post :add_team
+    delete :remove_team
+  end
 
   resources :games, except: :show
 end

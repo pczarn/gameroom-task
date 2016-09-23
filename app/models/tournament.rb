@@ -23,6 +23,15 @@ class Tournament < ApplicationRecord
   validate :number_of_teams_is_power_of_2,
            :no_repeated_members_across_teams
 
+  def full?
+    teams.count >= number_of_teams
+  end
+
+  def potential_members
+    # TODO: perhaps optimize the query
+    User.all - User.includes(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
+  end
+
   private
 
   def no_repeated_members_across_teams
