@@ -1,54 +1,69 @@
 class TeamsController < ApplicationController
+  before_action :authenticate!
+  before_action :load_team, only: [:show, :update, :destroy]
+
   def create
-    team = Team.create(team_params)
+    team = Team.new(team_params)
     if team.save
       redirect_to team
     else
-      flash[:error] = team.errors.full_messages
-      redirect_to action: :index
+      flash.now.alert = team.errors.full_messages.to_sentence
+      render "index"
     end
   end
 
   def index
     @teams = Team.page(params[:page])
-    @new_team = Team.new
+    @team = Team.new
   end
 
   def show
-    @team = Team.find(params[:id])
-    @user_ids_names = User.all.pluck(:id, :name)
   end
 
   def update
-    team = Team.find(params[:id])
-    flash[:error] = team.errors.full_messages unless team.update(team_params)
-    redirect_to team
+    if @team.update(team_params)
+      redirect_to @team
+    else
+      flash.now.alert = @team.errors.full_messages
+      render "show"
+      # redirect_to @team
+    end
   end
 
   def destroy
-    Team.find(params[:id]).destroy
-    flash[:success] = "Team deleted"
+    @team.destroy
+    flash.notice = "Team deleted"
     redirect_to action: :index
   end
 
   def add_member
-    # user = User.find(params[:member_id])
-    team = Team.find(params[:id])
-    user_team = UserTeam.create(team: team, user_id: params[:member_id])
-    if user_team.save
-      redirect_to team
+    @team = Team.find(params[:team_id])
+    user_team = @team.members << User.find(params[:member_id])
+    if @team.save
+      redirect_to @team
     else
-      flash[:error] = user_team.errors.full_messages
-      redirect_to :back
+      # still saves
+      flash.alert = @team.errors.full_messages.to_sentence
+      redirect_to @team
     end
   end
 
   def remove_member
-    UserTeam.find_by(team_id: params[:team_id], user_id: params[:member_id]).destroy
-    redirect_to :back
+    @team = Team.find(params[:team_id])
+    if @team.members.size >= 2
+      UserTeam.find_by(team: @team, user_id: params[:member_id]).destroy!
+    else
+      flash.alert = "Cannot remove the only user from a team"
+      # cannot render here? why?
+    end
+    redirect_to @team
   end
 
   private
+
+  def load_team
+    @team = Team.find(params[:id])
+  end
 
   def team_params
     params.require(:team).permit(
