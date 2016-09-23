@@ -25,6 +25,11 @@ daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
 emmanuel_team = Team.create(name: "Just Emmanuel", members: [users[6]])
 internal = Team.create(name: "Internal", members: users[0..4])
 
+[michals, middle, daniel_team, emmanuel_team, internal].each do |team|
+  team.user_teams.first.owner!
+  team.save!
+end
+
 # ongoing
 
 Match.create(
