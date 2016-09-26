@@ -1,6 +1,6 @@
 <fieldset>
   <legend>Add a member</legend>
-  <% joining_user_ids_and_names(team).map do |(id, name)| %>
+  <% potential_member_ids_and_names(team).map do |(id, name)| %>
     <%= radio_button_tag :member_id, id %>
     <%= label_tag :member_id, name, for: "member_id_#{id}" %>
   <% end %>
