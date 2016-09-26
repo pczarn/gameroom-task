@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate!
-  before_action :load_team, only: [:show, :update, :destroy]
+  before_action :load_team, only: [:edit, :update, :destroy]
   before_action :load_team_2, only: [:add_member, :remove_member]
   before_action :expect_team_owner!, only: [:update, :destroy, :add_member, :remove_member]
 
@@ -21,7 +21,7 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-  def show
+  def edit
   end
 
   def update
@@ -29,7 +29,7 @@ class TeamsController < ApplicationController
       redirect_to @team
     else
       flash.now.alert = @team.errors.full_messages
-      render "show"
+      render "edit"
     end
   end
 
