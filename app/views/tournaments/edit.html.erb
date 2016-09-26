@@ -22,7 +22,7 @@ Owner: <%= @tournament.owner.name %>
     <% if !team_tournament.full? %>
       <%= form_tag team_add_member_path(team) do %>
         <fieldset>
-          <%= select_tag "member_id", @tournament.potential_members.pluck(:name, :id) %>
+          <%= select_tag "member_id", options_for_select(@tournament.potential_members.pluck(:name, :id)) %>
           <%= submit_tag "Add team member" %>
         </fieldset>
       <% end %>
