@@ -56,12 +56,12 @@ RSpec.describe MatchesController, type: :controller do
 
       it "gives an error message" do
         expect { creation }
-          .to change { flash[:error] }
+          .to change { flash.alert }
           .to include("Team one score must be greater than or equal to 0")
       end
 
       it "renders the index" do
-        is_expected.to render_template "matches/index"
+        is_expected.to redirect_to matches_path
       end
     end
   end

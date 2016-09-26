@@ -7,7 +7,7 @@ class MatchesController < ApplicationController
     if @match.save
       redirect_to edit_match_path(@match)
     else
-      flash[:error] = @match.errors.full_messages
+      flash.alert = @match.errors.full_messages
       redirect_to matches_path
     end
   end
