@@ -33,6 +33,10 @@ class Tournament < ApplicationRecord
     User.all - User.includes(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
   end
 
+  def owned_by?(user)
+    owner.id == user.id
+  end
+
   private
 
   def no_repeated_members_across_teams
