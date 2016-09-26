@@ -1,0 +1,17 @@
+<%= button_to "Delete team", team_path(@team), method: :delete %>
+
+<h2>Edit</h2>
+
+<%=
+  form_for @team, url: { action: "update" } do |f|
+    render partial: "form", locals: { f: f }
+  end
+%>
+
+<h2>Add a member</h2>
+
+<%=
+  form_tag team_add_member_path(@team), action: "add_member", method: :post do
+    render partial: "add_member", locals: { team: @team }
+  end
+%>

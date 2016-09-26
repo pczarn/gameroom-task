@@ -14,6 +14,11 @@ class Team < ApplicationRecord
 
   validate :members_not_empty, :unique_member_collections_for_teams
 
+  def owned_by?(user)
+    user_team = user_teams.find_by(user: user)
+    user_team && user_team.owner?
+  end
+
   private
 
   def members_not_empty

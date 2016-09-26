@@ -14,11 +14,12 @@
     <li>
       <%= user_team.user.name %>
       <%= "(owner)" if user_team.owner? %>
-      <%=
-        button_to "Remove member",
-                  team_remove_member_path(team, member_id: user_team.user.id),
-                  method: :delete
-      %>
+
+      <% if team.owned_by? current_user %>
+        <%= button_to "Remove member",
+                      team_remove_member_path(team, member_id: user_team.user.id),
+                      method: :delete %>
+      <% end %>
     </li>
   <% end %>
 </ul>

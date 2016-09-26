@@ -70,9 +70,7 @@ class TeamsController < ApplicationController
   end
 
   def expect_team_owner!
-    user_team = UserTeam.find_by(user: current_user, team: @team) if current_user
-    unless user_team && user_team.owner?
-      redirect_back fallback_location: teams_path, alert: "You are not the owner."
-    end
+    return if current_user && @team.owned_by?(current_user)
+    redirect_back fallback_location: teams_path, alert: "You are not the owner."
   end
 end
