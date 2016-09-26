@@ -1,7 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate!
-  before_action :load_team, only: [:edit, :update, :destroy]
-  before_action :load_team_2, only: [:add_member, :remove_member]
+  before_action :load_team, only: [:edit, :update, :destroy, :add_member, :remove_member]
   before_action :expect_team_owner!, only: [:update, :destroy, :add_member, :remove_member]
 
   def create
@@ -42,9 +41,7 @@ class TeamsController < ApplicationController
   def add_member
     @team = Team.find(params[:team_id])
     @team.members << User.find(params[:member_id])
-    unless @team.save
-      flash.alert = @team.errors.full_messages.to_sentence
-    end
+    flash.alert = @team.errors.full_messages.to_sentence unless @team.save
     redirect_back fallback_location: edit_team_path(@team)
   end
 
@@ -63,11 +60,7 @@ class TeamsController < ApplicationController
   private
 
   def load_team
-    @team = Team.find(params[:id])
-  end
-
-  def load_team_2
-    @team = Team.find(params[:team_id])
+    @team = Team.find(params[:id] || params[:team_id])
   end
 
   def team_params
