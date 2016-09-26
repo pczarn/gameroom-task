@@ -1,0 +1,19 @@
+<h1>Game</h1>
+
+<%= render partial: "display_long", locals: { game: @game } %>
+
+<%= link_to "delete...", @game, method: :delete %>
+
+<h2>update</h2>
+
+<% flash.each do |name, msg| %>
+  <%= msg %>
+<% end %>
+
+<%=
+  form_for @game, url: { action: "update" } do |f|
+    render partial: "form", locals: { f: f }
+  end
+%>
+
+<%= link_to "Back to index", games_path %>
