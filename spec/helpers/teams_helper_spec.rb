@@ -5,10 +5,10 @@ RSpec.describe TeamsHelper, type: :helper do
     let(:team) { build(:team) }
 
     context "with the user not in the team" do
-      before { create(:user) }
+      let!(:user) { create(:user) }
 
       it "returns a potential user" do
-        expect(potential_member_ids_and_names(team).size).to eq(1)
+        expect(potential_member_ids_and_names(team)).to eq([[user.id, user.name]])
       end
     end
 
@@ -21,7 +21,7 @@ RSpec.describe TeamsHelper, type: :helper do
       end
 
       it "returns no potential users" do
-        expect(potential_member_ids_and_names(team).size).to eq(0)
+        expect(potential_member_ids_and_names(team)).to be_empty
       end
     end
   end
