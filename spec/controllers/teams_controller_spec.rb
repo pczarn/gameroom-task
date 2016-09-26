@@ -67,7 +67,7 @@ RSpec.describe TeamsController, type: :controller do
         expect { destruction }.not_to change(Team, :count)
       end
 
-      it "fails with an alert" do
+      it "gives an alert" do
         expect { destruction }.to change { flash.alert }
       end
     end
@@ -91,7 +91,7 @@ RSpec.describe TeamsController, type: :controller do
         expect { add_member }.not_to change { team.reload.member_ids }
       end
 
-      it "fails with an alert" do
+      it "gives an alert" do
         expect { add_member }.to change { flash.alert }
       end
     end
@@ -117,7 +117,7 @@ RSpec.describe TeamsController, type: :controller do
       let(:team) { create(:team, members: [owner]) }
       let(:user) { owner }
 
-      it "fails with an alert" do
+      it "gives an alert" do
         expect { remove_member }
           .to change { flash.alert }
           .to("Cannot remove the only owner from a team")
