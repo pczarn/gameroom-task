@@ -1,0 +1,24 @@
+<% if !tournament.full? %>
+  <%= form_tag tournament_add_team_path(tournament) do %>
+    <fieldset>
+      <legend>Owner of a new team</legend>
+      <%= select_tag "member_id", options_for_select(tournament.potential_members.pluck(:name, :id)) %>
+      <%= submit_tag "Add team with member" %>
+    </fieldset>
+  <% end %>
+  <%= form_tag tournament_add_team_path(tournament) do %>
+    <fieldset>
+      <legend>Add an existing team</legend>
+      <%= select_tag "team_id", options_for_select(Team.pluck(:name, :id)) %>
+      <%= submit_tag "Add team" %>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<h2>Edit</h2>
+
+<%=
+  form_for tournament, url: { action: "update" } do |f|
+    render partial: "form", locals: { f: f }
+  end
+%>
