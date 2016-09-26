@@ -21,7 +21,8 @@ class Tournament < ApplicationRecord
   validates :number_of_teams, presence: true, numericality: { greater_than_or_equal_to: 2 }
 
   validate :number_of_teams_is_power_of_2,
-           :no_repeated_members_across_teams
+           :no_repeated_members_across_teams,
+           :team_sizes_within_limit
 
   def full?
     teams.count >= number_of_teams
@@ -49,5 +50,12 @@ class Tournament < ApplicationRecord
 
   def power_of_2?(number)
     number && number.nonzero? && (number & (number - 1)).zero?
+  end
+
+  def team_sizes_within_limit
+    if team_tournaments.any?(&:overfull?)
+      # perhaps the error should point to TeamTournament#team_size_limit if that is the cause
+      errors.add(:number_of_members_per_team, "is too low")
+    end
   end
 end
