@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Tournament, type: :model do
-  let(:tournament) { create(:tournament) }
+  let(:tournament) { build(:tournament) }
 
   describe "validations" do
     subject { tournament }
@@ -142,31 +142,19 @@ RSpec.describe Tournament, type: :model do
 
   describe "#can_be_started?" do
     subject { tournament.can_be_started? }
+    let(:tournament) { build(:tournament) }
 
-    context "when team sizes have no limit" do
-      let(:tournament) { create(:tournament) }
-
+    context "when a team is full" do
       it { is_expected.to be(true) }
+    end
 
-      context "when a team size has an individual limit" do
-        let(:team_size) { 7 }
-        let(:team_tournament) { tournament.team_tournaments.first }
-        before { team_tournament.team_size_limit = team_size }
-
-        context "when a team size is within its individual limit" do
-          before { team_tournament.team.members = build_list(:user, team_size) }
-          it { is_expected.to be(true) }
-        end
-
-        context "when a team size is outside its individual limit" do
-          before { team_tournament.team.members = build_list(:user, team_size + 1) }
-          it { is_expected.to be(false) }
-        end
-      end
+    context "when a team is not full" do
+      before { allow(tournament.team_tournaments.first).to receive(:full?).and_return(false) }
+      it { is_expected.to be(false) }
     end
 
     context "when team sizes are limited" do
-      let(:tournament) { create(:tournament, number_of_members_per_team: 666) }
+      let(:tournament) { create(:tournament, number_of_members_per_team: 55) }
 
       context "when team sizes are outside the limit" do
         it { is_expected.to be(false) }

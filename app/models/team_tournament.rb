@@ -5,7 +5,7 @@ class TeamTournament < ApplicationRecord
   validates :team_id, uniqueness: { scope: :tournament_id }
 
   def full?
-    size_limit.nil? || team.members.count >= size_limit
+    size_limit.nil? || team.members.count <= size_limit
   end
 
   def overfull?
