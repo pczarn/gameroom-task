@@ -6,9 +6,9 @@ class TeamsController < ApplicationController
 
   def create
     @team = Team.new(team_params.merge(members: [current_user]))
-    @team.user_teams.build(user: current_user, role: :owner)
     if @team.save
-      redirect_to @team
+      @team.user_teams.find_by(user: current_user).owner!
+      redirect_to edit_team_path(@team)
     else
       flash.now.alert = @team.errors.full_messages.to_sentence
       @teams = Team.page(params[:page])
@@ -26,7 +26,7 @@ class TeamsController < ApplicationController
 
   def update
     if @team.update(team_params)
-      redirect_to @team
+      redirect_to edit_team_path(@team)
     else
       flash.now.alert = @team.errors.full_messages
       render "edit"
@@ -45,7 +45,7 @@ class TeamsController < ApplicationController
     unless @team.save
       flash.alert = @team.errors.full_messages.to_sentence
     end
-    redirect_to @team
+    redirect_back fallback_location: edit_team_path(@team)
   end
 
   def remove_member
@@ -56,9 +56,8 @@ class TeamsController < ApplicationController
       user_team.destroy!
     else
       flash.alert = "Cannot remove the only owner from a team"
-      # cannot render here? why? there is team_id but no id
     end
-    redirect_to @team
+    redirect_back fallback_location: edit_team_path(@team)
   end
 
   private
@@ -79,6 +78,8 @@ class TeamsController < ApplicationController
 
   def expect_team_owner!
     user_team = UserTeam.find_by(user: current_user, team: @team) if current_user
-    redirect_to teams_path, alert: "You are not the owner." unless user_team && user_team.owner?
+    unless user_team && user_team.owner?
+      redirect_back fallback_location: teams_path, alert: "You are not the owner."
+    end
   end
 end
