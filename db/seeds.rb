@@ -110,7 +110,7 @@ Tournament.create(
   title: "first open one",
   description: "we play montal kombat",
   game: monte_kombat,
-  owner: users.first,
+  owner: users[2],
   number_of_teams: 4,
   started_at: "2016-09-01 18:12".to_time(:utc),
   teams: [michals, middle, daniel_team, emmanuel_team],
@@ -118,7 +118,7 @@ Tournament.create(
 Tournament.create(
   title: "beer championship 2017",
   game: beer_pong,
-  owner: users.first,
+  owner: users[2],
   number_of_teams: 2,
   started_at: "2017-09-01 18:12".to_time(:utc),
   teams: [michals, middle],
@@ -129,7 +129,7 @@ Tournament.create(
 current_championship = Tournament.create(
   title: "beer championship 2016",
   game: beer_pong,
-  owner: users.first,
+  owner: users[2],
   status: 1,
   number_of_teams: 2,
   started_at: "2016-09-02 18:12".to_time(:utc),
@@ -151,7 +151,7 @@ ufc_september = Tournament.create(
 Tournament.create(
   title: "ufc tournament august",
   game: ufc,
-  owner: users.first,
+  owner: users[2],
   status: 2,
   number_of_teams: 2,
   started_at: "2016-08-03 18:12".to_time(:utc),
