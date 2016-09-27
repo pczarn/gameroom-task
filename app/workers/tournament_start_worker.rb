@@ -3,7 +3,6 @@ class TournamentStartWorker
 
   def perform(tournament_id, performed_at)
     tournament = Tournament.find(tournament_id)
-    # start(tournament) if ready_to_start?(tournament, performed_at)
     try_start(tournament, performed_at) if tournament.started_at == performed_at
   end
 
