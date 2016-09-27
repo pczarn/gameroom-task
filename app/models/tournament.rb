@@ -3,7 +3,7 @@
 class Tournament < ApplicationRecord
   belongs_to :game
   belongs_to :owner, class_name: User, inverse_of: :owned_tournaments
-  has_many :team_tournaments
+  has_many :team_tournaments, dependent: :destroy
   has_many :teams, through: :team_tournaments
   has_many :rounds
   has_many :matches, through: :rounds

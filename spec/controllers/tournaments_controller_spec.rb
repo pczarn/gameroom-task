@@ -65,4 +65,27 @@ RSpec.describe TournamentsController, type: :controller do
       end
     end
   end
+
+  describe "#destroy" do
+    let!(:tournament) { create(:tournament) }
+    subject(:destruction) { delete :destroy, params: { id: tournament.id } }
+
+    context "when the tournament is open" do
+      it "removes a tournament" do
+        expect { destruction }.to change(Tournament, :count).by(-1)
+      end
+    end
+
+    context "when the tournament is not open" do
+      before { tournament.started! }
+
+      it "does not remove the tournament" do
+        expect { destruction }.not_to change(Tournament, :count)
+      end
+    end
+
+    it "redirects to index" do
+      is_expected.to redirect_to tournaments_path
+    end
+  end
 end

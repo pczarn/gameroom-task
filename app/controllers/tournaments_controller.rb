@@ -37,6 +37,13 @@ class TournamentsController < ApplicationController
     end
   end
 
+  def destroy
+    unless @tournament.open? && @tournament.destroy
+      flash.alert = "Unable to delete the tournament"
+    end
+    redirect_to tournaments_path
+  end
+
   def add_team
     if team_id = params[:team_id]
       @tournament.team_tournaments.build(team_id: team_id)
