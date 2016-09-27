@@ -1,7 +1,7 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :expect_tournament_owner!, only: [:add_team, :remove_team]
-  before_action :load_tournament, only: [:edit, :update]
+  before_action :load_tournament, only: [:edit, :update, :destroy, :add_team, :remove_team]
+  before_action :expect_tournament_owner!, only: [:update, :destroy, :add_team, :remove_team]
 
   def index
     @tournament = Tournament.new(started_at: Time.zone.now)
@@ -38,7 +38,6 @@ class TournamentsController < ApplicationController
   end
 
   def add_team
-    @tournament = Tournament.find(params[:tournament_id])
     if team_id = params[:team_id]
       @tournament.team_tournaments.build(team_id: team_id)
     else
@@ -62,7 +61,6 @@ class TournamentsController < ApplicationController
   end
 
   def remove_team
-    @tournament = Tournament.find(params[:tournament_id])
     @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
@@ -70,7 +68,7 @@ class TournamentsController < ApplicationController
   private
 
   def load_tournament
-    @tournament = Tournament.find(params[:id])
+    @tournament = Tournament.find(params[:tournament_id] || params[:id])
   end
 
   def tournament_params
@@ -90,7 +88,7 @@ class TournamentsController < ApplicationController
   end
 
   def expect_tournament_owner!
-    return if current_user && Tournament.find(params[:tournament_id]).owned_by?(current_user)
-    redirect_back fallback_location: teams_path, alert: "You are not the tournament owner."
+    return if current_user && @tournament.owned_by?(current_user)
+    redirect_back fallback_location: tournaments_path, alert: "You are not the tournament owner."
   end
 end
