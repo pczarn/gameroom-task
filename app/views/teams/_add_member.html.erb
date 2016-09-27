@@ -1,9 +1,0 @@
-<fieldset>
-  <legend>Add a member</legend>
-  <% potential_member_ids_and_names(team).map do |(id, name)| %>
-    <%= radio_button_tag :member_id, id %>
-    <%= label_tag :member_id, name, for: "member_id_#{id}" %>
-  <% end %>
-</fieldset>
-<%= hidden_field_tag :id, team.id %>
-<%= submit_tag "Submit" %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923122629) do
+ActiveRecord::Schema.define(version: 20160921115742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,11 +85,10 @@ ActiveRecord::Schema.define(version: 20160923122629) do
   end
 
   create_table "user_teams", force: :cascade do |t|
-    t.integer  "user_id",                null: false
-    t.integer  "team_id",                null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "role",       default: 0
+    t.integer  "user_id",    null: false
+    t.integer  "team_id",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["team_id"], name: "index_user_teams_on_team_id", using: :btree
     t.index ["user_id", "team_id"], name: "index_user_teams_on_user_id_and_team_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_user_teams_on_user_id", using: :btree
