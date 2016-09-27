@@ -36,6 +36,14 @@ class Tournament < ApplicationRecord
     User.joins(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
   end
 
+  def potential_teams
+    Team.where.not(id: related_teams.pluck(:id))
+  end
+
+  def related_teams
+    Team.related_to(tournament.members.pluck(:id))
+  end
+
   def owned_by?(user)
     owner.id == user.id
   end

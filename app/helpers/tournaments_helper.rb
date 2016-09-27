@@ -4,6 +4,6 @@ module TournamentsHelper
   end
 
   def potential_team_names_and_ids(tournament)
-    Team.pluck(:name, :id) - Team.related_to(tournament.members.pluck(:id)).pluck(:name, :id)
+    tournament.potential_teams.pluck(:name, :id)
   end
 end
