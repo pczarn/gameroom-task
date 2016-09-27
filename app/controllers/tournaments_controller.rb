@@ -18,22 +18,14 @@ class TournamentsController < ApplicationController
   end
 
   def edit
-    if @tournament.open?
-      @team = Team.new
-      render "edit"
-    else
-      render "edit_restricted"
-    end
+    render_editing
   end
 
   def update
     if @tournament.update(tournament_params)
       redirect_to edit_tournament_path(@tournament)
-    elsif @tournament.open?
-      @team = Team.new
-      render "edit"
     else
-      render "edit_restricted"
+      render_editing
     end
   end
 
@@ -45,34 +37,33 @@ class TournamentsController < ApplicationController
   end
 
   def add_team
-    if team_id = params[:team_id]
-      @tournament.team_tournaments.build(team_id: team_id)
-    else
-      team = Team.new(add_team_params)
-      if found = Team.related_to(team.member_ids).find { |elem| elem.member_ids == team.member_ids }
-        team = found
-        flash.notice = "Found a team with these exact members."
-      end
-      if team.valid?
-        @tournament.team_tournaments.build(team: team)
-      else
-        flash.alert = team.errors.full_messages.to_sentence
+    if @tournament.open?
+      team_params = build_team
+      @tournament.team_tournaments.build(team_params) if team_params
+      unless @tournament.save
+        flash.alert = @tournament.errors.full_messages.to_sentence
       end
     end
-
-    unless @tournament.save
-      flash.alert = @tournament.errors.full_messages.to_sentence
-    end
-
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
 
   def remove_team
-    @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
+    if @tournament.open?
+      @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
+    end
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
 
   private
+
+  def render_editing
+    if @tournament.open?
+      @team = Team.new
+      render "edit"
+    else
+      render "edit_restricted"
+    end
+  end
 
   def load_tournament
     @tournament = Tournament.find(params[:tournament_id] || params[:id])
@@ -88,6 +79,31 @@ class TournamentsController < ApplicationController
             :number_of_teams,
             :number_of_members_per_team,
           )
+  end
+
+  def build_team
+    if team_id = params[:team_id]
+      { team_id: team_id }
+    elsif added_or_reused_team.valid?
+      { team: added_or_reused_team }
+    else
+      flash.alert = added_or_reused_team.errors.full_messages.to_sentence
+      nil
+    end
+  end
+
+  def added_or_reused_team
+    @added_or_reused_team ||= add_or_reuse_team
+  end
+
+  def add_or_reuse_team
+    team = Team.new(add_team_params)
+    if reused = Team.related_to(team.member_ids).find { |elem| elem.member_ids == team.member_ids }
+      flash.notice = "Found a team with these exact members."
+      reused
+    else
+      team
+    end
   end
 
   def add_team_params
