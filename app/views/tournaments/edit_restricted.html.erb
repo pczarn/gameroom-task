@@ -1,6 +1,7 @@
-<h1>
-  Tournament
-</h1>
+<h1>Tournament</h1>
+
+<%= render partial: "display", locals: { tournament: @tournament } %>
+
 <%=
   form_for @tournament, url: { action: "update" } do |f|
     render partial: "form_restricted", locals: { f: f }

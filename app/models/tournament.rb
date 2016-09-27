@@ -29,8 +29,11 @@ class Tournament < ApplicationRecord
   end
 
   def potential_members
-    # TODO: perhaps optimize the query
-    User.all - User.includes(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
+    User.where.not(id: members.pluck(:id))
+  end
+
+  def members
+    User.joins(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
   end
 
   def owned_by?(user)

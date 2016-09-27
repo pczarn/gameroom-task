@@ -19,6 +19,7 @@ class TournamentsController < ApplicationController
 
   def edit
     if @tournament.open?
+      @team = Team.new
       render "edit"
     else
       render "edit_restricted"
@@ -29,6 +30,7 @@ class TournamentsController < ApplicationController
     if @tournament.update(tournament_params)
       redirect_to edit_tournament_path(@tournament)
     elsif @tournament.open?
+      @team = Team.new
       render "edit"
     else
       render "edit_restricted"
@@ -37,14 +39,19 @@ class TournamentsController < ApplicationController
 
   def add_team
     @tournament = Tournament.find(params[:tournament_id])
-    if member_id = params[:member_id]
-      member = User.find(member_id)
-      team = Team.create(name: member.name, members: [member])
-      @tournament.team_tournaments.build team_id: team.id
-    elsif team_id = params[:team_id]
-      @tournament.team_tournaments.build team_id: team_id
+    if team_id = params[:team_id]
+      @tournament.team_tournaments.build(team_id: team_id)
     else
-      flash.alert = "Invalid parameters"
+      team = Team.new(add_team_params)
+      if found = Team.related_to(team.member_ids).find { |elem| elem.member_ids == team.member_ids }
+        team = found
+        flash.notice = "Found a team with these exact members."
+      end
+      if team.valid?
+        @tournament.team_tournaments.build(team: team)
+      else
+        flash.alert = team.errors.full_messages.to_sentence
+      end
     end
 
     unless @tournament.save
@@ -56,9 +63,8 @@ class TournamentsController < ApplicationController
 
   def remove_team
     @tournament = Tournament.find(params[:tournament_id])
-    team_id = params[:team_id]
-    @tournament.team_tournaments.find_by(team_id: team_id).destroy!
-    redirect_back fallback_location: @tournament
+    @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
+    redirect_back fallback_location: edit_tournament_path(@tournament)
   end
 
   private
@@ -77,6 +83,10 @@ class TournamentsController < ApplicationController
             :number_of_teams,
             :number_of_members_per_team,
           )
+  end
+
+  def add_team_params
+    params.require(:team).permit(:name, member_ids: [])
   end
 
   def expect_tournament_owner!
