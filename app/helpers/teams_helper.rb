@@ -1,5 +1,5 @@
 module TeamsHelper
-  def potential_member_ids_and_names(team)
-    User.pluck(:id, :name) - User.joins(:teams).where(teams: { id: team.id }).pluck(:id, :name)
+  def potential_members(team)
+    User.all - User.joins(:teams).where(teams: { id: team.id })
   end
 end
