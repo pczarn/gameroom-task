@@ -22,7 +22,8 @@ class Tournament < ApplicationRecord
 
   validate :number_of_teams_is_power_of_2,
            :no_repeated_members_across_teams,
-           :team_sizes_within_limit
+           :team_sizes_within_limit,
+           :number_of_teams_within_limit
 
   def full?
     teams.count >= number_of_teams
@@ -41,7 +42,7 @@ class Tournament < ApplicationRecord
   end
 
   def related_teams
-    Team.related_to(tournament.members.pluck(:id))
+    Team.related_to(members.pluck(:id))
   end
 
   def owned_by?(user)
@@ -71,6 +72,12 @@ class Tournament < ApplicationRecord
     if team_tournaments.any?(&:overfull?)
       # perhaps the error should point to TeamTournament#team_size_limit if that is the cause
       errors.add(:number_of_members_per_team, "is too low")
+    end
+  end
+
+  def number_of_teams_within_limit
+    if teams.length > number_of_teams
+      errors.add(:number_of_teams, "Can't be lower than the current number of teams")
     end
   end
 end
