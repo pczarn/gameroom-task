@@ -78,10 +78,22 @@ RSpec.describe TournamentsController, type: :controller do
   describe "#update" do
     subject(:updating) { patch :update, params: params }
     let(:params) { { id: tournament.id, tournament: { title: "bar" } } }
-    let(:tournament) { create(:tournament, title: "foo") }
+    let(:tournament) { create(:tournament, title: "foo", owner: owner) }
 
-    it "updates attributes" do
-      expect { updating }.to change { tournament.reload.title }.to eq("bar")
+    context "when tournament owner is logged in" do
+      let(:owner) { current_user }
+
+      it "updates attributes" do
+        expect { updating }.to change { tournament.reload.title }.to eq("bar")
+      end
+    end
+
+    context "when tournament owner is not logged in" do
+      let(:owner) { build(:user) }
+
+      it "does not update attributes" do
+        expect { updating }.not_to change { tournament.reload.title }
+      end
     end
   end
 
