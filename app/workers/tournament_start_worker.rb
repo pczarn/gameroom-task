@@ -15,7 +15,7 @@ class TournamentStartWorker
   end
 
   def start(tournament)
-    tournament.build_first_round
+    tournament.build_initial_rounds
     tournament.started!
     tournament.save!
     notify_members_about_start(tournament)
