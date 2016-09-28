@@ -9,8 +9,8 @@
   <%= [match.winning_team.score || "—", match.defeated_team.score || "—"].join(":") %>
 </h2>
 
-<%= render partial: "team_members", locals: { team: match.winning_team } %>
-<%= render partial: "team_members", locals: { team: match.defeated_team } %>
+<%= render partial: "matches/team_members", locals: { team: match.winning_team } %>
+<%= render partial: "matches/team_members", locals: { team: match.defeated_team } %>
 
 Match played at
 <% if match.played_at %>
