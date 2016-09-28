@@ -35,10 +35,6 @@ class Team < ApplicationRecord
   end
 
   def this_and_related_teams
-    if persisted?
-      Team.related_to(members.map(&:id)).includes(:members)
-    else
-      [self] + Team.related_to(members.map(&:id)).includes(:members)
-    end
+    [self] + Team.related_to(members.map(&:id)).where.not(id: id).includes(:members)
   end
 end

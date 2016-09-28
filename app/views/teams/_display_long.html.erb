@@ -1,0 +1,18 @@
+<div>
+  <span>
+    <%= team.name %>
+  </span>
+  with <%= team.members.count %> members,
+  created at
+  <time>
+    <%= team.created_at %>
+  </time>
+</div>
+
+<ul>
+  <% team.members.each do |member| %>
+    <li>
+      <%= member.name %>
+    </li>
+  <% end %>
+</ul>
