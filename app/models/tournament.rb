@@ -30,7 +30,7 @@ class Tournament < ApplicationRecord
            :number_of_teams_within_limit
 
   def full?
-    teams.count >= number_of_teams
+    teams.length == number_of_teams
   end
 
   def potential_members
@@ -54,7 +54,7 @@ class Tournament < ApplicationRecord
   end
 
   def can_be_started?
-    team_tournaments.all?(&:full?)
+    full? && team_tournaments.all?(&:full?)
   end
 
   def build_initial_rounds

@@ -5,16 +5,16 @@ class TeamTournament < ApplicationRecord
   validates :team_id, uniqueness: { scope: :tournament_id }
 
   def full?
-    size_limit.nil? || team.members.count <= size_limit
+    number_of_slots.nil? || team.members.count == number_of_slots
   end
 
   def overfull?
-    !size_limit.nil? && team.members.count > size_limit
+    !number_of_slots.nil? && team.members.count > number_of_slots
   end
 
   private
 
-  def size_limit
+  def number_of_slots
     [tournament.number_of_members_per_team, team_size_limit].compact.max
   end
 end
