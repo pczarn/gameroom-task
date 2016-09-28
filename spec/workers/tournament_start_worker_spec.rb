@@ -18,7 +18,7 @@ RSpec.describe TournamentStartWorker, type: :worker do
       end
 
       it "creates the first round" do
-        expect { perform }.to change { tournament.reload.rounds.size }.from(0).to(1)
+        expect { perform }.to change { tournament.reload.rounds.size }.from(0).to(3)
       end
 
       it "creates a round with a correct number of matches" do

@@ -57,10 +57,12 @@ class Tournament < ApplicationRecord
     team_tournaments.all?(&:full?)
   end
 
-  def build_first_round
-    round = rounds.build(number: 0)
+  def build_initial_rounds
+    number_of_rounds.times do |round_number|
+      rounds.build(number: round_number)
+    end
     teams.each_slice(2) do |first_team, second_team|
-      round.matches.build(game: game, team_one: first_team, team_two: second_team)
+      rounds.first.matches.build(game: game, team_one: first_team, team_two: second_team)
     end
   end
 
@@ -94,5 +96,9 @@ class Tournament < ApplicationRecord
     if teams.length > number_of_teams
       errors.add(:number_of_teams, "Can't be lower than the current number of teams")
     end
+  end
+
+  def number_of_rounds
+    Math.log2(teams.length).to_i
   end
 end
