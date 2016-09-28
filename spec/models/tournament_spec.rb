@@ -140,6 +140,15 @@ RSpec.describe Tournament, type: :model do
     end
   end
 
+  describe "#full?" do
+    subject { tournament.full? }
+    let(:tournament) { build(:tournament) }
+
+    context "when teams are full" do
+      it { is_expected.to be(true) }
+    end
+  end
+
   describe "#can_be_started?" do
     subject { tournament.can_be_started? }
     let(:tournament) { build(:tournament) }
