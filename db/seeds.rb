@@ -41,7 +41,7 @@ first_match = Match.create(
   team_two: daniel_team,
   team_one_score: 75,
   team_two_score: 52,
-  played_at: "2016-09-01 18:12".to_time(:utc),
+  played_at: "2016-10-01 18:12".to_time(:utc),
 )
 Match.create(
   game: beer_pong,
@@ -98,8 +98,6 @@ ufc_round_1_matches = [
     game: ufc,
     team_one: michals,
     team_two: emmanuel_team,
-    team_one_score: 44,
-    team_two_score: 12,
     played_at: "2016-09-22 14:12".to_time(:utc),
   ),
 ]
@@ -163,6 +161,12 @@ Tournament.create(
 Round.create(
   tournament: current_championship,
   matches: [first_match],
+  number: 0,
+)
+
+Round.create(
+  tournament: ufc_september,
+  matches: ufc_round_0_matches,
   number: 0,
 )
 
