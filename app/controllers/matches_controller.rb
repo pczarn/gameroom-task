@@ -27,7 +27,7 @@ class MatchesController < ApplicationController
   end
 
   def update
-    match_params = if @match.round.present? ? match_in_tournament_params : friendly_match_params
+    match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
     result = FinishMatch.new(@match, match_params).call
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
