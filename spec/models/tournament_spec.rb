@@ -142,7 +142,7 @@ RSpec.describe Tournament, type: :model do
 
   describe "#full?" do
     subject { tournament.full? }
-    let(:tournament) { build(:tournament) }
+    let(:tournament) { build(:tournament, :with_teams) }
 
     context "when teams are full" do
       it { is_expected.to be(true) }
@@ -151,7 +151,7 @@ RSpec.describe Tournament, type: :model do
 
   describe "#can_be_started?" do
     subject { tournament.can_be_started? }
-    let(:tournament) { build(:tournament) }
+    let(:tournament) { build(:tournament, :with_teams) }
 
     context "when a team is full" do
       it { is_expected.to be(true) }
@@ -163,7 +163,7 @@ RSpec.describe Tournament, type: :model do
     end
 
     context "when team sizes are limited" do
-      let(:tournament) { create(:tournament, number_of_members_per_team: 55) }
+      let(:tournament) { create(:tournament, :with_teams, number_of_members_per_team: 55) }
 
       context "when team sizes are outside the limit" do
         it { is_expected.to be(false) }

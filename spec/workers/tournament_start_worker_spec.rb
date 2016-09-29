@@ -4,7 +4,7 @@ RSpec.describe TournamentStartWorker, type: :worker do
   describe "#perform" do
     subject(:perform) { worker.perform(tournament.id, tournament.started_at) }
     let(:worker) { TournamentStartWorker.new }
-    let(:tournament) { create(:tournament, number_of_teams: number_of_teams) }
+    let(:tournament) { create(:tournament, :with_teams, number_of_teams: number_of_teams) }
     let(:number_of_teams) { 8 }
 
     context "when tournament is ready" do
