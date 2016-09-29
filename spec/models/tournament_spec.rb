@@ -64,13 +64,13 @@ RSpec.describe Tournament, type: :model do
     describe "#number_of_teams" do
       let(:tournament) { build(:tournament, number_of_teams: number_of_teams) }
 
-      context "with no teams" do
+      context "when zero" do
         let(:number_of_teams) { 0 }
 
         it { is_expected.to be_invalid }
       end
 
-      context "with one team" do
+      context "when one" do
         let(:number_of_teams) { 1 }
 
         it { is_expected.to be_invalid }
@@ -81,6 +81,18 @@ RSpec.describe Tournament, type: :model do
           let(:number_of_teams) { 4 }
 
           it { is_expected.to be_valid }
+
+          context "when lower than the current number of teams" do
+            before { tournament.teams = create_list(:team, number_of_teams + 1) }
+
+            it { is_expected.to be_invalid }
+          end
+
+          context "when greater than to the current number of teams" do
+            before { tournament.teams = create_list(:team, number_of_teams - 1) }
+
+            it { is_expected.to be_valid }
+          end
         end
 
         context "when not a power of two" do

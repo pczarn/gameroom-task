@@ -1,0 +1,9 @@
+<h1>Tournament</h1>
+
+<%= render partial: "display", locals: { tournament: @tournament } %>
+
+<%=
+  if @tournament.owned_by? current_user
+    render partial: "display_edit", locals: { tournament: @tournament }
+  end
+%>

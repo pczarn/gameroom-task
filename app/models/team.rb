@@ -1,7 +1,7 @@
 class Team < ApplicationRecord
   has_many :user_teams
   has_many :members, through: :user_teams, source: :user, class_name: User
-  has_many :team_tournaments
+  has_many :team_tournaments, dependent: :destroy
   has_many :tournaments, through: :team_tournaments
 
   scope :related_to, -> (user_ids) do
