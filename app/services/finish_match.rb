@@ -1,7 +1,7 @@
 class FinishMatch
   include TournamentsHelper
 
-  def initialize(match, current_user, params: nil, update: nil)
+  def initialize(match, current_user: nil, params: nil, update: nil)
     @match = match
     @round = match.round
     @tournament = @round && @round.tournament
@@ -48,7 +48,7 @@ class FinishMatch
   end
 
   def match_scores
-    [@match.team_one_score, @match.team_two_score]
+    @update.params.values_at(:team_one_score, :team_two_score)
   end
 
   def build_next_match
@@ -79,6 +79,7 @@ end
 
 class UpdateFinishedMatch
   attr_accessor :alert, :next_match, :end_tournament
+  attr_reader :params
 
   def initialize(match:, tournament:, params:)
     @match = match

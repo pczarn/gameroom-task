@@ -28,7 +28,7 @@ class TournamentStartWorker
   def notify_members_about_start(tournament)
     tournament.teams.each do |team|
       team.members.each do |member|
-        UserMailer.notify_about_tournament_start(member, tournament)
+        TournamentStatusMailer.notify_about_start(member.id, tournament.id)
       end
     end
   end
