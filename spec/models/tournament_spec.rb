@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Tournament, type: :model do
-  let(:tournament) { create(:tournament) }
+  let(:tournament) { build(:tournament) }
 
   describe "validations" do
     subject { tournament }
@@ -108,6 +108,22 @@ RSpec.describe Tournament, type: :model do
     it "is a time" do
       expect(tournament.started_at).to be_a(Time)
     end
+
+    context "when created" do
+      it "enqueues a job" do
+        expect(TournamentStartWorker).to receive(:perform_at)
+        create(:tournament)
+      end
+    end
+
+    context "when updated" do
+      before { tournament.save! }
+
+      it "enqueues a job" do
+        expect(TournamentStartWorker).to receive(:perform_at)
+        tournament.save!
+      end
+    end
   end
 
   describe "#status" do
@@ -121,6 +137,37 @@ RSpec.describe Tournament, type: :model do
 
     it "can be ended" do
       expect { tournament.ended! }.to change { tournament.ended? }.to(true)
+    end
+  end
+
+  describe "#full?" do
+    subject { tournament.full? }
+    let(:tournament) { build(:tournament) }
+
+    context "when teams are full" do
+      it { is_expected.to be(true) }
+    end
+  end
+
+  describe "#can_be_started?" do
+    subject { tournament.can_be_started? }
+    let(:tournament) { build(:tournament) }
+
+    context "when a team is full" do
+      it { is_expected.to be(true) }
+    end
+
+    context "when a team is not full" do
+      before { allow(tournament.team_tournaments.first).to receive(:full?).and_return(false) }
+      it { is_expected.to be(false) }
+    end
+
+    context "when team sizes are limited" do
+      let(:tournament) { create(:tournament, number_of_members_per_team: 55) }
+
+      context "when team sizes are outside the limit" do
+        it { is_expected.to be(false) }
+      end
     end
   end
 end

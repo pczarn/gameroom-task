@@ -8,6 +8,10 @@ class Tournament < ApplicationRecord
   has_many :rounds
   has_many :matches, through: :rounds
 
+  after_commit on: [:create, :update] do
+    TournamentStartWorker.perform_at(started_at, id, started_at) if open?
+  end
+
   enum status: {
     open: 0,
     started: 1,
@@ -26,7 +30,7 @@ class Tournament < ApplicationRecord
            :number_of_teams_within_limit
 
   def full?
-    teams.count >= number_of_teams
+    teams.length == number_of_teams
   end
 
   def potential_members
@@ -47,6 +51,19 @@ class Tournament < ApplicationRecord
 
   def owned_by?(user)
     owner.id == user.id
+  end
+
+  def can_be_started?
+    full? && team_tournaments.all?(&:full?)
+  end
+
+  def build_initial_rounds
+    number_of_rounds.times do |round_number|
+      rounds.build(number: round_number)
+    end
+    teams.each_slice(2) do |first_team, second_team|
+      rounds.first.matches.build(game: game, team_one: first_team, team_two: second_team)
+    end
   end
 
   private
@@ -79,5 +96,9 @@ class Tournament < ApplicationRecord
     if teams.length > number_of_teams
       errors.add(:number_of_teams, "Can't be lower than the current number of teams")
     end
+  end
+
+  def number_of_rounds
+    Math.log2(teams.length).to_i
   end
 end
