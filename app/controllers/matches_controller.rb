@@ -26,14 +26,15 @@ class MatchesController < ApplicationController
 
   def update
     match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
-    result = FinishMatch.new(@match, match_params).call
+    service = FinishMatch.new(@match, current_user: current_user, params: match_params)
+    service.call
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
-      flash.now.alert = result.alert
+      flash.now.alert = service.alert
       render "edit"
     else
       # go back to the source of the update, which can be tournaments/edit, not matches/edit
-      flash.alert = result.alert
+      flash.alert = service.alert
       redirect_back fallback_location: edit_match_path(@match)
     end
   end
