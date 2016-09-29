@@ -1,7 +1,8 @@
 require "rails_helper"
 
 RSpec.describe TournamentsController, type: :controller do
-  before { sign_in }
+  let(:current_user) { build(:user) }
+  before { sign_in(current_user) }
 
   describe "#index" do
     it "responds successfully" do

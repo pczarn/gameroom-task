@@ -10,9 +10,4 @@ module ControllerHelpers
     allow(controller).to receive(:authenticate!)
     allow(controller).to receive(:current_user).and_return(user)
   end
-
-  def current_user
-    @user.save! if @user.new_record?
-    @user
-  end
 end

@@ -5,7 +5,7 @@ Owner: <%= tournament.owner.name %>
 <% tournament.team_tournaments.each do |team_tournament| %>
   <%= render partial: "teams/display_long", locals: { team: team_tournament.team } %>
 
-  <% if @tournament.open? && @tournament.owned_by?(current_user) %>
+  <% if tournament.open? && tournament.owned_by?(current_user) %>
     <%= button_to "Remove team from tournament",
                   tournament_remove_team_path(tournament, team_id: team_tournament.team.id),
                   method: :delete %>
