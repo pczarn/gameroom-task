@@ -93,6 +93,21 @@ class UpdateFinishedMatch
     send_mails
   end
 
+  def self.notify_about_match_result(match_id)
+    User.pluck(:id).each do |user_id|
+      TournamentStatusMailer.notify_about_match_result(user_id, match_id).deliver
+    end
+  end
+
+  def self.notify_about_tournament_end(tournament_id, winning_team_id)
+    tournament = Tournament.find(tournament_id)
+    tournament.teams.includes(:members).each do |team|
+      team.member_ids.each do |user_id|
+        TournamentStatusMailer.notify_about_end(user_id, tournament_id, winning_team_id).deliver
+      end
+    end
+  end
+
   private
 
   def transactional_update
@@ -106,7 +121,7 @@ class UpdateFinishedMatch
   def update
     if @match.update(@params)
       @next_match.save! if @next_match
-      @tournament.ended! if @end_tournament
+      @tournament.update!(status: :ended) if @end_tournament
     else
       @alert = @match.errors.full_messages.to_sentence
     end
@@ -114,11 +129,11 @@ class UpdateFinishedMatch
 
   def send_mails
     if @next_match
-      TournamentStatusMailer.delay.notify_about_match_result(@tournament.id)
+      UpdateFinishedMatch.delay.notify_about_match_result(@match.id)
     end
 
     if @end_tournament
-      TournamentStatusMailer.delay.notify_about_end(@tournament.id, @match.winning_team.id)
+      UpdateFinishedMatch.delay.notify_about_tournament_end(@tournament.id, @match.winning_team.id)
     end
   end
 end
