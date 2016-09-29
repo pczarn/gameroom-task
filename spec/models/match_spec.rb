@@ -62,7 +62,7 @@ RSpec.describe Match, type: :model do
       end
 
       context "when absent" do
-        let(:match) { build(:ongoing_match) }
+        let(:match) { build(:match, :ongoing) }
         it { is_expected.to be_valid }
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe Match, type: :model do
     end
 
     context "when a match has no scores" do
-      let(:match) { build(:ongoing_match) }
+      let(:match) { build(:match, :ongoing) }
 
       it "maintans the same order" do
         expect(match.teams_in_order).to eq(match.teams)
