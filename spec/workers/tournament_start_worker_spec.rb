@@ -49,7 +49,7 @@ RSpec.describe TournamentStartWorker, type: :worker do
       end
 
       it "adds a new job" do
-        expect(TournamentStartWorker).to receive(:perform_in)
+        expect(TournamentStartWorker).to receive(:perform_at)
         perform
       end
     end

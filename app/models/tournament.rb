@@ -8,7 +8,7 @@ class Tournament < ApplicationRecord
   has_many :rounds
   has_many :matches, through: :rounds
 
-  after_save do
+  after_commit on: [:create, :update] do
     TournamentStartWorker.perform_at(started_at, id, started_at) if open?
   end
 
