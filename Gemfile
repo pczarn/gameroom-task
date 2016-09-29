@@ -60,3 +60,5 @@ gem "kaminari", "~> 0.17"
 
 # Authentication
 gem "argon2", "~> 1.1"
+
+gem "sidekiq", "~> 4.2"
