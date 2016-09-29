@@ -25,54 +25,15 @@ class MatchesController < ApplicationController
   end
 
   def update
-    if @match.round
-      tournament = @match.round.tournament
-      round_number = @match.round.number
-      if next_round = tournament.rounds[round_number + 1]
-        team_ids = [@match.team_one_id, @match.team_two_id]
-        if next_round.matches.find_by(team_one_id: team_ids, team_two_id: team_ids)
-          redirect_back alert: "Another match depends on the result of the one you tried to edit.",
-                        fallback_location: edit_match_path(@match)
-          return
-        end
-      end
-      unless current_user && editable?(@match, current_user) && !tournament.ended?
-        redirect_back alert: "You are not permitted to edit the match.",
-                      fallback_location: edit_match_path(@match)
-        return
-      end
-      match_params = match_in_tournament_params
-    else
-      match_params = friendly_match_params
-    end
+    match_params = if @match.round.present? ? match_in_tournament_params : friendly_match_params
+    result = FinishMatch.new(@match, match_params).call
 
-    if @match.update(match_params)
-      round = @match.round
-      tournament = round && round.tournament
-      if tournament && @match.team_one_score && @match.team_two_score
-        if next_round = tournament.rounds[round.number + 1]
-          index_in_round = @match.round.matches.find_index(@match)
-          other_match_in_pair = @match.round.matches[index_in_round ^ 1]
-          # TODO: perhaps set the order of team one and two?
-          # TODO: when the result is a tie?
-          next_round.matches.create(
-            game: tournament.game,
-            team_one_id: @match.winning_team.id,
-            team_two_id: other_match_in_pair.winning_team.id,
-          )
-          MatchResultMailer.notify_tournament_members(tournament)
-        else
-          TournamentResultMailer.result(tournament, Team.find(@match.winning_team.id))
-          tournament.ended!
-        end
-      end
-      redirect_back fallback_location: edit_match_path(@match)
-    elsif Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
-      flash.now.alert = @match.errors.full_messages.to_sentence
+    if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
+      flash.now.alert = result.alert
       render "edit"
     else
-      # go back to the source of the update, which is tournaments/edit, not matches/edit
-      flash.alert = @match.errors.full_messages.to_sentence
+      # go back to the source of the update, which can be tournaments/edit, not matches/edit
+      flash.alert = result.alert
       redirect_back fallback_location: edit_match_path(@match)
     end
   end
