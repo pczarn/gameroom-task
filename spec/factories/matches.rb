@@ -11,7 +11,7 @@ FactoryGirl.define do
     team_one_score { Faker::Number.between(0, 100) }
     team_two_score { Faker::Number.between(0, 100) }
 
-    factory :ongoing_match do
+    trait :ongoing do
       team_one_score { nil }
       team_two_score { nil }
     end
