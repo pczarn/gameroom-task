@@ -28,7 +28,7 @@ RSpec.describe TournamentStartWorker, type: :worker do
       end
 
       it "notifies players" do
-        expect(UserMailer).to receive(:notify_about_tournament_start).at_least(:once)
+        expect(TournamentStatusMailer).to receive(:notify_about_start).at_least(:once)
         perform
       end
     end
