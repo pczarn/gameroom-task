@@ -150,6 +150,14 @@ RSpec.describe MatchesController, type: :controller do
       expect { action }.to change { match.reload.team_one_score }.to eq(2)
     end
 
+    it "calls a service to finish the match" do
+      service = instance_double(FinishMatch)
+      allow(FinishMatch).to receive(:new).and_return(service)
+      allow(service).to receive(:alert)
+      expect(service).to receive(:call)
+      action
+    end
+
     it_behaves_like "an action that modifies matches"
   end
 
