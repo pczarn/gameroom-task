@@ -1,7 +1,10 @@
 require "rails_helper"
 
 RSpec.describe MatchesController, type: :controller do
-  before { sign_in }
+  before do
+    sign_in
+    allow(controller).to receive(:ensure_editable!)
+  end
 
   describe "#index" do
     it "responds successfully" do
@@ -56,7 +59,7 @@ RSpec.describe MatchesController, type: :controller do
 
       it "gives an error message" do
         expect { creation }
-          .to change { flash[:error] }
+          .to change { flash.alert }
           .to include("Team one score must be greater than or equal to 0")
       end
 
@@ -67,8 +70,13 @@ RSpec.describe MatchesController, type: :controller do
   end
 
   describe "#edit" do
-    subject { get :edit, params: { id: match.id } }
+    subject(:editing) { get :edit, params: { id: match.id } }
     let(:match) { create(:match) }
+
+    it "ensures the user can edit the match" do
+      expect(controller).to receive(:ensure_editable!)
+      editing
+    end
 
     it "responds successfully" do
       is_expected.to be_success
@@ -79,6 +87,11 @@ RSpec.describe MatchesController, type: :controller do
     subject(:updating) { patch :update, params: { id: match.id, match: { team_one_score: 2 } } }
     let(:match) { create(:match, team_one_score: 1) }
 
+    it "ensures the user can edit the match" do
+      expect(controller).to receive(:ensure_editable!)
+      updating
+    end
+
     it "updates attributes" do
       expect { updating }.to change { match.reload.team_one_score }.to eq(2)
     end
@@ -87,6 +100,11 @@ RSpec.describe MatchesController, type: :controller do
   describe "#destroy" do
     let!(:match) { create(:match) }
     subject(:destruction) { delete :destroy, params: { id: match.id } }
+
+    it "ensures the user can edit the match" do
+      expect(controller).to receive(:ensure_editable!)
+      destruction
+    end
 
     it "removes a match" do
       expect { destruction }.to change(Match, :count).by(-1)
@@ -97,7 +115,7 @@ RSpec.describe MatchesController, type: :controller do
     end
 
     it "gives a message that everything is ok" do
-      expect { destruction }.to change { flash[:success] }.to include("Match deleted")
+      expect { destruction }.to change { flash.notice }.to include("Match deleted")
     end
   end
 end
