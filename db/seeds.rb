@@ -21,6 +21,9 @@ users = [
   User.create(name: "Marcin", email: "marcin@monterail.com", **pass_h),
 ]
 
+michal = users.first
+admin = users[2]
+
 michals = Team.create(name: "The Michals", members: users[0..1])
 middle = Team.create(name: "The Middle", members: users[2..4])
 daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
@@ -34,6 +37,7 @@ Match.create(
   game: beer_pong,
   team_one: michals,
   team_two: middle,
+  owner: michal,
 )
 
 # finished
@@ -45,6 +49,7 @@ first_match = Match.create(
   team_one_score: 75,
   team_two_score: 52,
   played_at: "2016-10-01 18:12".to_time(:utc),
+  owner: michal,
 )
 Match.create(
   game: beer_pong,
@@ -53,6 +58,7 @@ Match.create(
   team_one_score: 77,
   team_two_score: 59,
   played_at: "2016-09-13 11:12".to_time(:utc),
+  owner: michal,
 )
 Match.create(
   game: monte_kombat,
@@ -61,6 +67,7 @@ Match.create(
   team_one_score: 8,
   team_two_score: 54,
   played_at: "2016-09-13 12:12".to_time(:utc),
+  owner: michal,
 )
 Match.create(
   game: monte_kombat,
@@ -69,6 +76,7 @@ Match.create(
   team_one_score: 7,
   team_two_score: 5,
   played_at: "2016-09-13 13:12".to_time(:utc),
+  owner: michal,
 )
 Match.create(
   game: ufc,
@@ -77,6 +85,7 @@ Match.create(
   team_one_score: 22,
   team_two_score: 33,
   played_at: "2016-09-13 14:12".to_time(:utc),
+  owner: michal,
 )
 ufc_round_0_matches = [
   Match.create(
@@ -130,7 +139,7 @@ Tournament.create(
   title: "first open one",
   description: "we play montal kombat",
   game: monte_kombat,
-  owner: users[2],
+  owner: admin,
   number_of_teams: 4,
   started_at: "2016-09-01 18:12".to_time(:utc),
   teams: [michals, middle, daniel_team, emmanuel_team],
@@ -138,7 +147,7 @@ Tournament.create(
 Tournament.create(
   title: "beer championship 2017",
   game: beer_pong,
-  owner: users[2],
+  owner: admin,
   number_of_teams: 2,
   started_at: "2017-09-01 18:12".to_time(:utc),
   teams: [michals, middle],
@@ -149,7 +158,7 @@ Tournament.create(
 current_championship = Tournament.create(
   title: "beer championship 2016",
   game: beer_pong,
-  owner: users[2],
+  owner: admin,
   status: 1,
   number_of_teams: 2,
   started_at: "2016-09-02 18:12".to_time(:utc),
@@ -159,7 +168,7 @@ current_championship = Tournament.create(
 ufc_september = Tournament.create(
   title: "ufc tournament september",
   game: ufc,
-  owner: users.first,
+  owner: michal,
   status: 1,
   number_of_teams: 4,
   started_at: "2016-09-03 18:12".to_time(:utc),
@@ -181,7 +190,7 @@ ufc_october = Tournament.create(
 Tournament.create(
   title: "ufc tournament august",
   game: ufc,
-  owner: users[2],
+  owner: admin,
   status: 2,
   number_of_teams: 2,
   started_at: "2016-08-03 18:12".to_time(:utc),
