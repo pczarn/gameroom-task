@@ -2,6 +2,14 @@
   <%= match.game.name %>
 </strong>
 
+<br>
+
+<% if match.owner %>
+  Owner: <%= match.owner.name %>
+<% else %>
+  The match has no owner!
+<% end %>
+
 <h2>
   <%= match.winning_team.name %>
   vs

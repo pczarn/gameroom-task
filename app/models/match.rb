@@ -5,6 +5,8 @@ class Match < ApplicationRecord
   belongs_to :round
   belongs_to :owner, class_name: User, inverse_of: :owned_matches
 
+  scope :friendly, -> { where(round: nil) }
+
   scope :involving, -> (user_id) do
     joins(team_one: :user_teams, team_two: :user_teams)
       .where(user_teams: { user_id: user_id })
