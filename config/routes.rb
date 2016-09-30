@@ -20,5 +20,7 @@ Rails.application.routes.draw do
     delete :remove_team
   end
 
+  resources :team_tournament_membership, only: [:update]
+
   resources :games, except: :show
 end
