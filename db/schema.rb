@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160921115742) do
+ActiveRecord::Schema.define(version: 20160930071221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,7 +34,9 @@ ActiveRecord::Schema.define(version: 20160921115742) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.integer  "round_id"
+    t.integer  "owner_id"
     t.index ["game_id"], name: "index_matches_on_game_id", using: :btree
+    t.index ["owner_id"], name: "index_matches_on_owner_id", using: :btree
     t.index ["round_id"], name: "index_matches_on_round_id", using: :btree
     t.index ["team_one_id"], name: "index_matches_on_team_one_id", using: :btree
     t.index ["team_two_id"], name: "index_matches_on_team_two_id", using: :btree
@@ -107,6 +109,7 @@ ActiveRecord::Schema.define(version: 20160921115742) do
 
   add_foreign_key "matches", "games"
   add_foreign_key "matches", "rounds"
+  add_foreign_key "matches", "users", column: "owner_id"
   add_foreign_key "rounds", "tournaments"
   add_foreign_key "team_tournaments", "teams"
   add_foreign_key "team_tournaments", "tournaments"
