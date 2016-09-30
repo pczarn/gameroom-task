@@ -18,20 +18,28 @@ class TournamentStatusMailer < ApplicationMailer
     match = Match.find(match_id)
     tournament = match.round.tournament
     subject = subject_for_team_result_in_match(tournament, match, @user)
+    @result = player_result_in_match(match, @user)
     mail(to: @user.email, subject: subject)
   end
 
   private
+
+  def player_result_in_match(match, user)
+    if UserTeam.exists?(user: user, team_id: match.winning_team.id)
+      :win
+    elsif UserTeam.exists?(user: user, team_id: match.defeated_team.id)
+      :loss
+    end
+  end
 
   def subject_for_tournament_win(tournament, team)
     "The team #{team.name} won the #{tournament.title} tournament"
   end
 
   def subject_for_team_result_in_match(tournament, match, user)
-    if UserTeam.exists?(user: user, team_id: match.winning_team.id)
-      subject_for_match_win(tournament)
-    elsif UserTeam.exists?(user: user, team_id: match.defeated_team.id)
-      subject_for_match_loss(tournament)
+    case player_result_in_match(match, user)
+    when :win then subject_for_match_win(tournament)
+    when :loss then subject_for_match_loss(tournament)
     else
       subject_for_match_result(tournament, Team.find(match.winning_team.id))
     end
