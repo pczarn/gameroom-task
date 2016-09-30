@@ -1,6 +1,6 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :load_tournament, only: [:edit, :update, :destroy, :add_team, :remove_team]
+  before_action :load_tournament, except: [:index, :create]
   before_action :expect_tournament_owner!, only: [:update, :destroy, :add_team, :remove_team]
 
   def index
