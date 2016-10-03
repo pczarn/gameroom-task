@@ -1,37 +1,51 @@
 class FinishMatch
   include TournamentsHelper
 
-  def initialize(match, current_user: nil, params: nil, update: nil)
+  def initialize(match, current_user: nil, params: {})
     @match = match
+    @params = params
     @round = match.round
     @tournament = @round && @round.tournament
     @current_user = current_user
-    @update = update
-    @update ||= UpdateFinishedMatch.new(match: match, tournament: @tournament, params: params)
   end
 
-  def call
-    update_with_tournament if @tournament.present?
-    @update.perform
+  def perform
+    build_tasks
+
+    Match.transaction do
+      @tasks.save_all
+    end
+
+    @tasks.finish_all
   end
 
   def alert
-    @update.alert
+    @tasks.alert
   end
 
   private
 
-  def update_with_tournament
+  def build_tasks
+    @tasks = TaskList.new
+    build_update_task
+    build_tasks_for_tournament if @tournament
+  end
+
+  def build_update_task
+    @tasks << UpdateMatch.new(match: @match, params: @params)
+  end
+
+  def build_tasks_for_tournament
     if !can_edit_tournament?
-      @update.alert = "You are not permitted to edit the match."
+      @tasks << Alert.new("You are not permitted to edit the match.")
     elsif next_round
       if next_match
-        @update.alert = "Another match depends on the result of the one you tried to edit."
+        @tasks << Alert.new("Another match depends on the result of the one you tried to edit.")
       elsif match_scores.all?
-        @update.next_match = build_next_match
+        @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
       end
     else
-      @update.end_tournament = true
+      @tasks << EndTournament.new(tournament: @tournament, match: @match)
     end
   end
 
@@ -43,13 +57,79 @@ class FinishMatch
     @tournament.rounds[@round.number + 1]
   end
 
+  def match_scores
+    @params.values_at(:team_one_score, :team_two_score)
+  end
+
   def next_match
     next_round.matches.find_by(team_one_id: team_ids, team_two_id: team_ids)
   end
 
-  def match_scores
-    @update.params.values_at(:team_one_score, :team_two_score)
+  def team_ids
+    [@match.team_one_id, @match.team_two_id]
   end
+end
+
+class TaskList < Array
+  def save_all
+    each do |task|
+      task.save or break
+    end
+  end
+
+  def finish_all
+    each(&:finish)
+  end
+
+  def alert
+    map { |task| task.alert }.find { |alert| alert.present? }
+  end
+end
+
+class UpdateMatch
+  def initialize(match:, params:)
+    @match = match
+    @params = params
+  end
+
+  def save
+    @match.update(@params)
+  end
+
+  def finish
+  end
+
+  def alert
+    @match.errors.full_messages.to_sentence unless @match.errors.empty?
+  end
+end
+
+class CreateNextMatch
+  def initialize(tournament:, round:, match:)
+    @tournament = tournament
+    @round = round
+    @match = match
+  end
+
+  def save
+    build_next_match.save!
+    true
+  end
+
+  def finish
+    CreateNextMatch.delay.notify_about_match_result(@match.id)
+  end
+
+  def alert
+  end
+
+  def self.notify_about_match_result(match_id)
+    User.pluck(:id).each do |user_id|
+      TournamentStatusMailer.notify_about_match_result(user_id, match_id).deliver
+    end
+  end
+
+  private
 
   def build_next_match
     team_one, team_two = next_match_teams
@@ -60,12 +140,12 @@ class FinishMatch
     )
   end
 
-  def team_ids
-    [@match.team_one_id, @match.team_two_id]
-  end
-
   def next_match_teams
     [@match.winning_team, other_match_in_pair.winning_team]
+  end
+
+  def next_round
+    @tournament.rounds[@round.number + 1]
   end
 
   def other_match_in_pair
@@ -77,26 +157,22 @@ class FinishMatch
   end
 end
 
-class UpdateFinishedMatch
-  attr_accessor :alert, :next_match, :end_tournament
-  attr_reader :params
-
-  def initialize(match:, tournament:, params:)
-    @match = match
+class EndTournament
+  def initialize(tournament:, match:)
     @tournament = tournament
-    @params = params
+    @match = match
   end
 
-  def perform
-    return if @alert
-    transactional_update
-    send_mails
+  def save
+    @tournament.update!(status: :ended)
+    true
   end
 
-  def self.notify_about_match_result(match_id)
-    User.pluck(:id).each do |user_id|
-      TournamentStatusMailer.notify_about_match_result(user_id, match_id).deliver
-    end
+  def finish
+    EndTournament.delay.notify_about_tournament_end(@tournament.id, @match.winning_team.id)
+  end
+
+  def alert
   end
 
   def self.notify_about_tournament_end(tournament_id, winning_team_id)
@@ -107,33 +183,19 @@ class UpdateFinishedMatch
       end
     end
   end
+end
 
-  private
+class Alert
+  attr_reader :alert
 
-  def transactional_update
-    if @tournament
-      @tournament.with_lock { update unless @tournament.ended? }
-    else
-      Match.transaction { update }
-    end
+  def initialize(alert)
+    @alert = alert
   end
 
-  def update
-    if @match.update(@params)
-      @next_match.save! if @next_match
-      @tournament.update!(status: :ended) if @end_tournament
-    else
-      @alert = @match.errors.full_messages.to_sentence
-    end
+  def save
+    true
   end
 
-  def send_mails
-    if @next_match
-      UpdateFinishedMatch.delay.notify_about_match_result(@match.id)
-    end
-
-    if @end_tournament
-      UpdateFinishedMatch.delay.notify_about_tournament_end(@tournament.id, @match.winning_team.id)
-    end
+  def finish
   end
 end

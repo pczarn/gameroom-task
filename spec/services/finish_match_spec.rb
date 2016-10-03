@@ -1,21 +1,26 @@
 require "rails_helper"
 
 RSpec.describe FinishMatch do
-  describe "#call" do
-    subject(:run_service) { service.call }
-    let(:service) { described_class.new(match, current_user: user, update: update) }
-    let(:update) { instance_double("UpdateFinishedMatch") }
+  describe "#build_tasks" do
+    subject(:run_service) do
+      service.perform
+    end
+
+    let(:service) { described_class.new(match, current_user: user, params: params) }
+    let(:params) { { team_one_score: 0, team_two_score: 0 } }
+    let(:update_match) { instance_double("UpdateMatch") }
     let(:user) { build(:user) }
 
     before do
-      allow(update).to receive(:params).and_return(team_one_score: 0, team_two_score: 0)
+      allow(UpdateMatch).to receive(:new).and_return(update_match)
+      allow(update_match).to receive_messages(save: true, finish: nil)
     end
 
     context "outside a tournament" do
       let(:match) { build(:match) }
 
       it "performs an update" do
-        expect(update).to receive(:perform)
+        expect(update_match).to receive_messages(save: true, finish: nil)
         run_service
       end
     end
@@ -27,15 +32,20 @@ RSpec.describe FinishMatch do
 
       before do
         allow(service).to receive(:editable?).and_return(true)
-        allow(update).to receive(:perform)
+        allow(update_match).to receive_messages(save: nil, finish: nil, alert: nil)
+      end
+
+      it "performs an update" do
+        expect(update_match).to receive(:save)
+        run_service
       end
 
       context "when tournament is ended" do
         before { tournament.ended! }
 
         it "gives an alert" do
-          expect(update).to receive(:alert=).with(kind_of(String))
           run_service
+          expect(service.alert).to be_a(String)
         end
       end
 
@@ -43,17 +53,21 @@ RSpec.describe FinishMatch do
         before { allow(service).to receive(:editable?).and_return(false) }
 
         it "gives an alert" do
-          expect(update).to receive(:alert=).with(kind_of(String))
           run_service
+          expect(service.alert).to be_a(String)
         end
       end
 
       context "when tournament is started and editable" do
-        before { expect(update).to receive(:perform) }
+        let(:create_next_match) { instance_double(CreateNextMatch) }
+        let(:end_tournament) { instance_double(EndTournament) }
+
+        before { expect(update_match).to receive_messages(save: true, finish: nil) }
 
         context "when match is not the last one" do
           it "builds the next match" do
-            expect(update).to receive(:next_match=).with(kind_of(Match))
+            expect(CreateNextMatch).to receive(:new).and_return(create_next_match)
+            expect(create_next_match).to receive_messages(save: true, finish: nil)
             run_service
           end
         end
@@ -62,7 +76,8 @@ RSpec.describe FinishMatch do
           let(:round) { tournament.rounds.last }
 
           it "ends the tournament" do
-            expect(update).to receive(:end_tournament=).with(true)
+            expect(EndTournament).to receive(:new).and_return(end_tournament)
+            expect(end_tournament).to receive_messages(save: true, finish: nil)
             run_service
           end
         end
@@ -71,55 +86,94 @@ RSpec.describe FinishMatch do
   end
 end
 
-RSpec.describe UpdateFinishedMatch do
-  subject(:update) { described_class.new(match: match, tournament: tournament, params: params) }
-  let(:tournament) { create(:tournament, :with_rounds) }
-  let(:match) { tournament.rounds.first.matches.first }
-  let(:params) { { team_one_score: 1, team_two_score: 2 } }
+RSpec.describe UpdateMatch do
+  subject(:update_match) { described_class.new(match: match, params: params) }
+  let(:match) { create(:match) }
+  let(:params) { { team_one_score: 0, team_two_score: 0 } }
+
+  describe "#save" do
+    it "works" do
+      expect { update_match.save }.not_to raise_error
+    end
+  end
+end
+
+RSpec.describe CreateNextMatch do
+  subject(:create_next_match) do
+    described_class.new(tournament: tournament, round: round, match: match)
+  end
+
+  let!(:tournament) { create(:tournament, :with_rounds) }
+  let(:round) { tournament.rounds.first }
+  let(:match) { round.matches.first }
   let(:mail) { double("Message") }
 
-  describe "#perform" do
-    it "works" do
-      expect { update.perform }.not_to raise_error
-    end
+  before do
+    allow(described_class).to receive(:delay).and_return(described_class)
+  end
 
+  describe "#save" do
+    it "saves the next match" do
+      expect { create_next_match.save }.to change(Match, :count).by(1)
+    end
+  end
+
+  describe "#finish" do
+    it "sends mails about match result" do
+      allow(TournamentStatusMailer).to receive(:notify_about_match_result).and_return(mail)
+      expect(mail).to receive(:deliver).at_least(:once)
+      create_next_match.finish
+    end
+  end
+end
+
+RSpec.describe EndTournament do
+  let(:end_tournament) { described_class.new(tournament: tournament, match: match) }
+  let(:tournament) { create(:tournament, :with_rounds) }
+  let(:match) { tournament.rounds.first.matches.first }
+  let(:mail) { double("Message") }
+
+  before do
+    allow(described_class).to receive(:delay).and_return(described_class)
+  end
+
+  describe "#save" do
+    it "ends the tournament" do
+      expect { end_tournament.save }.to change { tournament.reload.ended? }.to eq(true)
+    end
+  end
+
+  describe "#finish" do
     before do
-      allow(described_class).to receive(:delay).and_return(described_class)
+      tournament.teams = [build(:team)]
     end
 
-    context "when #next_match is set" do
-      let(:next_match) { build(:match) }
-
-      before do
-        update.next_match = next_match
-      end
-
-      it "saves the next match" do
-        expect { update.perform }.to change { next_match.persisted? }.to eq(true)
-      end
-
-      it "sends mails about match result" do
-        allow(TournamentStatusMailer).to receive(:notify_about_match_result).and_return(mail)
-        expect(mail).to receive(:deliver).at_least(:once)
-        update.perform
-      end
+    it "sends mails about tournament end" do
+      allow(TournamentStatusMailer).to receive(:notify_about_end).and_return(mail)
+      expect(mail).to receive(:deliver).at_least(:once)
+      end_tournament.finish
     end
+  end
+end
 
-    context "when #end_tournament is set to true" do
-      before do
-        update.end_tournament = true
-        tournament.teams = [build(:team)]
-      end
+RSpec.describe Alert do
+  let(:alert) { described_class.new("woah") }
 
-      it "ends the tournament" do
-        expect { update.perform }.to change { tournament.reload.ended? }.to eq(true)
-      end
+  describe "#alert" do
+    it "returns the alert string" do
+      expect(alert.alert).to eq("woah")
+    end
+  end
 
-      it "sends mails about tournament end" do
-        allow(TournamentStatusMailer).to receive(:notify_about_end).and_return(mail)
-        expect(mail).to receive(:deliver).at_least(:once)
-        update.perform
-      end
+  describe "#save" do
+    it "works" do
+      expect { alert.save }.not_to raise_error
+    end
+  end
+
+  describe "#finish" do
+    it "works" do
+      expect { alert.finish }.not_to raise_error
     end
   end
 end
