@@ -4,7 +4,7 @@ class TeamTournamentMembershipController < ApplicationController
     service.join_team
     flash.alert = service.alert
     flash.notice = service.notice
-    redirect_back fallback_location: edit_tournament_path(tournament)
+    redirect_back fallback_location: edit_tournament_path(service.tournament)
   end
 
   def destroy
@@ -12,7 +12,7 @@ class TeamTournamentMembershipController < ApplicationController
     service.leave_team
     flash.alert = service.alert
     flash.notice = service.notice
-    redirect_back fallback_location: edit_tournament_path(tournament)
+    redirect_back fallback_location: edit_tournament_path(service.tournament)
   end
 
   private

@@ -7,11 +7,15 @@ class ChangeMembershipInTournament
   end
 
   def join_team
-    update(member_ids: current_member_ids + [user.id])
+    update(member_ids: current_member_ids + [@user.id])
   end
 
   def leave_team
-    update(member_ids: current_member_ids - [user.id])
+    update(member_ids: current_member_ids - [@user.id])
+  end
+
+  def tournament
+    @team_tournament.tournament
   end
 
   private
@@ -32,7 +36,7 @@ class ChangeMembershipInTournament
     end
   end
 
-  def copy_team(team, params)
+  def copy_team(team, member_ids:)
     new_team = add_or_reuse_team(name: current_team.name, member_ids: member_ids)
     new_team.team_tournaments.build(tournament: tournament)
     new_team
@@ -43,10 +47,6 @@ class ChangeMembershipInTournament
       new_team.save && @team_tournament.destroy!
     end
     new_team.persisted?
-  end
-
-  def tournament
-    @team_tournament.tournament
   end
 
   def current_team
@@ -60,10 +60,7 @@ class ChangeMembershipInTournament
   def add_or_reuse_team(params)
     team = Team.new(params)
     member_ids = team.member_ids.sort
-    if reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
-      reused
-    else
-      team
-    end
+    reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
+    reused || team
   end
 end
