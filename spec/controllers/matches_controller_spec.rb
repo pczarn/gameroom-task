@@ -87,7 +87,7 @@ RSpec.describe MatchesController, type: :controller do
       service = instance_double(FinishMatch)
       allow(FinishMatch).to receive(:new).and_return(service)
       allow(service).to receive(:alert)
-      expect(service).to receive(:call)
+      expect(service).to receive(:perform)
       updating
     end
   end

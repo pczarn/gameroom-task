@@ -27,7 +27,7 @@ class MatchesController < ApplicationController
   def update
     match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
     service = FinishMatch.new(@match, current_user: current_user, params: match_params)
-    service.call
+    service.perform
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
       flash.now.alert = service.alert
