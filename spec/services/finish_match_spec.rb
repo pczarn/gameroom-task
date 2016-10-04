@@ -32,7 +32,7 @@ RSpec.describe FinishMatch do
 
       before do
         allow(service).to receive(:editable?).and_return(true)
-        allow(update_match).to receive_messages(save: nil, finish: nil, alert: nil)
+        allow(update_match).to receive_messages(save: nil, finish: nil)
       end
 
       it "performs an update" do
@@ -152,28 +152,6 @@ RSpec.describe EndTournament do
       allow(TournamentStatusMailer).to receive(:notify_about_end).and_return(mail)
       expect(mail).to receive(:deliver).at_least(:once)
       end_tournament.finish
-    end
-  end
-end
-
-RSpec.describe Alert do
-  let(:alert) { described_class.new("woah") }
-
-  describe "#alert" do
-    it "returns the alert string" do
-      expect(alert.alert).to eq("woah")
-    end
-  end
-
-  describe "#save" do
-    it "works" do
-      expect { alert.save }.not_to raise_error
-    end
-  end
-
-  describe "#finish" do
-    it "works" do
-      expect { alert.finish }.not_to raise_error
     end
   end
 end
