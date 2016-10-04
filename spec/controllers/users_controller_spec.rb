@@ -44,4 +44,79 @@ RSpec.describe UsersController, type: :controller do
       end
     end
   end
+
+  describe "#update" do
+    subject(:action) { post :update, params: { id: user.id, user: user_attrs } }
+    let!(:user) { create(:user) }
+
+    context "when the user is logged in" do
+      before do
+        sign_in(user)
+      end
+
+      context "with password correctly confirmed" do
+        let(:user_attrs) { { password: "blablabla", password_confirmation: "blablabla" } }
+
+        it "does not give an error message" do
+          action
+          expect(assigns(:user).errors).to be_empty
+        end
+
+        it "redirects to editing" do
+          is_expected.to redirect_to(edit_user_path(user))
+        end
+
+        it "updates the password" do
+          expect { action }.to change { user.reload.password_hashed }
+        end
+      end
+
+      context "with password incorrectly confirmed" do
+        let(:user_attrs) { { password: "blablabla", password_confirmation: "qwertyuio" } }
+
+        it "fails" do
+          action
+          expect(assigns(:user).errors.full_messages)
+            .to include("Password confirmation doesn't match Password")
+        end
+      end
+
+      context "with correct name" do
+        let(:user_attrs) { { name: "foo" } }
+
+        it "does not give an error message" do
+          action
+          expect(assigns(:user).errors).to be_empty
+        end
+
+        it "redirects to editing" do
+          is_expected.to redirect_to(edit_user_path(user))
+        end
+
+        it "updates the account name" do
+          expect { action }.to change { user.reload.name }.to eq("foo")
+        end
+      end
+
+      context "with wrong name" do
+        let(:user_attrs) { { name: "" } }
+
+        it "fails" do
+          action
+          expect(assigns(:user).errors.full_messages).to include("Name can't be blank")
+        end
+      end
+    end
+
+    context "when another user is logged in" do
+      it "fails" do
+        expect(controller).not_to receive(:update)
+        action
+      end
+
+      it "redirects to root" do
+        expect(action).to redirect_to(root_path)
+      end
+    end
+  end
 end

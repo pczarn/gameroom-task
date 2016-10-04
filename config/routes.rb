@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   root "matches#index"
 
-  resources :users, only: [:create]
+  resources :users, only: [:create, :edit, :update]
+
   get "sign_up", to: "users#new", as: "sign_up"
 
   resource :sessions, only: [:create]
