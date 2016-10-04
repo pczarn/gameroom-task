@@ -103,7 +103,7 @@ RSpec.describe CreateNextMatch do
     described_class.new(tournament: tournament, round: round, match: match)
   end
 
-  let!(:tournament) { create(:tournament, :with_rounds) }
+  let!(:tournament) { create(:tournament, :with_rounds, number_of_rounds: 2) }
   let(:round) { tournament.rounds.first }
   let(:match) { round.matches.first }
   let(:mail) { double("Message") }

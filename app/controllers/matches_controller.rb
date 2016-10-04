@@ -6,11 +6,7 @@ class MatchesController < ApplicationController
   before_action :ensure_editable!, only: [:edit, :update, :destroy]
 
   def create
-<<<<<<< HEAD
-    @match = Match.new(friendly_match_params)
-=======
-    @match = current_user.owned_matches.build(match_params)
->>>>>>> Ensure only users with access can modify matches
+    @match = current_user.owned_matches.build(friendly_match_params)
     if @match.save
       redirect_to edit_match_path(@match)
     else

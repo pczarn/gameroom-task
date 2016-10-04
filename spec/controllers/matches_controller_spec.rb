@@ -155,7 +155,7 @@ RSpec.describe MatchesController, type: :controller do
       allow(FinishMatch).to receive(:new).and_return(service)
       allow(service).to receive(:alert)
       expect(service).to receive(:perform)
-      updating
+      action
     end
 
     it_behaves_like "an action that modifies matches"
