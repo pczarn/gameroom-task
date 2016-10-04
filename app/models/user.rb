@@ -6,6 +6,8 @@ class User < ApplicationRecord
     admin: 1,
   }
 
+  mount_uploader :image, ImageUploader
+
   has_many :user_teams
   has_many :teams, through: :user_teams
   has_many :team_tournaments
