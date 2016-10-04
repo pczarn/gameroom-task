@@ -41,6 +41,10 @@ class Match < ApplicationRecord
     ]
   end
 
+  def scores
+    [team_one_score, team_two_score]
+  end
+
   private
 
   def no_repeated_members_across_teams

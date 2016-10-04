@@ -16,6 +16,14 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_rounds do
+      after(:build) do |tournament, evaluator|
+        evaluator.number_of_rounds.times do |i|
+          tournament.rounds << build(:round, :with_matches, tournament: tournament, number: i)
+        end
+      end
+    end
+
     trait :with_image do
       image do
         image_path = File.join(Rails.root, "spec", "support", "tournament_images", "mk.jpg")

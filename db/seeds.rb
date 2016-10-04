@@ -17,6 +17,8 @@ users = [
   User.create(name: "Rafal", email: "r@monterail.com", **pass_h),
   User.create(name: "Daniel", email: "d@monterail.com", **pass_h),
   User.create(name: "Emmanuel", email: "e@monterail.com", **pass_h),
+  User.create(name: "Pawel", email: "pawel@monterail.com", **pass_h),
+  User.create(name: "Marcin", email: "marcin@monterail.com", **pass_h),
 ]
 
 michal = users.first
@@ -27,6 +29,7 @@ middle = Team.create(name: "The Middle", members: users[2..4])
 daniel_team = Team.create(name: "Just Daniel", members: [users[5]])
 emmanuel_team = Team.create(name: "Just Emmanuel", members: [users[6]])
 internal = Team.create(name: "Internal", members: users[0..4])
+qa = Team.create(name: "QA", members: users[7..8])
 
 # ongoing
 
@@ -45,7 +48,7 @@ first_match = Match.create(
   team_two: daniel_team,
   team_one_score: 75,
   team_two_score: 52,
-  played_at: "2016-09-01 18:12".to_time(:utc),
+  played_at: "2016-10-01 18:12".to_time(:utc),
   owner: michal,
 )
 Match.create(
@@ -107,10 +110,27 @@ ufc_round_1_matches = [
     game: ufc,
     team_one: michals,
     team_two: emmanuel_team,
-    team_one_score: 44,
-    team_two_score: 12,
     played_at: "2016-09-22 14:12".to_time(:utc),
   ),
+]
+ufc_october_rounds = [
+  [
+    Match.create(
+      game: ufc,
+      team_one: internal,
+      team_two: qa,
+      team_one_score: 0,
+      team_two_score: 11,
+      played_at: "2016-10-22 14:12".to_time(:utc),
+    ),
+    Match.create(
+      game: ufc,
+      team_one: emmanuel_team,
+      team_two: daniel_team,
+      played_at: "2016-10-22 14:12".to_time(:utc),
+    ),
+  ],
+  [],
 ]
 
 # open
@@ -155,6 +175,16 @@ ufc_september = Tournament.create(
   teams: [michals, middle, daniel_team, emmanuel_team],
 )
 
+ufc_october = Tournament.create(
+  title: "ufc tournament october",
+  game: ufc,
+  owner: users.first,
+  status: 1,
+  number_of_teams: 4,
+  started_at: "2016-10-03 18:12".to_time(:utc),
+  teams: [internal, qa, daniel_team, emmanuel_team],
+)
+
 # ended
 
 Tournament.create(
@@ -175,8 +205,30 @@ Round.create(
   number: 0,
 )
 
+######
+
+Round.create(
+  tournament: ufc_september,
+  matches: ufc_round_0_matches,
+  number: 0,
+)
+
 Round.create(
   tournament: ufc_september,
   matches: ufc_round_1_matches,
+  number: 1,
+)
+
+######
+
+Round.create(
+  tournament: ufc_october,
+  matches: ufc_october_rounds[0],
+  number: 0,
+)
+
+Round.create(
+  tournament: ufc_october,
+  matches: ufc_october_rounds[1],
   number: 1,
 )

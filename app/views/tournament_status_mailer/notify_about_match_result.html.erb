@@ -1,0 +1,10 @@
+<h1>Hi, <%= @user.name -%>,</h1>
+<p>
+  <% if @result == :win %>
+    You won the match.
+  <% elsif @result == :loss %>
+    You lost the match.
+  <% else %>
+    The match is finished.
+  <% end %>
+</p>
