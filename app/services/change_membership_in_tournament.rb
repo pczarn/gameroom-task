@@ -63,12 +63,10 @@ class ChangeMembershipInTournament
 
     if member_ids == current_team.member_ids
       @notice = "Your action did not change your team membership."
-    elsif !tournament.open?
-      @alert = "The tournament has already started."
     elsif tournament.invalid?
       @alert = tournament.errors.full_messages.to_sentence
-    elsif !perform_transaction(new_team)
-      @alert = new_team.errors.full_messages.to_sentence
+    else
+      perform_transaction(new_team)
     end
 
     new_team
@@ -90,7 +88,6 @@ class ChangeMembershipInTournament
         raise ActiveRecord::Rollback
       end
     end
-    new_team.persisted?
   end
 
   def current_team
