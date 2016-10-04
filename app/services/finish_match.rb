@@ -1,6 +1,8 @@
 class FinishMatch
   include TournamentsHelper
 
+  attr_reader :alert
+
   def initialize(match, current_user: nil, params: {})
     @match = match
     @params = params
@@ -13,14 +15,15 @@ class FinishMatch
     build_tasks
 
     Match.transaction do
-      @tasks.save_all
+      begin
+        @tasks.save_all
+      rescue ActiveModel::ValidationError => error
+        @alert = error.model.errors.full_messages.to_sentence
+        raise ActiveRecord::Rollback
+      end
     end
 
-    @tasks.finish_all
-  end
-
-  def alert
-    @tasks.alert
+    @tasks.finish_all unless @alert
   end
 
   private
@@ -37,10 +40,12 @@ class FinishMatch
 
   def build_tasks_for_tournament
     if !can_edit_tournament?
-      @tasks << Alert.new("You are not permitted to edit the match.")
+      @alert = "You are not permitted to edit the match."
+      @tasks.clear
     elsif next_round
       if next_match
-        @tasks << Alert.new("Another match depends on the result of the one you tried to edit.")
+        @alert = "Another match depends on the result of the one you tried to edit."
+        @tasks.clear
       elsif match_scores.all?
         @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
       end
@@ -72,17 +77,11 @@ end
 
 class TaskList < Array
   def save_all
-    each do |task|
-      task.save or break
-    end
+    each(&:save)
   end
 
   def finish_all
     each(&:finish)
-  end
-
-  def alert
-    map { |task| task.alert }.find { |alert| alert.present? }
   end
 end
 
@@ -93,14 +92,10 @@ class UpdateMatch
   end
 
   def save
-    @match.update(@params)
+    @match.update!(@params)
   end
 
   def finish
-  end
-
-  def alert
-    @match.errors.full_messages.to_sentence unless @match.errors.empty?
   end
 end
 
@@ -113,14 +108,10 @@ class CreateNextMatch
 
   def save
     build_next_match.save!
-    true
   end
 
   def finish
     CreateNextMatch.delay.notify_about_match_result(@match.id)
-  end
-
-  def alert
   end
 
   def self.notify_about_match_result(match_id)
@@ -165,14 +156,10 @@ class EndTournament
 
   def save
     @tournament.update!(status: :ended)
-    true
   end
 
   def finish
     EndTournament.delay.notify_about_tournament_end(@tournament.id, @match.winning_team.id)
-  end
-
-  def alert
   end
 
   def self.notify_about_tournament_end(tournament_id, winning_team_id)
@@ -182,20 +169,5 @@ class EndTournament
         TournamentStatusMailer.notify_about_end(user_id, tournament_id, winning_team_id).deliver
       end
     end
-  end
-end
-
-class Alert
-  attr_reader :alert
-
-  def initialize(alert)
-    @alert = alert
-  end
-
-  def save
-    true
-  end
-
-  def finish
   end
 end
