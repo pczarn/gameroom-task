@@ -1,21 +1,6 @@
 <h1>Register</h1>
-<%= form_for @user do |f| -%>
-  <%= render partial: "error_messages", locals: { errors: @user.errors } %>
-  <fieldset>
-    <%= f.label :name, "Name" %>
-    <%= f.text_field :name %>
-  </fieldset>
-  <fieldset>
-    <%= f.label :email, "Email" %>
-    <%= f.text_field :email %>
-  </fieldset>
-  <fieldset>
-    <%= f.label :password, "Password" %>
-    <%= f.password_field :password %>
-  </fieldset>
-  <fieldset>
-    <%= f.label :password_confirmation, "Password confirmation" %>
-    <%= f.password_field :password_confirmation %>
-  </fieldset>
-  <%= f.submit "Submit", :disable_with => 'Submiting...' %>
-<% end -%>
+<%=
+  form_for @user do |f|
+    render partial: "form", locals: { f: f }
+  end
+%>

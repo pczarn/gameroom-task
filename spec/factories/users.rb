@@ -30,5 +30,9 @@ FactoryGirl.define do
     password PASS
     password_confirmation PASS
     password_hashed PASS_HASHED
+
+    after(:build) do |user, _|
+      allow(user).to receive(:encrypt_password)
+    end
   end
 end
