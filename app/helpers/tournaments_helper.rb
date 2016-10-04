@@ -7,6 +7,22 @@ module TournamentsHelper
     !team_tournament.tournament.ended? && member_of_team?(user, team_tournament)
   end
 
+  def can_edit_team_tournament?(user, team_tournament)
+    !team_tournament.tournament.ended? &&
+      (
+        team_tournament.tournament.owned_by?(user) ||
+        user.admin?
+      )
+  end
+
+  def can_remove_user_from_team_tournament?(current_user, user, team_tournament)
+    can_leave?(user, team_tournament) &&
+      (
+        current_user.id == user.id ||
+        can_edit_team_tournament?(current_user, team_tournament)
+      )
+  end
+
   def potential_teams_for_select(tournament)
     options_for_select(potential_team_names_and_ids(tournament))
   end
