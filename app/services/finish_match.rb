@@ -1,5 +1,22 @@
+module TournamentRoundAccess
+  private
+
+  def next_round
+    @tournament.rounds[@round.number + 1]
+  end
+
+  def other_match_in_pair
+    @round.matches[index_in_round ^ 1]
+  end
+
+  def index_in_round
+    @round.matches.find_index(@match)
+  end
+end
+
 class FinishMatch
   include TournamentsHelper
+  include TournamentRoundAccess
 
   attr_reader :alert
 
@@ -42,24 +59,20 @@ class FinishMatch
     if !can_edit_tournament?
       @alert = "You are not permitted to edit the match."
       @tasks.clear
-    elsif next_round
-      if next_match
+    elsif match_scores.all?
+      if next_round && next_match
         @alert = "Another match depends on the result of the one you tried to edit."
         @tasks.clear
-      elsif match_scores.all?
+      elsif next_round && other_match_in_pair.scores.all?
         @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
+      else
+        @tasks << EndTournament.new(tournament: @tournament, match: @match)
       end
-    else
-      @tasks << EndTournament.new(tournament: @tournament, match: @match)
     end
   end
 
   def can_edit_tournament?
     @current_user && editable?(@match, @current_user) && !@tournament.ended?
-  end
-
-  def next_round
-    @tournament.rounds[@round.number + 1]
   end
 
   def match_scores
@@ -100,6 +113,8 @@ class UpdateMatch
 end
 
 class CreateNextMatch
+  include TournamentRoundAccess
+
   def initialize(tournament:, round:, match:)
     @tournament = tournament
     @round = round
@@ -133,18 +148,6 @@ class CreateNextMatch
 
   def next_match_teams
     [@match.winning_team, other_match_in_pair.winning_team]
-  end
-
-  def next_round
-    @tournament.rounds[@round.number + 1]
-  end
-
-  def other_match_in_pair
-    @round.matches[index_in_round ^ 1]
-  end
-
-  def index_in_round
-    @round.matches.find_index(@match)
   end
 end
 
