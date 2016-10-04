@@ -60,11 +60,13 @@ class FinishMatch
       @alert = "You are not permitted to edit the match."
       @tasks.clear
     elsif match_scores.all?
-      if next_round && next_match
-        @alert = "Another match depends on the result of the one you tried to edit."
-        @tasks.clear
-      elsif next_round && other_match_in_pair.scores.all?
-        @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
+      if next_round
+        if next_match
+          @alert = "Another match depends on the result of the one you tried to edit."
+          @tasks.clear
+        elsif other_match_in_pair.scores.all?
+          @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
+        end
       else
         @tasks << EndTournament.new(tournament: @tournament, match: @match)
       end
