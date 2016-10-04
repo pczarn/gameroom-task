@@ -3,14 +3,14 @@ Owner: <%= tournament.owner.name %>
 <h2>Teams</h2>
 
 <% tournament.team_tournaments.each do |team_tournament| %>
-  <%= render partial: "teams/display_long", locals: { team: team_tournament.team } %>
+  <%= render partial: "team_display", locals: { team_tournament: team_tournament } %>
 
   <% if tournament.open? %>
-    <% if member_of_team?(team_tournament, current_user) %>
+    <% if can_leave?(current_user, team_tournament) %>
       <%= button_to "Leave team",
                     team_tournament_membership_path(team_tournament),
                     method: :delete %>
-    <% elsif !member?(tournament, current_user) %>
+    <% elsif can_join?(current_user, tournament) %>
       <%= button_to "Join team",
                     team_tournament_membership_index_path(id: team_tournament),
                     method: :post %>

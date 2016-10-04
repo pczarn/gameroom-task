@@ -11,7 +11,41 @@ class ChangeMembershipInTournament
   end
 
   def leave_team
-    update(member_ids: current_member_ids - [@user.id])
+    if tournament.started?
+      team_id = @team_tournament.team_id
+      matches = tournament.rounds.joins(:matches)
+      matches = matches.where(
+        matches: { team_one_score: nil, team_two_score: nil, team_one_id: team_id }
+      ).or(
+        matches: { team_one_score: nil, team_two_score: nil, team_two_id: team_id }
+      )
+
+      if current_team.members.length == 1
+        matches.each do |match|
+          if match.team_one_id == team_id
+            params = { team_one_score: 0, team_two_score: 1 }
+          elsif match.team_two_id == team_id
+            params = { team_one_score: 1, team_two_score: 0 }
+          end
+          service = FinishMatch.new(@match, current_user: @user, params: params)
+          service.perform
+        end
+        @team_tournament.destroy!
+      else
+        team = update(member_ids: current_member_ids - [@user.id])
+        matches.each do |match|
+          if match.team_one_id == team_id
+            match.update!(team_one: team)
+          elsif match.team_two_id == team_id
+            match.update!(team_two: team)
+          end
+        end
+      end
+    elsif current_team.members.length == 1
+      @team_tournament.destroy!
+    else
+      update(member_ids: current_member_ids - [@user.id])
+    end
   end
 
   def tournament
@@ -34,6 +68,8 @@ class ChangeMembershipInTournament
     elsif !perform_transaction(new_team)
       @alert = new_team.errors.full_messages.to_sentence
     end
+
+    new_team
   end
 
   def copy_team(team, member_ids:)
