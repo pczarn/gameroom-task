@@ -65,10 +65,22 @@ RSpec.describe FinishMatch do
         before { expect(update_match).to receive_messages(save: true, finish: nil) }
 
         context "when match is not the last one" do
-          it "builds the next match" do
-            expect(CreateNextMatch).to receive(:new).and_return(create_next_match)
-            expect(create_next_match).to receive_messages(save: true, finish: nil)
-            run_service
+          context "when the other match in pair is complete" do
+            it "builds the next match" do
+              expect(CreateNextMatch).to receive(:new).and_return(create_next_match)
+              expect(create_next_match).to receive_messages(save: true, finish: nil)
+              run_service
+            end
+          end
+
+          context "when the other match in pair is not complete" do
+            before { round.matches[1].update!(team_one_score: nil, team_two_score: 1) }
+
+            it "does not build the next match" do
+              allow(CreateNextMatch).to receive(:new)
+              expect(create_next_match).not_to receive(:save)
+              run_service
+            end
           end
         end
 
@@ -103,7 +115,7 @@ RSpec.describe CreateNextMatch do
     described_class.new(tournament: tournament, round: round, match: match)
   end
 
-  let!(:tournament) { create(:tournament, :with_rounds) }
+  let!(:tournament) { create(:tournament, :with_rounds, number_of_rounds: 2) }
   let(:round) { tournament.rounds.first }
   let(:match) { round.matches.first }
   let(:mail) { double("Message") }
