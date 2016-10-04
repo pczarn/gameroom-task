@@ -7,69 +7,78 @@ class ChangeMembershipInTournament
   end
 
   def join_team
-    update(member_ids: current_member_ids + [@user.id])
-  end
-
-  def leave_team
-    if tournament.started?
-      team_id = @team_tournament.team_id
-      matches = Match.where(round_id: tournament.round_ids)
-      matches = matches.where(
-        team_one_score: nil, team_two_score: nil, team_one_id: team_id
-      ).or(
-        matches.where(
-          team_one_score: nil, team_two_score: nil, team_two_id: team_id
-        )
-      )
-
-      if current_team.members.length == 1
-        matches.each do |match|
-          if match.team_one_id == team_id
-            params = { team_one_score: 0, team_two_score: 1 }
-          elsif match.team_two_id == team_id
-            params = { team_one_score: 1, team_two_score: 0 }
-          end
-          service = FinishMatch.new(match, current_user: @user, params: params)
-          service.perform
-        end
-        @team_tournament.destroy!
-      else
-        team = update(member_ids: current_member_ids - [@user.id])
-        matches.each do |match|
-          if match.team_one_id == team_id
-            match.update!(team_one: team)
-          elsif match.team_two_id == team_id
-            match.update!(team_two: team)
-          end
-        end
-      end
-    elsif current_team.members.length == 1
-      @team_tournament.destroy!
-    else
-      update(member_ids: current_member_ids - [@user.id])
+    transaction do
+      team = copy_team(current_team, member_ids: current_team.member_ids + [@user.id])
+      save_members(team)
     end
   end
 
-  def tournament
-    @team_tournament.tournament
+  def leave_team
+    transaction do
+      if current_team.members.length == 1
+        destroy_team
+      else
+        replace_team
+      end
+    end
   end
 
   private
 
-  def update(member_ids:)
-    new_team = copy_team(current_team, member_ids: member_ids)
+  def destroy_team
+    if tournament.started?
+      matches_in_tournament_played_by(current_team).each do |match|
+        params = scores_for_team_loss(match, current_team)
+        service = FinishMatch.new(match, current_user: @user, params: params)
+        service.perform
+      end
+    end
+    @team_tournament.destroy!
+  end
+
+  def replace_team
+    team = copy_team(current_team, member_ids: current_team.member_ids - [@user.id])
+    save_members(team)
+    if tournament.started?
+      matches_in_tournament_played_by(current_team).each do |match|
+        case current_team.id
+        when match.team_one_id then match.update!(team_one: team)
+        when match.team_two_id then match.update!(team_two: team)
+        end
+      end
+    end
+  end
+
+  def save_members(new_team)
     # for validation, not for saving.
     tournament.team_tournaments.build(team: new_team)
 
-    if member_ids == current_team.member_ids
+    if new_team.member_ids == current_team.member_ids
       @notice = "Your action did not change your team membership."
     elsif tournament.invalid?
       @alert = tournament.errors.full_messages.to_sentence
     else
-      perform_transaction(new_team)
+      new_team.save!
+      @team_tournament.destroy!
     end
+  end
 
-    new_team
+  def matches_in_tournament_played_by(team)
+    tournament_matches = Match.where(round_id: tournament.round_ids)
+    matches = tournament_matches.where(
+      team_one_score: nil, team_two_score: nil, team_one_id: team.id
+    ).or(
+      tournament_matches.where(
+        team_one_score: nil, team_two_score: nil, team_two_id: team.id
+      )
+    )
+  end
+
+  def scores_for_team_loss(match, team)
+    case team.id
+    when match.team_one_id then { team_one_score: 0, team_two_score: 1 }
+    when match.team_two_id then { team_one_score: 1, team_two_score: 0 }
+    end
   end
 
   def copy_team(team, member_ids:)
@@ -78,30 +87,29 @@ class ChangeMembershipInTournament
     new_team
   end
 
-  def perform_transaction(new_team)
-    TeamTournament.transaction do
-      begin
-        new_team.save!
-        @team_tournament.destroy!
-      rescue ActiveModel::ValidationError => error
-        @alert = error.model.errors.full_messages.to_sentence
-        raise ActiveRecord::Rollback
-      end
-    end
+  def add_or_reuse_team(params)
+    team = Team.new(params)
+    member_ids = team.member_ids.sort
+    reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
+    reused || team
   end
 
   def current_team
     @team_tournament.team
   end
 
-  def current_member_ids
-    @team_tournament.team.member_ids
+  def tournament
+    @team_tournament.tournament
   end
 
-  def add_or_reuse_team(params)
-    team = Team.new(params)
-    member_ids = team.member_ids.sort
-    reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
-    reused || team
+  def transaction
+    TeamTournament.transaction do
+      begin
+        yield
+      rescue ActiveModel::ValidationError => error
+        @alert = error.model.errors.full_messages.to_sentence
+        raise ActiveRecord::Rollback
+      end
+    end
   end
 end
