@@ -35,7 +35,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :image, :email, :password, :password_confirmation)
   end
 
   def expect_account_owner!
