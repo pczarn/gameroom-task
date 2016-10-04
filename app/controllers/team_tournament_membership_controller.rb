@@ -14,7 +14,7 @@ class TeamTournamentMembershipController < ApplicationController
   end
 
   def destroy
-    if can_remove_user_from_team_tournament?(current_user, team_tournament)
+    if can_remove_user_from_team_tournament?(current_user, user, team_tournament)
       service = change_membership_service
       service.leave_team
       flash.alert = service.alert
