@@ -13,11 +13,13 @@ class ChangeMembershipInTournament
   def leave_team
     if tournament.started?
       team_id = @team_tournament.team_id
-      matches = tournament.rounds.joins(:matches)
+      matches = Match.where(round_id: tournament.round_ids)
       matches = matches.where(
-        matches: { team_one_score: nil, team_two_score: nil, team_one_id: team_id }
+        team_one_score: nil, team_two_score: nil, team_one_id: team_id
       ).or(
-        matches: { team_one_score: nil, team_two_score: nil, team_two_id: team_id }
+        matches.where(
+          team_one_score: nil, team_two_score: nil, team_two_id: team_id
+        )
       )
 
       if current_team.members.length == 1
@@ -27,7 +29,7 @@ class ChangeMembershipInTournament
           elsif match.team_two_id == team_id
             params = { team_one_score: 1, team_two_score: 0 }
           end
-          service = FinishMatch.new(@match, current_user: @user, params: params)
+          service = FinishMatch.new(match, current_user: @user, params: params)
           service.perform
         end
         @team_tournament.destroy!
