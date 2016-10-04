@@ -80,7 +80,13 @@ class ChangeMembershipInTournament
 
   def perform_transaction(new_team)
     TeamTournament.transaction do
-      new_team.save && @team_tournament.destroy!
+      begin
+        new_team.save!
+        @team_tournament.destroy!
+      rescue ActiveModel::ValidationError => error
+        @alert = error.model.errors.full_messages.to_sentence
+        raise ActiveRecord::Rollback
+      end
     end
     new_team.persisted?
   end
