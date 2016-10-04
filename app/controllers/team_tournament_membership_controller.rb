@@ -10,7 +10,7 @@ class TeamTournamentMembershipController < ApplicationController
     else
       flash.alert = "You can't join the tournament."
     end
-    redirect_back fallback_location: edit_tournament_path(service.tournament)
+    redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
   def destroy
@@ -22,7 +22,7 @@ class TeamTournamentMembershipController < ApplicationController
     else
       flash.alert = "You can't leave the tournament."
     end
-    redirect_back fallback_location: edit_tournament_path(service.tournament)
+    redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
   private
@@ -33,6 +33,10 @@ class TeamTournamentMembershipController < ApplicationController
 
   def team_tournament
     @team_tournament ||= TeamTournament.find(params[:id])
+  end
+
+  def tournament
+    team_tournament.tournament
   end
 
   def user
