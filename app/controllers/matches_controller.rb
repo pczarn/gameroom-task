@@ -1,6 +1,4 @@
 class MatchesController < ApplicationController
-  include TournamentsHelper
-
   before_action :authenticate!
   before_action :load_friendly_match, only: [:edit, :destroy]
   before_action :load_match, only: :update
@@ -30,7 +28,7 @@ class MatchesController < ApplicationController
   def update
     authorize @match
     match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
-    service = FinishMatch.new(@match, current_user: current_user, params: match_params)
+    service = FinishMatch.new(@match, params: match_params)
     service.perform
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"

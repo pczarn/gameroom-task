@@ -15,11 +15,14 @@ class MatchPolicy < ApplicationPolicy
         user.admin?
       )
     else
-      match.owner == user || user.admin?
+      match.owner == user ||
+        user.admin? ||
+        match.team_one.member_ids.include?(user.id) ||
+        match.team_two.member_ids.include?(user.id)
     end
   end
 
   def destroy?
-    update?
+    match.round.nil? && (match.owner == user || user.admin?)
   end
 end

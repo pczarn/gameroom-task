@@ -1,10 +1,11 @@
 class GamesController < ApplicationController
   before_action :authenticate!
   before_action :load_game, only: [:edit, :update, :destroy]
-  after_action :verify_authorized, only: [:edit, :update, :destroy]
+  after_action :verify_authorized, only: [:create, :edit, :update, :destroy]
 
   def create
-    @game = Game.create(game_params)
+    @game = Game.new(game_params)
+    authorize @game
     if @game.save
       redirect_to edit_game_path(@game)
     else
@@ -20,9 +21,11 @@ class GamesController < ApplicationController
   end
 
   def edit
+    authorize @game
   end
 
   def update
+    authorize @game
     if @game.update(game_params)
       redirect_to edit_game_path(@game)
     else
@@ -32,6 +35,7 @@ class GamesController < ApplicationController
   end
 
   def destroy
+    authorize @game
     @game.destroy
     flash[:success] = "Game deleted"
     redirect_to action: :index
@@ -40,7 +44,7 @@ class GamesController < ApplicationController
   private
 
   def load_game
-    @game = authorize Game.find(params[:id])
+    @game = Game.find(params[:id])
   end
 
   def game_params
