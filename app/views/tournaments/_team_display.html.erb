@@ -15,7 +15,7 @@
       <%= member.name %>
     </li>
 
-    <% if can_edit_team_tournament?(current_user, team_tournament) %>
+    <% if policy(team_tournament).remove_member? %>
       <%= button_to "Remove member",
                     team_tournament_membership_path(team_tournament, user_id: member.id),
                     method: :delete %>
