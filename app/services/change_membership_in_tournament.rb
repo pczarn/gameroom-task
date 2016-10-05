@@ -29,7 +29,7 @@ class ChangeMembershipInTournament
     if tournament.started?
       matches_in_tournament_played_by(current_team).each do |match|
         params = scores_for_team_loss(match, current_team)
-        service = FinishMatch.new(match, current_user: @user, params: params)
+        service = FinishMatch.new(match, params: params)
         service.perform
       end
     end
