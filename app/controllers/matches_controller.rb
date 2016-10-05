@@ -4,7 +4,7 @@ class MatchesController < ApplicationController
   before_action :authenticate!
   before_action :load_friendly_match, only: [:edit, :destroy]
   before_action :load_match, only: :update
-  before_action :ensure_editable!, only: [:edit, :update, :destroy]
+  after_action :verify_authorized, only: [:edit, :update, :destroy]
 
   def create
     @match = current_user.owned_matches.build(friendly_match_params)
@@ -24,10 +24,11 @@ class MatchesController < ApplicationController
   end
 
   def edit
-    render "edit"
+    authorize @match
   end
 
   def update
+    authorize @match
     match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
     service = FinishMatch.new(@match, current_user: current_user, params: match_params)
     service.perform
@@ -43,6 +44,7 @@ class MatchesController < ApplicationController
   end
 
   def destroy
+    authorize @match
     @match.destroy
     flash.notice = "Match deleted"
     redirect_to action: :index
@@ -56,12 +58,6 @@ class MatchesController < ApplicationController
 
   def load_match
     @match = Match.find(params[:id])
-  end
-
-  def ensure_editable!
-    unless owner?(current_user) || member?(current_user) || current_user.admin?
-      redirect_to matches_path, alert: "You must be an owner or a member of a match to edit it."
-    end
   end
 
   def match_in_tournament_params

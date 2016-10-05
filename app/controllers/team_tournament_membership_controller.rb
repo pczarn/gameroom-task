@@ -1,33 +1,33 @@
 class TeamTournamentMembershipController < ApplicationController
   include TournamentsHelper
 
+  after_action :verify_authorized
+
   def create
-    if can_join?(user, team_tournament.tournament)
-      service = change_membership_service
-      service.join_team
-      flash.alert = service.alert
-      flash.notice = service.notice
-    else
-      flash.alert = "You can't join the tournament."
-    end
+    authorize tournament, :join?
+    service = change_membership_service(current_user)
+    service.join_team
+    flash.alert = service.alert
+    flash.notice = service.notice
     redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
   def destroy
-    if can_remove_user_from_team_tournament?(current_user, user, team_tournament)
-      service = change_membership_service
-      service.leave_team
-      flash.alert = service.alert
-      flash.notice = service.notice
+    if user = params[:user_id] && User.find(params[:user_id])
+      authorize team_tournament, :remove_user?
     else
-      flash.alert = "You can't leave the tournament."
+      authorize team_tournament, :leave?
     end
+    service = change_membership_service(user || current_user)
+    service.leave_team
+    flash.alert = service.alert
+    flash.notice = service.notice
     redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
   private
 
-  def change_membership_service
+  def change_membership_service(user)
     ChangeMembershipInTournament.new(team_tournament: team_tournament, user: user)
   end
 
@@ -37,9 +37,5 @@ class TeamTournamentMembershipController < ApplicationController
 
   def tournament
     team_tournament.tournament
-  end
-
-  def user
-    @user ||= params[:user_id] ? User.find(params[:user_id]) : current_user
   end
 end
