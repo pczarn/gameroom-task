@@ -13,4 +13,6 @@ at
   an unspecified date
 <% end %>
 
-<%= link_to "(edit)", edit_match_path(match) %>
+<% if policy(match).edit? %>
+  <%= link_to "(edit)", edit_match_path(match) %>
+<% end %>

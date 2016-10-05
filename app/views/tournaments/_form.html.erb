@@ -4,30 +4,32 @@
   <%= f.text_field :title %>
 </fieldset>
 <fieldset>
-  <legend>Game</legend>
-  <% game_ids_and_names.each do |(id, name)| %>
-    <%= f.radio_button :game_id, id %>
-    <%= f.label :game_id, name, value: id %>
-  <% end %>
-</fieldset>
-<fieldset>
-  <legend>Teams</legend>
-  <%= f.label :number_of_teams, "Number of teams (must be a power of 2)" %>
-  <%= f.number_field :number_of_teams %>
-</fieldset>
-<fieldset>
-  <legend>Size of teams</legend>
-  <%= f.label :number_of_members_per_team, "Number of members per team (can be blank)" %>
-  <%= f.number_field :number_of_members_per_team %>
-</fieldset>
-<fieldset>
-  <legend>Date</legend>
-  <%= f.label :started_at, "Starts at" %>
-  <%= f.datetime_field :started_at %>
-</fieldset>
-<fieldset>
   <legend>Description</legend>
   <%= f.label :description, "Description (can be blank)" %>
   <%= f.text_area :description %>
 </fieldset>
+<% if f.object.new_record? || policy(f.object).update_open? %>
+  <fieldset>
+    <legend>Game</legend>
+    <% game_ids_and_names.each do |(id, name)| %>
+      <%= f.radio_button :game_id, id %>
+      <%= f.label :game_id, name, value: id %>
+    <% end %>
+  </fieldset>
+  <fieldset>
+    <legend>Teams</legend>
+    <%= f.label :number_of_teams, "Number of teams (must be a power of 2)" %>
+    <%= f.number_field :number_of_teams %>
+  </fieldset>
+  <fieldset>
+    <legend>Size of teams</legend>
+    <%= f.label :number_of_members_per_team, "Number of members per team (can be blank)" %>
+    <%= f.number_field :number_of_members_per_team %>
+  </fieldset>
+  <fieldset>
+    <legend>Date</legend>
+    <%= f.label :started_at, "Starts at" %>
+    <%= f.datetime_field :started_at %>
+  </fieldset>
+<% end %>
 <%= f.submit "Submit" %>
