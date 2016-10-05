@@ -92,8 +92,8 @@ RSpec.describe TournamentsController, type: :controller do
     context "when tournament owner is not logged in" do
       let(:owner) { build(:user) }
 
-      it "does not update attributes" do
-        expect { updating }.not_to change { tournament.reload.title }
+      it "fails" do
+        expect { updating }.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end
@@ -149,8 +149,8 @@ RSpec.describe TournamentsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it "does not add the team" do
-        expect { adding }.not_to change { tournament.teams.count }
+      it "fails" do
+        expect { adding }.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end
@@ -170,8 +170,8 @@ RSpec.describe TournamentsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it "does not remove the team" do
-        expect { removing }.not_to change { tournament.teams.count }
+      it "fails" do
+        expect { removing }.to raise_error(Pundit::NotAuthorizedError)
       end
     end
   end
