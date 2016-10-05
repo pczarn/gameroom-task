@@ -6,10 +6,9 @@ RSpec.describe FinishMatch do
       service.perform
     end
 
-    let(:service) { described_class.new(match, current_user: user, params: params) }
+    let(:service) { described_class.new(match, params: params) }
     let(:params) { { team_one_score: 0, team_two_score: 0 } }
     let(:update_match) { instance_double("UpdateMatch") }
-    let(:user) { build(:user) }
 
     before do
       allow(UpdateMatch).to receive(:new).and_return(update_match)
@@ -29,69 +28,44 @@ RSpec.describe FinishMatch do
       let(:tournament) { build(:tournament, :with_rounds, number_of_rounds: 2) }
       let(:round) { tournament.rounds.first }
       let(:match) { round.matches.first }
+      let(:create_next_match) { instance_double(CreateNextMatch) }
+      let(:end_tournament) { instance_double(EndTournament) }
 
       before do
-        allow(service).to receive(:editable?).and_return(true)
-        allow(update_match).to receive_messages(save: nil, finish: nil)
+        expect(update_match).to receive_messages(save: true, finish: nil)
       end
 
       it "performs an update" do
-        expect(update_match).to receive(:save)
         run_service
       end
 
-      context "when tournament is ended" do
-        before { tournament.ended! }
-
-        it "gives an alert" do
-          run_service
-          expect(service.alert).to be_a(String)
-        end
-      end
-
-      context "when tournament is not editable" do
-        before { allow(service).to receive(:editable?).and_return(false) }
-
-        it "gives an alert" do
-          run_service
-          expect(service.alert).to be_a(String)
-        end
-      end
-
-      context "when tournament is started and editable" do
-        let(:create_next_match) { instance_double(CreateNextMatch) }
-        let(:end_tournament) { instance_double(EndTournament) }
-
-        before { expect(update_match).to receive_messages(save: true, finish: nil) }
-
-        context "when match is not the last one" do
-          context "when the other match in pair is complete" do
-            it "builds the next match" do
-              expect(CreateNextMatch).to receive(:new).and_return(create_next_match)
-              expect(create_next_match).to receive_messages(save: true, finish: nil)
-              run_service
-            end
-          end
-
-          context "when the other match in pair is not complete" do
-            before { round.matches[1].update!(team_one_score: nil, team_two_score: 1) }
-
-            it "does not build the next match" do
-              allow(CreateNextMatch).to receive(:new)
-              expect(create_next_match).not_to receive(:save)
-              run_service
-            end
-          end
-        end
-
-        context "when match is the last one" do
-          let(:round) { tournament.rounds.last }
-
-          it "ends the tournament" do
-            expect(EndTournament).to receive(:new).and_return(end_tournament)
-            expect(end_tournament).to receive_messages(save: true, finish: nil)
+      context "when match is not the last one" do
+        context "when the other match in pair is complete" do
+          it "builds the next match" do
+            expect(CreateNextMatch).to receive(:new).and_return(create_next_match)
+            expect(create_next_match).to receive_messages(save: true, finish: nil)
             run_service
           end
+        end
+
+        context "when the other match in pair is not complete" do
+          before { round.matches[1].update!(team_one_score: nil, team_two_score: 1) }
+
+          it "does not build the next match" do
+            allow(CreateNextMatch).to receive(:new)
+            expect(create_next_match).not_to receive(:save)
+            run_service
+          end
+        end
+      end
+
+      context "when match is the last one" do
+        let(:round) { tournament.rounds.last }
+
+        it "ends the tournament" do
+          expect(EndTournament).to receive(:new).and_return(end_tournament)
+          expect(end_tournament).to receive_messages(save: true, finish: nil)
+          run_service
         end
       end
     end

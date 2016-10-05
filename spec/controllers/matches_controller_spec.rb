@@ -2,22 +2,8 @@ require "rails_helper"
 
 shared_examples_for "an action that modifies matches" do
   context "when the user owns the match" do
-    it "performs the action" do
-      expect(controller).to receive(action_name)
-      action
-    end
-  end
-
-  context "when the user participates in the match" do
-    before do
-      match.team_one.members << current_user
-      match.owner = nil
-      match.save!
-    end
-
-    it "performs the action" do
-      expect(controller).to receive(action_name)
-      action
+    it "succeeds" do
+      expect { action }.not_to raise_error
     end
   end
 
@@ -25,26 +11,16 @@ shared_examples_for "an action that modifies matches" do
     let(:current_user) { build(:user, role: :admin) }
     before { match.update(owner: nil) }
 
-    it "performs the action" do
-      expect(controller).to receive(action_name)
-      action
+    it "succeeds" do
+      expect { action }.not_to raise_error
     end
   end
 
-  context "when the user has no access" do
-    before { match.update(owner: nil) }
+  context "when the user should not have access" do
+    before { match.update!(owner: nil) }
 
-    it "does not perform the action" do
-      expect(controller).not_to receive(action_name)
-      action
-    end
-
-    it "redirects" do
-      is_expected.to be_redirect
-    end
-
-    it "gives an alert" do
-      expect { action }.to change { flash.alert }
+    it "fails" do
+      expect { action }.to raise_error(Pundit::NotAuthorizedError)
     end
   end
 end
@@ -121,13 +97,7 @@ RSpec.describe MatchesController, type: :controller do
 
   describe "#edit" do
     subject(:action) { get :edit, params: { id: match.id } }
-    let(:action_name) { :edit }
     let(:match) { create(:match, owner: current_user) }
-
-    it "ensures the user can edit the match" do
-      expect(controller).to receive(:ensure_editable!)
-      action
-    end
 
     it "responds successfully" do
       is_expected.to be_success
@@ -138,13 +108,7 @@ RSpec.describe MatchesController, type: :controller do
 
   describe "#update" do
     subject(:action) { patch :update, params: { id: match.id, match: { team_one_score: 2 } } }
-    let(:action_name) { :update }
     let(:match) { create(:match, team_one_score: 1, owner: current_user) }
-
-    it "ensures the user can edit the match" do
-      expect(controller).to receive(:ensure_editable!)
-      action
-    end
 
     it "updates attributes" do
       expect { action }.to change { match.reload.team_one_score }.to eq(2)
@@ -158,18 +122,24 @@ RSpec.describe MatchesController, type: :controller do
       action
     end
 
+    context "when the user participates in the match" do
+      before do
+        match.team_one.members << current_user
+        match.owner = nil
+        match.save!
+      end
+
+      it "succeeds" do
+        expect { action }.not_to raise_error
+      end
+    end
+
     it_behaves_like "an action that modifies matches"
   end
 
   describe "#destroy" do
     subject(:action) { delete :destroy, params: { id: match.id } }
-    let(:action_name) { :destroy }
     let!(:match) { create(:match, owner: current_user) }
-
-    it "ensures the user can edit the match" do
-      expect(controller).to receive(:ensure_editable!)
-      action
-    end
 
     it "removes a match" do
       expect { action }.to change(Match, :count).by(-1)
