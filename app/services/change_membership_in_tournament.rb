@@ -15,7 +15,7 @@ class ChangeMembershipInTournament
 
   def leave_team
     transaction do
-      if current_team.members.length == 1
+      if current_team.members == [@user]
         destroy_team
       else
         replace_team

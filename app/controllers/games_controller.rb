@@ -1,6 +1,7 @@
 class GamesController < ApplicationController
-  before_action :authenticate_admin!
+  before_action :authenticate!
   before_action :load_game, only: [:edit, :update, :destroy]
+  after_action :verify_authorized, only: [:edit, :update, :destroy]
 
   def create
     @game = Game.create(game_params)
@@ -39,7 +40,7 @@ class GamesController < ApplicationController
   private
 
   def load_game
-    @game = Game.find(params[:id])
+    @game = authorize Game.find(params[:id])
   end
 
   def game_params
