@@ -1,31 +1,20 @@
 class UsersController < ApplicationController
-  before_action :redirect_if_user_logged_in!, only: [:new, :create]
-  before_action :load_user, only: [:edit, :update]
-  before_action :verify_authorized, only: [:edit, :update]
-
-  def new
-    @user = User.new
-  end
+  before_action :ensure_user_not_logged_in!
+  before_action :load_user, only: [:show, :update]
+  before_action :verify_authorized, only: :update
 
   def create
-    @user = User.new(user_params)
-    if @user.save
-      redirect_to root_path, notice: "Signed up."
-    else
-      render "new"
-    end
+    user = User.create!(user_params)
+    render json: UserRepresenter.new(user)
   end
 
-  def edit
+  def show
+    render json: UserRepresenter.new(@user)
   end
 
   def update
-    if @user.update(user_params)
-      redirect_to edit_user_path(@user), notice: "Your account is updated."
-    else
-      flash.now.alert = @user.errors.full_messages.to_sentence
-      render "edit"
-    end
+    @user.update!(user_params)
+    render json: UserRepresenter.new(@user)
   end
 
   private

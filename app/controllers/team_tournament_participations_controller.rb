@@ -2,20 +2,14 @@ class TeamTournamentParticipationsController < ApplicationController
   after_action :verify_authorized
 
   def create
-    if team_params = build_team_params
-      authorize tournament.team_tournaments.build(team_params)
-      unless tournament.save
-        flash.alert = tournament.errors.full_messages.to_sentence
-      end
-    else
-      flash.alert = added_or_reused_team.errors.full_messages.to_sentence
-    end
-    redirect_back fallback_location: edit_tournament_path(tournament)
+    authorize tournament.team_tournaments.build(team_param)
+    tournament.save!
+    render json: TournamentRepresenter.new(tournament)
   end
 
   def destroy
     team_tournament.destroy!
-    redirect_back fallback_location: edit_tournament_path(team_tournament.tournament)
+    render json: TournamentRepresenter.new(tournament)
   end
 
   private
@@ -32,10 +26,10 @@ class TeamTournamentParticipationsController < ApplicationController
     params[:team_id]
   end
 
-  def build_team_params
+  def team_param
     if team_id
       { team_id: team_id }
-    elsif added_or_reused_team.valid?
+    else
       { team: added_or_reused_team }
     end
   end
@@ -45,13 +39,13 @@ class TeamTournamentParticipationsController < ApplicationController
   end
 
   def add_or_reuse_team
-    team = Team.new(team_params)
+    team = Team.new(add_team_params)
     member_ids = team.member_ids.sort
     reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
     reused || team
   end
 
-  def team_params
+  def add_team_params
     params.require(:team).permit(:name, member_ids: [])
   end
 end
