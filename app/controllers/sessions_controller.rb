@@ -1,22 +1,18 @@
 class SessionsController < ApplicationController
-  before_action :redirect_if_user_logged_in!, only: [:new, :create]
-
-  def new
-  end
+  before_action :ensure_user_not_logged_in!, only: :create
 
   def create
     user = User.authenticate(params[:email], params[:password])
     if user
       session[:user_id] = user.id
-      redirect_to root_path, notice: "You are logged in."
+      head :ok
     else
-      flash.now.alert = "Invalid email or password"
-      render "new"
+      head 401
     end
   end
 
   def destroy
     session[:user_id] = nil
-    redirect_to root_path, notice: "Logged out."
+    head :ok
   end
 end

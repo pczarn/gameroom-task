@@ -9,8 +9,11 @@ class TeamTournamentMembershipController < ApplicationController
     authorize tournament, :join?
     service = change_membership_service(current_user)
     valid, alert = service.join_team
-    flash.alert = alert unless valid
-    redirect_back fallback_location: edit_tournament_path(tournament)
+    if valid
+      head :ok
+    else
+      render json: { error: alert }, status: 422
+    end
   end
 
   def destroy
@@ -21,8 +24,11 @@ class TeamTournamentMembershipController < ApplicationController
     end
     service = change_membership_service(user || current_user)
     valid, alert = service.leave_team
-    flash.alert = alert unless valid
-    redirect_back fallback_location: edit_tournament_path(tournament)
+    if valid
+      head :ok
+    else
+      render json: { error: alert }, status: 422
+    end
   end
 
   private

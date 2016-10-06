@@ -1,40 +1,31 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :load_tournament, only: [:edit, :update, :destroy]
-  after_action :verify_authorized, only: [:edit, :update, :destroy]
+  before_action :load_tournament, only: [:show, :update, :destroy]
+  after_action :verify_authorized, only: [:update, :destroy]
 
   def index
-    @tournament = Tournament.new(started_at: Time.zone.now)
+    render json: TournamentsRepresenter.new(Tournament.all)
   end
 
   def create
-    @tournament = current_user.owned_tournaments.build(tournament_params)
-    if @tournament.save
-      redirect_to edit_tournament_path(@tournament)
-    else
-      flash.now.alert = @tournament.errors.full_messages.to_sentence
-      render "index"
-    end
+    tournament = current_user.owned_tournaments.build(tournament_params)
+    authorize tournament
+    tournament.save!
+    render json: TournamentRepresenter.new(tournament)
   end
 
-  def edit
-    @team = Team.new
+  def show
+    render json: TournamentRepresenter.new(@tournament)
   end
 
   def update
-    if @tournament.update(tournament_params)
-      redirect_to edit_tournament_path(@tournament)
-    else
-      @team = Team.new
-      render "edit"
-    end
+    @tournament.update!(tournament_params)
+    render json: TournamentRepresenter.new(@tournament)
   end
 
   def destroy
-    unless @tournament.open? && @tournament.destroy
-      flash.alert = "Unable to delete the tournament"
-    end
-    redirect_to tournaments_path
+    @tournament.destroy!
+    head :ok
   end
 
   private

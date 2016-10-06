@@ -23,7 +23,7 @@ class TournamentPolicy < ApplicationPolicy
   end
 
   def destroy?
-    tournament.owner == user
+    tournament.owner == user && tournament.open?
   end
 
   def join?
