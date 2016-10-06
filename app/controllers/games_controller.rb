@@ -1,41 +1,30 @@
 class GamesController < ApplicationController
   before_action :authenticate!
-  after_action :verify_authorized, only: [:create, :edit, :update, :destroy]
+  after_action :verify_authorized, only: [:create, :update, :destroy]
 
   def create
-    @game = Game.new(game_params)
-    authorize @game
-    if @game.save
-      redirect_to edit_game_path(@game)
-    else
-      flash.now.alert = @game.errors.full_messages.to_sentence
-      render "index"
-    end
+    game = Game.new(game_params)
+    authorize game
+    game.save!
+    render json: GameRepresenter.new(game)
   end
 
   def index
-    @active_games = Game.active.page(params[:active_games_page])
-    @archivized_games = Game.archivized.page(params[:archivized_games_page])
-    @game = Game.new
+    render json: GamesRepresenter.new(Game.all)
   end
 
-  def edit
-    game
+  def show
+    render json: GameRepresenter.new(game)
   end
 
   def update
-    if game.update(game_params)
-      redirect_to edit_game_path(game)
-    else
-      flash.now.alert = game.errors.full_messages.to_sentence
-      render "edit"
-    end
+    game.update!(game_params)
+    render json: GameRepresenter.new(game)
   end
 
   def destroy
-    game.destroy
-    flash[:success] = "Game deleted"
-    redirect_to action: :index
+    @game.destroy!
+    head :ok
   end
 
   private

@@ -1,34 +1,24 @@
 class TeamsController < ApplicationController
   before_action :authenticate!
-  before_action :load_team, only: [:edit, :update]
-  before_action :expect_team_member!, only: :update
+  before_action :load_team, only: [:show, :update]
 
   def create
-    @team = Team.new(team_params)
-    if @team.save
-      redirect_to edit_team_path(@team)
-    else
-      flash.now.alert = @team.errors.full_messages.to_sentence
-      @teams = Team.page(params[:page])
-      render "index"
-    end
+    team = Team.create(team_params)
+    render json: TeamRepresenter.new(team)
   end
 
   def index
-    @teams = Team.page(params[:page])
-    @team = Team.new
+    teams = Team.page(params[:page])
+    render json: TeamsRepresenter.new(teams)
   end
 
-  def edit
+  def show
+    render json: TeamRepresenter.new(@team)
   end
 
   def update
-    if @team.update(team_params)
-      redirect_to edit_team_path(@team)
-    else
-      flash.now.alert = @team.errors.full_messages
-      render "edit"
-    end
+    @team.update!(team_params)
+    render json: TeamRepresenter.new(@team)
   end
 
   private
@@ -39,10 +29,5 @@ class TeamsController < ApplicationController
 
   def team_params
     params.require(:team).permit(:name, member_ids: [])
-  end
-
-  def expect_team_member!
-    return if current_user && @team.member_ids.include?(current_user.id)
-    redirect_back fallback_location: teams_path, alert: "You are not a member of this team."
   end
 end
