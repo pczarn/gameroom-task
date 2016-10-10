@@ -29,6 +29,10 @@ class Tournament < ApplicationRecord
            :team_sizes_within_limit,
            :number_of_teams_within_limit
 
+  def can_be_started?
+    full? && team_tournaments.all?(&:full?)
+  end
+
   def full?
     teams.length == number_of_teams
   end
@@ -43,23 +47,6 @@ class Tournament < ApplicationRecord
 
   def potential_teams
     Team.where.not(id: related_teams.pluck(:id))
-  end
-
-  def related_teams
-    Team.related_to(members.pluck(:id))
-  end
-
-  def can_be_started?
-    full? && team_tournaments.all?(&:full?)
-  end
-
-  def build_initial_rounds
-    number_of_rounds.times do |round_number|
-      rounds.build(number: round_number)
-    end
-    teams.each_slice(2) do |first_team, second_team|
-      rounds.first.matches.build(game: game, team_one: first_team, team_two: second_team)
-    end
   end
 
   private
@@ -94,7 +81,7 @@ class Tournament < ApplicationRecord
     end
   end
 
-  def number_of_rounds
-    Math.log2(teams.length).to_i
+  def related_teams
+    Team.related_to(members.pluck(:id))
   end
 end
