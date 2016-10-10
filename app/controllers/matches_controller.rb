@@ -2,7 +2,8 @@ class MatchesController < ApplicationController
   include TournamentsHelper
 
   before_action :authenticate!
-  before_action :load_match, only: [:edit, :update, :destroy]
+  before_action :load_friendly_match, only: [:edit, :destroy]
+  before_action :load_match, only: :update
   before_action :ensure_editable!, only: [:edit, :update, :destroy]
 
   def create
@@ -49,8 +50,12 @@ class MatchesController < ApplicationController
 
   private
 
-  def load_match
+  def load_friendly_match
     @match = Match.friendly.find(params[:id])
+  end
+
+  def load_match
+    @match = Match.find(params[:id])
   end
 
   def ensure_editable!
@@ -79,7 +84,7 @@ class MatchesController < ApplicationController
   end
 
   def owner?(user)
-    @match.owner && @match.owner.id == user.id
+    @match.owner && @match.owner.id == user.id || @match.round && editable?(@match, user)
   end
 
   def member?(user)

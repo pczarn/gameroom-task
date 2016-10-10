@@ -35,6 +35,7 @@ group :development, :test do
   gem "pry-rails"
   gem "faker"
   gem "rails-controller-testing"
+  gem "rspec-sidekiq", "~> 2.2"
 end
 
 group :development do

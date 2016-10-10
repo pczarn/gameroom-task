@@ -1,0 +1,24 @@
+<div>
+  <span>
+    <%= team_tournament.team.name %>
+  </span>
+  with <%= team_tournament.team.members.count %> members,
+  created at
+  <time>
+    <%= team_tournament.team.created_at %>
+  </time>
+</div>
+
+<ul>
+  <% team_tournament.team.members.each do |member| %>
+    <li>
+      <%= member.name %>
+    </li>
+
+    <% if can_edit_team_tournament?(current_user, team_tournament) %>
+      <%= button_to "Remove member",
+                    team_tournament_membership_path(team_tournament, user_id: member.id),
+                    method: :delete %>
+    <% end %>
+  <% end %>
+</ul>

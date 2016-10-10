@@ -10,7 +10,7 @@ class Team < ApplicationRecord
       .distinct
   end
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
 
   validate :members_not_empty, :unique_member_collections_for_teams
 
