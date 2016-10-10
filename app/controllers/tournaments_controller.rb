@@ -1,7 +1,7 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :load_tournament, except: [:index, :create]
-  after_action :verify_authorized, only: [:update, :destroy, :add_team, :remove_team]
+  before_action :load_tournament, only: [:edit, :update, :destroy, :add_team, :remove_team]
+  after_action :verify_authorized, only: [:edit, :update, :destroy, :add_team, :remove_team]
 
   def index
     @tournament = Tournament.new(started_at: Time.zone.now)
@@ -18,12 +18,10 @@ class TournamentsController < ApplicationController
   end
 
   def edit
-    authorize @tournament
     @team = Team.new
   end
 
   def update
-    authorize @tournament
     if @tournament.update(tournament_params)
       redirect_to edit_tournament_path(@tournament)
     else
@@ -33,7 +31,6 @@ class TournamentsController < ApplicationController
   end
 
   def destroy
-    authorize @tournament
     unless @tournament.open? && @tournament.destroy
       flash.alert = "Unable to delete the tournament"
     end
@@ -41,7 +38,6 @@ class TournamentsController < ApplicationController
   end
 
   def add_team
-    authorize @tournament
     team_params = build_team
     @tournament.team_tournaments.build(team_params) if team_params
     unless @tournament.save
@@ -51,7 +47,6 @@ class TournamentsController < ApplicationController
   end
 
   def remove_team
-    authorize @tournament
     @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
@@ -60,6 +55,7 @@ class TournamentsController < ApplicationController
 
   def load_tournament
     @tournament = Tournament.find(params[:tournament_id] || params[:id])
+    authorize @tournament
   end
 
   def tournament_params

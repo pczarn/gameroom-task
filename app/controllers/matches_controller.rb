@@ -22,11 +22,9 @@ class MatchesController < ApplicationController
   end
 
   def edit
-    authorize @match
   end
 
   def update
-    authorize @match
     match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
     service = FinishMatch.new(@match, params: match_params)
     service.perform
@@ -42,7 +40,6 @@ class MatchesController < ApplicationController
   end
 
   def destroy
-    authorize @match
     @match.destroy
     flash.notice = "Match deleted"
     redirect_to action: :index
@@ -52,10 +49,12 @@ class MatchesController < ApplicationController
 
   def load_friendly_match
     @match = Match.friendly.find(params[:id])
+    authorize @match
   end
 
   def load_match
     @match = Match.find(params[:id])
+    authorize @match
   end
 
   def match_in_tournament_params
