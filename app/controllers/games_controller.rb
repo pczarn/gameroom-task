@@ -21,11 +21,9 @@ class GamesController < ApplicationController
   end
 
   def edit
-    authorize @game
   end
 
   def update
-    authorize @game
     if @game.update(game_params)
       redirect_to edit_game_path(@game)
     else
@@ -35,7 +33,6 @@ class GamesController < ApplicationController
   end
 
   def destroy
-    authorize @game
     @game.destroy
     flash[:success] = "Game deleted"
     redirect_to action: :index
@@ -45,6 +42,7 @@ class GamesController < ApplicationController
 
   def load_game
     @game = Game.find(params[:id])
+    authorize @game
   end
 
   def game_params
