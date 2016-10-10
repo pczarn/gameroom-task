@@ -1,26 +1,28 @@
 class ChangeMembershipInTournament
-  attr_reader :alert, :notice
-
   def initialize(team_tournament:, user:)
     @team_tournament = team_tournament
     @user = user
   end
 
   def join_team
-    transaction do
+    TeamTournament.transaction do
       team = copy_team(current_team, member_ids: current_team.member_ids + [@user.id])
       save_members(team)
     end
+  rescue ActiveModel::ValidationError => error
+    [false, error.model.errors.full_messages.to_sentence]
   end
 
   def leave_team
-    transaction do
+    TeamTournament.transaction do
       if current_team.members == [@user]
         destroy_team
       else
         replace_team
       end
     end
+  rescue ActiveModel::ValidationError => error
+    [false, error.model.errors.full_messages.to_sentence]
   end
 
   private
@@ -52,14 +54,16 @@ class ChangeMembershipInTournament
   def save_members(new_team)
     # for validation, not for saving.
     tournament.team_tournaments.build(team: new_team)
-
-    if new_team.member_ids == current_team.member_ids
-      @notice = "Your action did not change your team membership."
-    elsif tournament.invalid?
-      @alert = tournament.errors.full_messages.to_sentence
+    if new_team.member_ids != current_team.member_ids
+      if tournament.invalid?
+        [false, tournament.errors.full_messages.to_sentence]
+      else
+        new_team.save!
+        @team_tournament.destroy!
+        [true, nil]
+      end
     else
-      new_team.save!
-      @team_tournament.destroy!
+      [true, nil]
     end
   end
 
@@ -100,16 +104,5 @@ class ChangeMembershipInTournament
 
   def tournament
     @team_tournament.tournament
-  end
-
-  def transaction
-    TeamTournament.transaction do
-      begin
-        yield
-      rescue ActiveModel::ValidationError => error
-        @alert = error.model.errors.full_messages.to_sentence
-        raise ActiveRecord::Rollback
-      end
-    end
   end
 end
