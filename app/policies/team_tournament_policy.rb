@@ -6,6 +6,14 @@ class TeamTournamentPolicy < ApplicationPolicy
     @team_tournament = team_tournament
   end
 
+  def create?
+    TournamentPolicy.new(@user, tournament).create_team?
+  end
+
+  def destroy?
+    TournamentPolicy.new(@user, tournament).destroy_team?
+  end
+
   def leave?
     !tournament.ended? && team.members.exists?(user.id)
   end

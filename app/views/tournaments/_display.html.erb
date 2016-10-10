@@ -17,9 +17,9 @@ Status: <%= tournament.status %>
                     method: :post %>
     <% end %>
 
-    <% if policy(tournament).remove_team? %>
+    <% if policy(team_tournament).destroy? %>
       <%= button_to "Remove team from tournament",
-                    tournament_remove_team_path(tournament, team_id: team_tournament.team.id),
+                    team_tournament_participation_path(id: team_tournament.id),
                     method: :delete %>
     <% end -%>
   <% end %>
