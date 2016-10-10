@@ -75,12 +75,4 @@ class MatchesController < ApplicationController
       :team_two_score,
     )
   end
-
-  def owner?(user)
-    @match.owner && @match.owner.id == user.id || @match.round && editable?(@match, user)
-  end
-
-  def member?(user)
-    @match.team_one.member_ids.include?(user.id) || @match.team_two.member_ids.include?(user.id)
-  end
 end

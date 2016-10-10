@@ -49,10 +49,6 @@ class Tournament < ApplicationRecord
     Team.related_to(members.pluck(:id))
   end
 
-  def owned_by?(user)
-    owner.id == user.id
-  end
-
   def can_be_started?
     full? && team_tournaments.all?(&:full?)
   end
