@@ -46,19 +46,17 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "#update" do
-    subject(:action) { post :update, params: { id: user.id, user: user_attrs } }
+    subject(:update) { post :update, params: { id: user.id, user: user_attrs } }
     let!(:user) { create(:user) }
 
     context "when the user is logged in" do
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
       context "with password correctly confirmed" do
         let(:user_attrs) { { password: "blablabla", password_confirmation: "blablabla" } }
 
         it "does not give an error message" do
-          action
+          update
           expect(assigns(:user).errors).to be_empty
         end
 
@@ -67,7 +65,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         it "updates the password" do
-          expect { action }.to change { user.reload.password_hashed }
+          expect { update }.to change { user.reload.password_hashed }
         end
       end
 
@@ -75,7 +73,7 @@ RSpec.describe UsersController, type: :controller do
         let(:user_attrs) { { password: "blablabla", password_confirmation: "qwertyuio" } }
 
         it "fails" do
-          action
+          update
           expect(assigns(:user).errors.full_messages)
             .to include("Password confirmation doesn't match Password")
         end
@@ -85,7 +83,7 @@ RSpec.describe UsersController, type: :controller do
         let(:user_attrs) { { name: "foo" } }
 
         it "does not give an error message" do
-          action
+          update
           expect(assigns(:user).errors).to be_empty
         end
 
@@ -94,7 +92,7 @@ RSpec.describe UsersController, type: :controller do
         end
 
         it "updates the account name" do
-          expect { action }.to change { user.reload.name }.to eq("foo")
+          expect { update }.to change { user.reload.name }.to eq("foo")
         end
       end
 
@@ -102,7 +100,7 @@ RSpec.describe UsersController, type: :controller do
         let(:user_attrs) { { name: "" } }
 
         it "fails" do
-          action
+          update
           expect(assigns(:user).errors.full_messages).to include("Name can't be blank")
         end
       end
@@ -111,11 +109,11 @@ RSpec.describe UsersController, type: :controller do
     context "when another user is logged in" do
       it "fails" do
         expect(controller).not_to receive(:update)
-        action
+        update
       end
 
       it "redirects to root" do
-        expect(action).to redirect_to(root_path)
+        expect(update).to redirect_to(root_path)
       end
     end
   end
