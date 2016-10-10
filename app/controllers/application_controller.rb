@@ -5,6 +5,11 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  def authorize(record, *params)
+    Pundit.instance_method(:authorize).bind(self).(record, *params)
+    record
+  end
+
   private
 
   def authenticate!

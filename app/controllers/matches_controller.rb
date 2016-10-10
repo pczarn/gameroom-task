@@ -1,7 +1,5 @@
 class MatchesController < ApplicationController
   before_action :authenticate!
-  before_action :load_friendly_match, only: [:edit, :destroy]
-  before_action :load_match, only: :update
   after_action :verify_authorized, only: [:edit, :update, :destroy]
 
   def create
@@ -22,11 +20,12 @@ class MatchesController < ApplicationController
   end
 
   def edit
+    friendly_match
   end
 
   def update
-    match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
-    service = FinishMatch.new(@match, params: match_params)
+    match_params = match.round.present? ? match_in_tournament_params : friendly_match_params
+    service = FinishMatch.new(match, params: match_params)
     service.perform
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
@@ -40,21 +39,19 @@ class MatchesController < ApplicationController
   end
 
   def destroy
-    @match.destroy
+    friendly_match.destroy
     flash.notice = "Match deleted"
     redirect_to action: :index
   end
 
   private
 
-  def load_friendly_match
-    @match = Match.friendly.find(params[:id])
-    authorize @match
+  def friendly_match
+    @match ||= authorize Match.friendly.find(params[:id])
   end
 
-  def load_match
-    @match = Match.find(params[:id])
-    authorize @match
+  def match
+    @match ||= authorize Match.find(params[:id])
   end
 
   def match_in_tournament_params
