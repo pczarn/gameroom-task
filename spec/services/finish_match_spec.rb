@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe FinishMatch do
-  describe "#build_tasks" do
+  describe "#perform" do
     subject(:run_service) do
       service.perform
     end

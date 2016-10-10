@@ -14,7 +14,7 @@ shared_examples_for "mail_sender" do
   end
 
   describe "#body" do
-    it { expect(mail.body).to be_present }
+    it { expect(mail.body.multipart?).to eq(true) }
   end
 end
 
