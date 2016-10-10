@@ -19,7 +19,7 @@ shared_examples_for "an action that modifies matches" do
   context "when the user should not have access" do
     before { match.update!(owner: nil) }
 
-    it "fails" do
+    it "does not authorize the action" do
       expect { action }.to raise_error(Pundit::NotAuthorizedError)
     end
   end
