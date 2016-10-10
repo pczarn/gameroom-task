@@ -24,8 +24,8 @@ class User < ApplicationRecord
 
   before_save :encrypt_password
 
-  validates :name, presence: true, uniqueness: true
-  validates :email, presence: true, uniqueness: true
+  validates :name, :email, presence: true, uniqueness: true
+  validates :email, format: /@/
   validates :password, presence: true, length: { in: 7..100 }, on: :create
   validates :password, confirmation: true
 
