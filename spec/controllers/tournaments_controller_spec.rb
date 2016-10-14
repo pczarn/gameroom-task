@@ -92,9 +92,7 @@ RSpec.describe TournamentsController, type: :controller do
     context "when tournament owner is not logged in" do
       let(:owner) { build(:user) }
 
-      it "does not authorize the action" do
-        expect { updating }.to raise_error(Pundit::NotAuthorizedError)
-      end
+      it { expect { updating }.to raise_error(Pundit::NotAuthorizedError) }
     end
   end
 
@@ -149,9 +147,7 @@ RSpec.describe TournamentsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it "does not authorize the action" do
-        expect { adding }.to raise_error(Pundit::NotAuthorizedError)
-      end
+      it { expect { adding }.to raise_error(Pundit::NotAuthorizedError) }
     end
   end
 
@@ -170,9 +166,7 @@ RSpec.describe TournamentsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it "does not authorize the action" do
-        expect { removing }.to raise_error(Pundit::NotAuthorizedError)
-      end
+      it { expect { removing }.to raise_error(Pundit::NotAuthorizedError) }
     end
   end
 end
