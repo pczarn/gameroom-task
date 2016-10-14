@@ -22,6 +22,7 @@ group :development, :test do
   gem "rspec-rails"
   gem "rspec-sidekiq", "~> 2.2"
   gem "rails-controller-testing"
+  gem "guard-rspec", require: false
 end
 
 group :development do
@@ -32,6 +33,7 @@ group :development do
   # Preloader
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
+  gem "spring-commands-rspec"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
