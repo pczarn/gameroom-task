@@ -15,17 +15,15 @@ module TournamentRoundAccess
 end
 
 class FinishMatch
-  include TournamentsHelper
   include TournamentRoundAccess
 
   attr_reader :alert
 
-  def initialize(match, current_user: nil, params: {})
+  def initialize(match, params: {})
     @match = match
     @params = params
     @round = match.round
     @tournament = @round && @round.tournament
-    @current_user = current_user
   end
 
   def perform
@@ -56,10 +54,7 @@ class FinishMatch
   end
 
   def build_tasks_for_tournament
-    if !can_edit_tournament?
-      @alert = "You are not permitted to edit the match."
-      @tasks.clear
-    elsif match_scores.all?
+    if match_scores.all?
       if next_round
         if next_match
           @alert = "Another match depends on the result of the one you tried to edit."
@@ -71,10 +66,6 @@ class FinishMatch
         @tasks << EndTournament.new(tournament: @tournament, match: @match)
       end
     end
-  end
-
-  def can_edit_tournament?
-    @current_user && editable?(@match, @current_user) && !@tournament.ended?
   end
 
   def match_scores

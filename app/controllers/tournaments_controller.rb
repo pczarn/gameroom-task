@@ -1,7 +1,7 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :load_tournament, except: [:index, :create]
-  before_action :expect_tournament_owner!, only: [:update, :destroy, :add_team, :remove_team]
+  before_action :load_tournament, only: [:edit, :update, :destroy, :add_team, :remove_team]
+  after_action :verify_authorized, only: [:edit, :update, :destroy, :add_team, :remove_team]
 
   def index
     @tournament = Tournament.new(started_at: Time.zone.now)
@@ -18,14 +18,15 @@ class TournamentsController < ApplicationController
   end
 
   def edit
-    render_editing
+    @team = Team.new
   end
 
   def update
     if @tournament.update(tournament_params)
       redirect_to edit_tournament_path(@tournament)
     else
-      render_editing
+      @team = Team.new
+      render "edit"
     end
   end
 
@@ -37,36 +38,24 @@ class TournamentsController < ApplicationController
   end
 
   def add_team
-    if @tournament.open?
-      team_params = build_team
-      @tournament.team_tournaments.build(team_params) if team_params
-      unless @tournament.save
-        flash.alert = @tournament.errors.full_messages.to_sentence
-      end
+    team_params = build_team
+    @tournament.team_tournaments.build(team_params) if team_params
+    unless @tournament.save
+      flash.alert = @tournament.errors.full_messages.to_sentence
     end
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
 
   def remove_team
-    if @tournament.open?
-      @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
-    end
+    @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
     redirect_back fallback_location: edit_tournament_path(@tournament)
   end
 
   private
 
-  def render_editing
-    if @tournament.open?
-      @team = Team.new
-      render "edit"
-    else
-      render "edit_restricted"
-    end
-  end
-
   def load_tournament
     @tournament = Tournament.find(params[:tournament_id] || params[:id])
+    authorize @tournament
   end
 
   def tournament_params
@@ -108,10 +97,5 @@ class TournamentsController < ApplicationController
 
   def add_team_params
     params.require(:team).permit(:name, member_ids: [])
-  end
-
-  def expect_tournament_owner!
-    return if current_user && @tournament.owned_by?(current_user)
-    redirect_back fallback_location: tournaments_path, alert: "You are not the tournament owner."
   end
 end

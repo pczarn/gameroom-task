@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pundit
+
   protect_from_forgery with: :exception
 
   helper_method :current_user
@@ -7,10 +9,6 @@ class ApplicationController < ActionController::Base
 
   def authenticate!
     redirect_to log_in_path unless session[:user_id]
-  end
-
-  def authenticate_admin!
-    redirect_to log_in_path unless current_user && current_user.admin?
   end
 
   def redirect_if_user_logged_in!

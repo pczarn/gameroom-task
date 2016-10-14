@@ -2,8 +2,40 @@
 
 <%= render partial: "tournaments/display", locals: { tournament: @tournament } %>
 
-<%=
-  if @tournament.owned_by? current_user
-    render partial: "tournaments/display_edit", locals: { tournament: @tournament }
-  end
-%>
+<% if policy(@tournament).add_team? %>
+  <h3>Add a team with members</h3>
+  <%= form_for @team, url: tournament_add_team_path(tournament), method: :post do |f| %>
+    <%= render "teams/form", f: f, potential_members: tournament.potential_members %>
+  <% end %>
+
+  <h3>Add an existing team</h3>
+  <%= form_tag tournament_add_team_path(tournament) do %>
+    <fieldset>
+      <legend>Add an existing team</legend>
+      <%= select_tag "team_id", potential_teams_for_select(tournament) %>
+      <%= submit_tag "Add team" %>
+    </fieldset>
+  <% end %>
+<% end %>
+
+<% if policy(@tournament).update? %>
+  <h2>Edit</h2>
+
+  <%= form_for tournament, url: { action: "update" } do |f| %>
+    <%= render partial: "form", locals: { f: f } %>
+  <% end %>
+<% end %>
+
+<% if policy(@tournament).destroy? %>
+  <h2>Delete</h2>
+
+  <%= button_to "Delete tournament", tournament, method: :delete %>
+<% end %>
+
+<% if @tournament.started? || @tournament.ended? %>
+  <h2>Rounds</h2>
+
+  <% @tournament.rounds.each do |round| %>
+    <%= render "round_display", round: round %>
+  <% end %>
+<% end %>

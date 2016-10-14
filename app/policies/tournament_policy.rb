@@ -1,0 +1,40 @@
+class TournamentPolicy < ApplicationPolicy
+  attr_reader :tournament
+
+  def initialize(user, tournament)
+    @user = user
+    @tournament = tournament
+  end
+
+  def update_open?
+    tournament.open? && tournament.owner == user
+  end
+
+  def update_started?
+    tournament.started? && tournament.owner == user
+  end
+
+  def edit?
+    true
+  end
+
+  def update?
+    update_open? || update_started?
+  end
+
+  def destroy?
+    tournament.owner == user
+  end
+
+  def add_team?
+    update_open? && !tournament.full?
+  end
+
+  def remove_team?
+    update_open?
+  end
+
+  def join?
+    tournament.open? && !tournament.members.exists?(user.id)
+  end
+end
