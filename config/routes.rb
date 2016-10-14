@@ -9,18 +9,15 @@ Rails.application.routes.draw do
   get "log_in", to: "sessions#new", as: "log_in"
   delete "log_out", to: "sessions#destroy", as: "log_out"
 
-  resources :teams do
-    post :add_member
-    delete :remove_member
-  end
+  resources :teams, only: [:create, :index, :edit, :update]
 
-  resources :matches, except: :show
+  resources :matches, only: [:create, :index, :edit, :update, :destroy]
 
-  resources :tournaments, except: [:new, :show]
+  resources :tournaments, only: [:create, :index, :edit, :update, :destroy]
 
   resources :team_tournament_participations, only: [:create, :destroy]
 
   resources :team_tournament_membership, only: [:create, :destroy]
 
-  resources :games, except: :show
+  resources :games, only: [:create, :index, :edit, :update, :destroy]
 end
