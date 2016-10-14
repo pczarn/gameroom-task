@@ -6,6 +6,8 @@ class User < ApplicationRecord
     admin: 1,
   }
 
+  mount_uploader :image, ImageUploader
+
   has_many :user_teams
   has_many :teams, through: :user_teams
   has_many :team_tournaments
@@ -24,7 +26,8 @@ class User < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :email, presence: true, uniqueness: true
-  validates :password, presence: true, confirmation: true, length: { in: 7..100 }, on: :create
+  validates :password, presence: true, length: { in: 7..100 }, on: :create
+  validates :password, confirmation: true
 
   def self.authenticate(email, password)
     return unless user = User.find_by(email: email)
@@ -32,8 +35,6 @@ class User < ApplicationRecord
   end
 
   def encrypt_password
-    if password_hashed.blank? && password.present?
-      self.password_hashed = Argon2::Password.create(password)
-    end
+    self.password_hashed = Argon2::Password.create(password) if password.present?
   end
 end

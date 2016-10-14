@@ -12,6 +12,7 @@
     <div class="nav">
       <% if current_user %>
         Logged in as <%= current_user.email %>.
+        <%= image_tag current_user.image.thumb.url, alt: "Avatar" %>
         <%= button_to "Log out", log_out_path, method: :delete %>
       <% else %>
         <%= link_to "Log in", log_in_path %>
