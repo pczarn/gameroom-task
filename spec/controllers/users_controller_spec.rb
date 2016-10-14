@@ -107,14 +107,13 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context "when another user is logged in" do
-      it "fails" do
-        expect(controller).not_to receive(:update)
-        update
-      end
+      before { sign_in }
 
-      it "redirects to root" do
-        expect(update).to redirect_to(root_path)
-      end
+      it { expect { update }.to raise_error(Pundit::NotAuthorizedError) }
+    end
+
+    context "when no user is logged in" do
+      it { expect { update }.to raise_error(Pundit::NotAuthorizedError) }
     end
   end
 end
