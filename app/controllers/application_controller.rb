@@ -17,15 +17,11 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate!
-    redirect_to log_in_path unless session[:user_id]
+    render json: { error: "forbidden" }, status: :forbidden unless session[:user_id]
   end
 
   def ensure_user_not_logged_in!
-    render json: { error: "forbidden" }, status: 403
-  end
-
-  def redirect_if_user_logged_in!
-    redirect_to root_path, notice: "You are already logged in." if session[:user_id]
+    render json: { error: "forbidden" }, status: :forbidden if session[:user_id]
   end
 
   def current_user
