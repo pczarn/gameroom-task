@@ -2,43 +2,42 @@ require "rails_helper"
 
 shared_examples_for "an action that modifies matches" do
   context "when the user owns the match" do
-    it "succeeds" do
-      expect { action }.not_to raise_error
-    end
+    it { is_expected.to be_success }
   end
 
   context "when the user is an admin" do
-    let(:current_user) { build(:user, role: :admin) }
+    let(:current_user) { create(:user, role: :admin) }
     before { match.update(owner: nil) }
 
-    it "succeeds" do
-      expect { action }.not_to raise_error
-    end
+    it { is_expected.to be_success }
   end
 
   context "when the user should not have access" do
     before { match.update!(owner: nil) }
 
-    it { expect { action }.to raise_error(Pundit::NotAuthorizedError) }
+    it { is_expected.to be_forbidden }
   end
 end
 
-RSpec.describe MatchesController, type: :controller do
-  let(:current_user) { build(:user) }
+RSpec.describe Api::V1::MatchesController, type: :controller do
+  let(:current_user) { create(:user) }
 
   before do
     sign_in(current_user)
   end
 
+  let(:parsed_body) { JSON.parse(response.body) }
+
   describe "#index" do
+    subject(:get_index) { get :index, params: params }
+    let(:params) { {} }
+
     it "responds successfully" do
-      get :index
-      expect(response).to be_success
+      expect(get_index).to be_success
     end
 
-    it "responds with html by default" do
-      get :index
-      expect(response.content_type).to eq "text/html"
+    it "responds with json by default" do
+      expect(get_index.content_type).to eq "application/json"
     end
 
     describe "list of matches" do
@@ -47,20 +46,26 @@ RSpec.describe MatchesController, type: :controller do
       let!(:my_match) { create(:match, team_one: user_team.team) }
       let!(:other_match) { create(:match) }
 
+      let(:response_match_ids) do
+        parsed_body.map { |match| match["id"].to_i }
+      end
+
       it "shows both matches" do
-        get :index
-        expect(assigns(:recent)).to include(my_match, other_match)
+        get_index
+        expect(response_match_ids).to include(my_match.id, other_match.id)
       end
 
       context "with an involving_user parameter passed" do
+        let(:params) { { involving_user: player.id } }
+
         it "shows the match involving the specified user" do
-          get :index, params: { involving_user: player.id }
-          expect(assigns(:recent)).to include(my_match)
+          get_index
+          expect(response_match_ids).to include(my_match.id)
         end
 
         it "does not show matches not involving the specified user" do
-          get :index, params: { involving_user: player.id }
-          expect(assigns(:recent)).not_to include(other_match)
+          get_index
+          expect(response_match_ids).not_to include(other_match.id)
         end
       end
     end
@@ -70,9 +75,7 @@ RSpec.describe MatchesController, type: :controller do
     subject(:creation) { post :create, params: { match: match.attributes } }
     let(:match) { build(:match) }
 
-    it "succeeds and redirects to editing" do
-      is_expected.to redirect_to(edit_match_path(assigns(:match)))
-    end
+    it { is_expected.to be_success }
 
     it "stores a new match" do
       expect { creation }.to change(Match, :count).by(1)
@@ -81,27 +84,15 @@ RSpec.describe MatchesController, type: :controller do
     context "with invalid data" do
       let(:match) { build(:match, team_one_score: -1) }
 
-      it "gives an error message" do
-        expect { creation }
-          .to change { flash.alert }
-          .to include("Team one score must be greater than or equal to 0")
-      end
-
-      it "renders the index" do
-        is_expected.to render_template "matches/index"
-      end
+      it { is_expected.to be_unprocessable }
     end
   end
 
-  describe "#edit" do
-    subject(:action) { get :edit, params: { id: match.id } }
+  describe "#show" do
+    subject(:action) { get :show, params: { id: match.id } }
     let(:match) { create(:match, owner: current_user) }
 
-    it "responds successfully" do
-      is_expected.to be_success
-    end
-
-    it_behaves_like "an action that modifies matches"
+    it { is_expected.to be_success }
   end
 
   describe "#update" do
@@ -126,9 +117,7 @@ RSpec.describe MatchesController, type: :controller do
         match.save!
       end
 
-      it "succeeds" do
-        expect { action }.not_to raise_error
-      end
+      it { is_expected.to be_success }
     end
 
     it_behaves_like "an action that modifies matches"
@@ -140,14 +129,6 @@ RSpec.describe MatchesController, type: :controller do
 
     it "removes a match" do
       expect { action }.to change(Match, :count).by(-1)
-    end
-
-    it "redirects to index" do
-      is_expected.to redirect_to(action: :index)
-    end
-
-    it "gives a message that everything is ok" do
-      expect { action }.to change { flash.notice }.to include("Match deleted")
     end
 
     it_behaves_like "an action that modifies matches"

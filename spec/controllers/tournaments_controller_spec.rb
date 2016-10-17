@@ -1,23 +1,17 @@
 require "rails_helper"
 
-RSpec.describe TournamentsController, type: :controller do
-  let(:current_user) { build(:user) }
+RSpec.describe Api::V1::TournamentsController, type: :controller do
+  let(:current_user) { create(:user) }
   before { sign_in(current_user) }
+  let(:parsed_body) { JSON.parse(response.body) }
 
   describe "#index" do
-    it "responds successfully" do
-      get :index
-      expect(response).to be_success
-    end
+    subject(:get_index) { get :index }
 
-    it "responds with html by default" do
-      get :index
-      expect(response.content_type).to eq "text/html"
-    end
+    it { is_expected.to be_success }
 
-    it "sets a default start time" do
-      get :index
-      expect(assigns(:tournament).started_at).to be_a(Time)
+    it "responds with json by default" do
+      expect(get_index.content_type).to eq "application/json"
     end
   end
 
@@ -29,51 +23,35 @@ RSpec.describe TournamentsController, type: :controller do
     context "with correct params" do
       let(:tournament_params) { attr_for_tournament }
 
-      it "does not set alerts" do
-        expect { creation }.not_to change { flash.alert }
-      end
+      it { is_expected.to be_success }
 
       it "stores a new match" do
         expect { creation }.to change(Tournament, :count).by(1)
-      end
-
-      it "redirects" do
-        expect(creation).to be_redirect
       end
     end
 
     context "with wrong params" do
       let(:tournament_params) { attr_for_tournament.merge(number_of_teams: 111) }
 
-      it "assigns an object with errors" do
-        creation
-        expect(assigns(:tournament).errors.full_messages)
-          .to include("Number of teams must be a power of 2")
-      end
+      it { is_expected.to be_unprocessable }
 
-      it "sets alerts" do
-        expect { creation }
-          .to change { flash.alert }
+      it "responds with an error" do
+        creation
+        expect(parsed_body["error"])
           .to include("Number of teams must be a power of 2")
       end
 
       it "does not store a new match" do
         expect { creation }.not_to change(Tournament, :count)
       end
-
-      it "renders the index" do
-        is_expected.to render_template "tournaments/index"
-      end
     end
   end
 
-  describe "#edit" do
-    subject { get :edit, params: { id: tournament.id } }
+  describe "#show" do
+    subject { get :show, params: { id: tournament.id } }
     let(:tournament) { create(:tournament) }
 
-    it "responds successfully" do
-      is_expected.to be_success
-    end
+    it { is_expected.to be_success }
   end
 
   describe "#update" do
@@ -92,7 +70,7 @@ RSpec.describe TournamentsController, type: :controller do
     context "when tournament owner is not logged in" do
       let(:owner) { build(:user) }
 
-      it { expect { updating }.to raise_error(Pundit::NotAuthorizedError) }
+      it { is_expected.to be_forbidden }
     end
   end
 
@@ -101,6 +79,8 @@ RSpec.describe TournamentsController, type: :controller do
     subject(:destruction) { delete :destroy, params: { id: tournament.id } }
 
     context "when the tournament is open" do
+      it { is_expected.to be_success }
+
       it "removes a tournament" do
         expect { destruction }.to change(Tournament, :count).by(-1)
       end
@@ -109,13 +89,11 @@ RSpec.describe TournamentsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
+      it { is_expected.to be_forbidden }
+
       it "does not remove the tournament" do
         expect { destruction }.not_to change(Tournament, :count)
       end
-    end
-
-    it "redirects to index" do
-      is_expected.to redirect_to tournaments_path
     end
   end
 end

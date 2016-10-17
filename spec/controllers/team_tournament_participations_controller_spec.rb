@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe TeamTournamentParticipationsController, type: :controller do
-  let(:current_user) { build(:user) }
+RSpec.describe Api::V1::TeamTournamentParticipationsController, type: :controller do
+  let(:current_user) { create(:user) }
   before { sign_in(current_user) }
 
   describe "#create" do
@@ -13,6 +13,8 @@ RSpec.describe TeamTournamentParticipationsController, type: :controller do
 
     context "when the tournament is open" do
       context "when adding a unique team" do
+        it { is_expected.to be_success }
+
         it "adds the team" do
           expect { adding }.to change { tournament.teams.count }.by(1)
         end
@@ -20,6 +22,8 @@ RSpec.describe TeamTournamentParticipationsController, type: :controller do
 
       context "when adding a duplicate team" do
         before { create(:team, name: "bar", members: members) }
+
+        it { is_expected.to be_success }
 
         it "adds a reused the team" do
           expect { adding }
@@ -32,7 +36,7 @@ RSpec.describe TeamTournamentParticipationsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it { expect { adding }.to raise_error(Pundit::NotAuthorizedError) }
+      it { is_expected.to be_forbidden }
     end
   end
 
@@ -54,7 +58,7 @@ RSpec.describe TeamTournamentParticipationsController, type: :controller do
     context "when the tournament is not open" do
       before { tournament.started! }
 
-      it { expect { removing }.to raise_error(Pundit::NotAuthorizedError) }
+      it { is_expected.to be_forbidden }
     end
   end
 end
