@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.row ul {
+ list-style-type: none;
+}
+
+.left-col {
+  width: 50%;
+  flex: 0 1 auto;
+  text-align: right;
+}
+
+.right-col {
+  width: 50%;
+  flex: 0 1 auto;
+  text-align: left;
+}
+
+.middle-col {
+  padding: 0 5px;
+}
