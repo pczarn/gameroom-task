@@ -30,6 +30,16 @@ RSpec.configure do |config|
     end
   end
 
+  # Speed up hashing
+  config.before(:each) do
+    PASS ||= "password".freeze
+    PASS_HASHED ||= Argon2::Password.create(PASS)
+    allow(Argon2::Password).to receive(:create).and_call_original
+    allow(Argon2::Password).to receive(:create).with(PASS).and_return(PASS_HASHED)
+    allow(Argon2::Password).to receive(:verify_password).and_call_original
+    allow(Argon2::Password).to receive(:verify_password).with(PASS, PASS_HASHED).and_return(true)
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
