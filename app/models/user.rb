@@ -29,12 +29,17 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { in: 7..100 }, on: :create
   validates :password, confirmation: true
 
-  def self.authenticate(email, password)
-    return unless user = User.find_by(email: email)
-    Argon2::Password.verify_password(password, user.password_hashed) && user
+  def authenticate(password)
+    Argon2::Password.verify_password(password, password_hashed) && self
+  end
+
+  def password=(pass)
+    self.password_hashed = Argon2::Password.create(pass)
   end
 
   def encrypt_password
-    self.password_hashed = Argon2::Password.create(password) if password.present?
+    if password.present?
+      self.password_hashed = Argon2::Password.create(password)
+    end
   end
 end

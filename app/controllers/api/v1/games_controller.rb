@@ -1,7 +1,7 @@
 module Api
   module V1
     class GamesController < BaseController
-      before_action :authenticate!
+      before_action :authenticate
       after_action :verify_authorized, only: [:create, :update, :destroy]
 
       def create

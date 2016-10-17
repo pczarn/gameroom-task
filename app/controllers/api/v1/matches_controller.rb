@@ -1,7 +1,7 @@
 module Api
   module V1
     class MatchesController < BaseController
-      before_action :authenticate!
+      before_action :authenticate
       after_action :verify_authorized, only: [:update, :destroy]
 
       def create
