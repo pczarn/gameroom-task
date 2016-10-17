@@ -11,7 +11,6 @@ module Api
 
       def create
         tournament = current_user.owned_tournaments.build(tournament_params)
-        authorize tournament
         tournament.save!
         render json: TournamentRepresenter.new(tournament)
       end
