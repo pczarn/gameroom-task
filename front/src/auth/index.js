@@ -1,0 +1,54 @@
+import {router} from '../main'
+import api from '../api'
+
+// Session related constants
+const SESSION_KEY = 'sessionData'
+
+export default {
+  // Send a request to the login URL and save the returned JWT
+  logIn(token, redirect) {
+    localStorage.setItem(SESSION_KEY, token)
+    api.logIn(token)
+  },
+
+  // To log out, we just need to remove the token
+  logOut() {
+    localStorage.removeItem(SESSION_KEY)
+    api.logOut()
+  },
+
+  // checkAuth() {
+  //   var jwt = localStorage.getItem(SESSION_KEY)
+  //   if(jwt) {
+  //     this.user.authenticated = true
+  //   }
+  //   else {
+  //     this.user.authenticated = false
+  //   }
+  // },
+
+  // // The object to be passed as a header for authenticated requests
+  // getAuthHeader() {
+  //   return {
+  //     'Authorization': 'Bearer ' + localStorage.getItem(SESSION_KEY)
+  //   }
+  // }
+
+  // signup(context, creds, redirect) {
+  //   context.$http.post(SIGNUP_URL, creds, (data) => {
+  //     localStorage.setItem(SESSION_KEY, data.id_token)
+  //     axios.defaults.headers = axios.defaults
+  //     this.user.authenticated = true
+
+  //     if(redirect) {
+  //       router.push(redirect);
+  //     }
+  //   }).error((err) => {
+  //     context.error = err
+  //   })
+  // },
+
+  getToken () {
+    return localStorage.getItem(SESSION_KEY)
+  }
+}
