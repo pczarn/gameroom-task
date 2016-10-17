@@ -6,6 +6,10 @@ class MatchPolicy < ApplicationPolicy
     @match = match
   end
 
+  def show?
+    true
+  end
+
   def update?
     if match.round
       (match.team_one_score.nil? || match.team_two_score.nil?) && (
