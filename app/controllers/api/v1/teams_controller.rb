@@ -1,7 +1,7 @@
 module Api
   module V1
     class TeamsController < BaseController
-      before_action :authenticate!
+      before_action :authenticate
       before_action :load_team, only: [:show, :update]
 
       def create

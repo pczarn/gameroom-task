@@ -58,3 +58,5 @@ gem "pundit", "~> 1.1"
 
 # Background jobs
 gem "sidekiq", "~> 4.2"
+
+gem "knock", "~> 1.4"

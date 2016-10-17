@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
+  root to: "root#index"
+
   namespace :api do
     namespace :v1 do
+      post "user_token" => "user_token#create"
+
       resources :users, only: [:create, :show, :update]
 
       resource :sessions, only: :create
