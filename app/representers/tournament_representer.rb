@@ -1,5 +1,5 @@
 class TournamentRepresenter
-  attr_reader :round
+  attr_reader :tournament
 
   def initialize(tournament)
     @tournament = tournament
@@ -11,7 +11,7 @@ class TournamentRepresenter
       started_at: tournament.started_at,
       image_url: tournament.image.url,
       game: GameRepresenter.new(tournament.game),
-      owner: UserRepresenter.new(tournament.owner.id),
+      owner: UserRepresenter.new(tournament.owner),
       teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).with_teams,
       rounds: RoundsRepresenter.new(tournament.rounds).flat,
     }
