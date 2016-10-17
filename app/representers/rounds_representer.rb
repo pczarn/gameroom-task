@@ -6,7 +6,7 @@ class RoundsRepresenter
   end
 
   def flat
-    rounds.sort_by(&:number).map(&:matches).map { |round| RoundRepresenter.new(round) }
+    rounds.sort_by(&:number).map(&:matches).map { |matches| MatchesRepresenter.new(matches) }
   end
 
   def as_json(_ = {})

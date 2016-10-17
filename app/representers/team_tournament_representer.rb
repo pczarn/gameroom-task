@@ -1,5 +1,5 @@
 class TeamTournamentRepresenter
-  attr_reader :round
+  attr_reader :team_tournament
 
   def initialize(team_tournament)
     @team_tournament = team_tournament
