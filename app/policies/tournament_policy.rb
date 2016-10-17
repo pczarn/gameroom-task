@@ -14,7 +14,7 @@ class TournamentPolicy < ApplicationPolicy
     tournament.started? && tournament.owner == user
   end
 
-  def edit?
+  def show?
     true
   end
 
