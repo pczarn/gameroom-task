@@ -5,7 +5,7 @@ class MatchRepresenter
     @match = match
   end
 
-  def to_json(_ = {})
+  def as_json(_ = {})
     {
       id: match.id,
       played_at: match.played_at,

@@ -12,4 +12,12 @@ class TeamRepresenter
       members: UsersRepresenter.new(team.members),
     }
   end
+
+  def shallow
+    as_json
+  end
+
+  def with_members
+    as_json
+  end
 end
