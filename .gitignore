@@ -22,3 +22,10 @@
 
 node_modules
 dump.rdb
+node_modules/
+.DS_Store
+dist/
+npm-debug.log*
+/front/test/unit/coverage
+/front/test/e2e/reports
+selenium-debug.log
