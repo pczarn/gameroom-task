@@ -26,7 +26,7 @@ module Api
         service = FinishMatch.new(match, params: match_params)
         valid, alert = service.perform
         if valid
-          render json: MatchRepresenter.new(fiendly_match)
+          render json: MatchRepresenter.new(friendly_match)
         else
           render json: { error: alert }, status: 422
         end

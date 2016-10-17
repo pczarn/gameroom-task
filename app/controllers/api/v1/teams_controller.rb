@@ -2,10 +2,10 @@ module Api
   module V1
     class TeamsController < BaseController
       before_action :authenticate
-      before_action :load_team, only: [:show, :update]
+      after_action :verify_authorized, only: :update
 
       def create
-        team = Team.create(team_params)
+        team = Team.create!(team_params)
         render json: TeamRepresenter.new(team)
       end
 
@@ -15,18 +15,18 @@ module Api
       end
 
       def show
-        render json: TeamRepresenter.new(@team)
+        render json: TeamRepresenter.new(team)
       end
 
       def update
-        @team.update!(team_params)
-        render json: TeamRepresenter.new(@team)
+        team.update!(team_params)
+        render json: TeamRepresenter.new(team)
       end
 
       private
 
-      def load_team
-        @team = Team.find(params[:id])
+      def team
+        @team ||= authorize Team.find(params[:id])
       end
 
       def team_params

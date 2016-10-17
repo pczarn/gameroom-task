@@ -1,6 +1,7 @@
-class Api
-  class V1
+module Api
+  module V1
     class TeamTournamentParticipationsController < BaseController
+      before_action :authenticate
       after_action :verify_authorized
 
       def create
