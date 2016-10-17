@@ -25,7 +25,7 @@ module Api
       end
 
       def destroy
-        @game.destroy!
+        game.destroy!
         head :ok
       end
 
