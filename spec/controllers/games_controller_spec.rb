@@ -1,7 +1,9 @@
 require "rails_helper"
 
-RSpec.describe GamesController, type: :controller do
+RSpec.describe Api::V1::GamesController, type: :controller do
   before { sign_in_admin }
+
+  let(:parsed_body) { JSON.parse(response.body) }
 
   describe "#index" do
     it "responds successfully" do
@@ -9,43 +11,17 @@ RSpec.describe GamesController, type: :controller do
       expect(response).to be_success
     end
 
-    it "responds with html by default" do
+    it "responds with json by default" do
       get :index
-      expect(response.content_type).to eq "text/html"
-    end
-
-    it "assigns a new game" do
-      get :index
-      expect(assigns(:game)).to be_a(Game)
+      expect(response.content_type).to eq "application/json"
     end
 
     describe "list of games" do
-      context "with active games" do
-        before { create_list(:game, 2) }
+      before { create_list(:game, 2) }
 
-        it "has all active games" do
-          get :index
-          expect(assigns(:active_games).length).to be(2)
-        end
-
-        it "does not have any archivized games" do
-          get :index
-          expect(assigns(:archivized_games).length).to be(0)
-        end
-      end
-
-      context "with archivized games" do
-        before { create_list(:game, 2, state_archivized: "archivized") }
-
-        it "does not have any active games" do
-          get :index
-          expect(assigns(:active_games).length).to be(0)
-        end
-
-        it "has all archivized games" do
-          get :index
-          expect(assigns(:archivized_games).length).to be(2)
-        end
+      it "has all games" do
+        get :index
+        expect(parsed_body.length).to eq(2)
       end
     end
   end
@@ -56,9 +32,7 @@ RSpec.describe GamesController, type: :controller do
     context "with valid data" do
       let(:game) { build(:game) }
 
-      it "succeeds" do
-        expect(creation).to redirect_to(edit_game_path(assigns(:game)))
-      end
+      specify { expect(creation).to be_success }
 
       it "stores a new game" do
         expect { creation }.to change(Game, :count).by(1)
@@ -68,37 +42,26 @@ RSpec.describe GamesController, type: :controller do
     context "with incorrect data" do
       let(:game) { build(:game, name: "") }
 
-      it "sends an error message" do
-        expect { creation }
-          .to change { flash.alert }
-          .to include("Name can't be blank")
-      end
-
-      it "renders the index" do
-        expect(creation).to render_template "games/index"
+      it "responds with the code for unprocessable entity" do
+        expect(creation).to be_unprocessable
       end
     end
 
     context "with no image" do
       let(:game) { build(:game, image: nil) }
 
-      it "succeeds" do
-        expect(creation).to redirect_to edit_game_path assigns(:game)
-      end
+      specify { expect(creation).to be_success }
     end
   end
 
-  describe "#edit" do
-    subject(:edit) { get :edit, params: { id: game.id } }
+  describe "#show" do
+    subject(:show) { get :show, params: { id: game.id } }
     let(:game) { create(:game) }
 
-    it "assigns a game" do
-      edit
-      expect(assigns(:game)).to be_a(Game)
-    end
+    specify { expect(show).to be_success }
 
-    it "renders editing" do
-      expect(edit).to render_template "games/edit"
+    it "responds with json" do
+      expect(show.content_type).to eq "application/json"
     end
   end
 
@@ -108,21 +71,22 @@ RSpec.describe GamesController, type: :controller do
     let(:game) { create(:game, name: "foo") }
 
     context "with valid params" do
-      it "updates attributes" do
-        update
-        expect(game.reload.name).to eq(params[:game][:name])
+      specify { expect(update).to be_success }
+
+      it "responds with json" do
+        expect(update.content_type).to eq "application/json"
       end
 
-      it "redirects to editing" do
-        expect(update).to redirect_to edit_game_path game
+      it "updates attributes" do
+        expect { update }.to change { game.reload.name }.to eq(params[:game][:name])
       end
     end
 
     context "with incorrect params" do
       let(:params) { { id: game.id, game: { name: "" } } }
 
-      it "renders editing" do
-        expect(update).to render_template "games/edit"
+      it "responds with the code for unprocessable entity" do
+        expect(update).to be_unprocessable
       end
     end
   end
@@ -132,25 +96,18 @@ RSpec.describe GamesController, type: :controller do
     let!(:game) { create(:game) }
 
     context "with valid id" do
+      specify { expect(deletion).to be_success }
+
       it "removes a game" do
         expect { deletion }.to change(Game, :count).by(-1)
-      end
-
-      it "redirects to index" do
-        expect(deletion).to redirect_to(action: :index)
-      end
-
-      it "sends a message that everything is ok" do
-        expect { deletion }
-          .to change { flash[:success] }
-          .to eq("Game deleted")
       end
     end
 
     context "with incorrect id" do
       subject(:deletion) { delete :destroy, params: { id: 123 } }
+
       it "fails" do
-        expect { deletion }.to raise_error(ActiveRecord::RecordNotFound)
+        expect(deletion).to be_not_found
       end
     end
   end
