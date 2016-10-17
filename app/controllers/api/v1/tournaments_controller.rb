@@ -1,7 +1,7 @@
 module Api
   module V1
     class TournamentsController < BaseController
-      before_action :authenticate!
+      before_action :authenticate
       before_action :load_tournament, only: [:show, :update, :destroy]
       after_action :verify_authorized, only: [:update, :destroy]
 

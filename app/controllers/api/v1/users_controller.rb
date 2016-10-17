@@ -1,6 +1,6 @@
 module Api
   module V1
-    class UsersController < ApplicationController
+    class UsersController < BaseController
       before_action :ensure_user_not_logged_in!
       before_action :load_user, only: [:show, :update]
       before_action :verify_authorized, only: :update
