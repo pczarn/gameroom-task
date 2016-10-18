@@ -13,6 +13,7 @@ import TournamentList from './components/TournamentList'
 import Tournament from './components/Tournament'
 import Match from './components/Match'
 import Login from './components/Login'
+import Dashboard from './components/Dashboard'
 import auth from './auth'
 import api from './api'
 
@@ -30,7 +31,11 @@ Vue.use(VueTimeago, {
 const routes = [
   {
     path: '/',
-    redirect: '/games',
+    redirect: '/dashboard',
+  },
+  {
+    path: '/dashboard',
+    component: Dashboard,
   },
   {
     path: '/games',
@@ -89,6 +94,55 @@ export var store = new Vuex.Store({
     currentUser (state) {
       return state.currentUser
     },
+
+    userList (state) {
+      return state.users
+    },
+    userMap (state, getters) {
+      return new Map(getters.userList.map(user => [user.id, user]))
+    },
+
+    // rawGameList (state) {
+    // },
+    gameList (state, getters) {
+      return state.games
+    },
+    gameMap (state, getters) {
+      return new Map(getters.gameList.map(game => [game.id, game]))
+    },
+
+    rawTeamList (state) {
+      return state.teams
+    },
+    teamList (state, getters) {
+      return getters.rawTeamList.map(team => {
+        return Vue.util.extend(team, {
+          members: team.member_ids.map(memberId => getters.userMap.get(memberId))
+        })
+      })
+    },
+    teamMap (state, getters) {
+      return new Map(getters.teamList.map(team => [team.id, team]))
+    },
+
+    rawMatchList (state) {
+      return state.matches
+    },
+    matchList (state, getters) {
+      return getters.rawMatchList.map(match => {
+        return Vue.util.extend(match, {
+          teamOne: getters.teamMap.get(match.team_one_id),
+          teamTwo: getters.teamMap.get(match.team_two_id),
+          game: getters.gameMap.get(match.game_id),
+          owner: match.owner_id && getters.userMap.get(match.owner_id),
+        })
+      })
+    },
+    matchMap (state, getters) {
+      return new Map(getters.matchList.map(match => [match.id, match]))
+    },
+
+    // need or not?
     userMatches (state) {
       if(state.currentUser) {
         let userId = state.currentUser.id
@@ -98,24 +152,20 @@ export var store = new Vuex.Store({
         return []
       }
     },
-    userList (state) {
-      return state.users
-    },
-    userMap (state) {
-      return new Map(state.users.map(user => [user.id, user]))
-    },
-    gameList (state) {
-      return state.games
-    },
-    teamList (state) {
-      return state.teams
-    },
-    matchList (state) {
-      return state.matches
-    },
-    tournamentList (state) {
+
+    rawTournamentList (state) {
       return state.tournaments
     },
+    tournamentList (state, getters) {
+      let toMatch = matchId => getters.matchMap.get(matchId)
+      let toListOfMatches = matchIds => matchIds.map(toMatch)
+      return getters.rawTournamentList.map(tournament => {
+        tournament = Vue.util.extend({}, tournament)
+        tournament.rounds = tournament.rounds.map(toListOfMatches)
+        return tournament
+      })
+    },
+
     activeGames (state) {
       return state.games.filter(game => !game.archivized)
     },
@@ -318,7 +368,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
-  } else if(!store.getters.isLoggedIn) {
+  } else if(!store.getters.isLoggedIn && !auth.getToken()) {
     next('/login')
   } else {
     next()

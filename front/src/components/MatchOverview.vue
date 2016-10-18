@@ -9,9 +9,9 @@
     </span>
   </div>
   <div class="row">
-    <strong class="left-col">{{ team_one.name }}</strong>
+    <strong class="left-col">{{ teamOne.name }}</strong>
     <span class="middle-col">vs</span>
-    <strong class="right-col">{{ team_two.name }}</strong>
+    <strong class="right-col">{{ teamTwo.name }}</strong>
   </div>
   <div class="row">
     <span class="left-col">{{ scoreOne }}</span>
@@ -40,8 +40,8 @@ export default {
   props: {
     id: Number,
     played_at: String,
-    team_one: Object,
-    team_two: Object,
+    teamOne: Object,
+    teamTwo: Object,
     team_one_score: Number,
     team_two_score: Number,
   },
