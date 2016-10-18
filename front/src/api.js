@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {store} from './main'
 
 const API_URL = 'http://localhost:3000/api/v1/'
 const TOKEN_TYPE = 'Bearer '
