@@ -5,11 +5,11 @@ class TeamTournamentsRepresenter < BaseRepresenter
     @team_tournaments = team_tournaments
   end
 
-  def with_teams(_ = {})
-    team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).with_team }
+  def basic
+    team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).basic }
   end
 
-  def shallow(_ = {})
-    team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).shallow }
+  def with_teams
+    team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).with_team }
   end
 end

@@ -5,15 +5,11 @@ class TeamsRepresenter < BaseRepresenter
     @teams = teams
   end
 
-  def shallow(_ = {})
-    teams.map { |team| TeamRepresenter.new(team).shallow }
+  def basic
+    teams.map { |team| TeamRepresenter.new(team).basic }
   end
 
-  def with_members(_ = {})
+  def with_members
     teams.map { |team| TeamRepresenter.new(team).with_members }
-  end
-
-  def as_json(_ = {})
-    shallow
   end
 end

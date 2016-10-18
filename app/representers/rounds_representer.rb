@@ -5,11 +5,11 @@ class RoundsRepresenter < BaseRepresenter
     @rounds = rounds
   end
 
-  def flat
-    rounds.sort_by(&:number).map(&:matches).map { |matches| MatchesRepresenter.new(matches) }
+  def basic
+    rounds.sort_by(&:number).map { |round| RoundRepresenter.new(round).basic }
   end
 
-  def as_json(_ = {})
-    rounds.map { |round| RoundRepresenter.new(round) }
+  def with_permissions(current_user)
+    basic.map { |matches| matches.with_permissions(current_user) }
   end
 end
