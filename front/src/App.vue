@@ -1,20 +1,20 @@
 <template>
-  <div id="main">
-    <navigation-bar></navigation-bar>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
-  </div>
+<div id="main">
+  <navigation-bar></navigation-bar>
+  <keep-alive>
+    <router-view></router-view>
+  </keep-alive>
+</div>
 </template>
 
 <script>
-  import NavigationBar from 'src/components/NavigationBar'
+import NavigationBar from 'src/components/NavigationBar'
 
-  export default {
-    components: {
-      NavigationBar,
-    },
-  }
+export default {
+  components: {
+    NavigationBar,
+  },
+}
 </script>
 
 <style>

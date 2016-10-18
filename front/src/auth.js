@@ -1,4 +1,3 @@
-import {router} from '../main'
 import api from '../api'
 
 // Session related constants
