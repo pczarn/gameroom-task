@@ -5,10 +5,13 @@ class RoundRepresenter < BaseRepresenter
     @round = round
   end
 
-  def as_json(_ = {})
+  def basic
+    MatchesRepresenter.new(round.matches)
+  end
+
+  def with_number
     {
       number: round.number,
-      # number_of_matches: round.number_of_matches,
       matches: MatchesRepresenter.new(round.matches),
     }
   end

@@ -1,9 +1,11 @@
 class UsersRepresenter < BaseRepresenter
+  attr_reader :users
+
   def initialize(users)
     @users = users
   end
 
-  def as_json(_ = {})
-    @users.map { |user| UserRepresenter.new(user) }
+  def basic
+    users.map { |user| UserRepresenter.new(user).basic }
   end
 end

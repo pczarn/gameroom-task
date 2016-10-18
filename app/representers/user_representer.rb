@@ -5,12 +5,11 @@ class UserRepresenter < BaseRepresenter
     @user = user
   end
 
-  def as_json(_ = {})
+  def basic
     {
       id: user.id,
       name: user.name,
       email: user.email,
-      # avatar_url: user.image.url,
       role: user.role,
     }
   end

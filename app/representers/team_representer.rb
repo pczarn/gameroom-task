@@ -5,7 +5,7 @@ class TeamRepresenter < BaseRepresenter
     @team = team
   end
 
-  def shallow(_ = {})
+  def basic
     {
       id: team.id,
       name: team.name,
@@ -13,15 +13,9 @@ class TeamRepresenter < BaseRepresenter
     }
   end
 
-  def with_members(_ = {})
-    {
-      id: team.id,
-      name: team.name,
-      members: UsersRepresenter.new(team.members),
-    }
-  end
-
-  def as_json(_ = {})
-    shallow
+  def with_members
+    basic.merge(
+      members: UsersRepresenter.new(team.members).basic,
+    )
   end
 end

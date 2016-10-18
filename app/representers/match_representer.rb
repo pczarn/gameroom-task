@@ -12,22 +12,28 @@ class MatchRepresenter < BaseRepresenter
       played_at: match.played_at,
       team_one_score: match.team_one_score,
       team_two_score: match.team_two_score,
-      winner: match.winning_team.id == match.team_one_id ? 0 : 1,
-      owner: match.owner && UserRepresenter.new(match.owner),
+      team_one_id: match.team_one_id,
+      team_two_id: match.team_two_id,
+      owner_id: match.owner_id,
     }
   end
 
-  def as_json(_ = {})
+  def with_winner
     basic.merge(
-      team_one: TeamRepresenter.new(match.team_one).shallow,
-      team_two: TeamRepresenter.new(match.team_two).shallow,
+      winner: match.winning_team.id == match.team_one_id ? 0 : 1,
     )
   end
 
-  def shallow(_ = {})
+  def with_permissions(current_user)
+    with_winner.merge(
+      editable: MatchPolicy.new(current_user, match).update?,
+    )
+  end
+
+  def with_teams
     basic.merge(
-      team_one_id: match.team_one_id,
-      team_two_id: match.team_two_id,
+      team_one: TeamRepresenter.new(match.team_one).basic,
+      team_two: TeamRepresenter.new(match.team_two).basic,
     )
   end
 end

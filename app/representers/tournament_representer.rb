@@ -5,7 +5,7 @@ class TournamentRepresenter < BaseRepresenter
     @tournament = tournament
   end
 
-  def basic(_ = {})
+  def basic
     {
       id: tournament.id,
       title: tournament.title,
@@ -13,30 +13,23 @@ class TournamentRepresenter < BaseRepresenter
       status: tournament.status,
       image_url: tournament.image.url,
       number_of_teams: tournament.number_of_teams,
-      game: GameRepresenter.new(tournament.game),
-      owner: UserRepresenter.new(tournament.owner),
-      rounds: RoundsRepresenter.new(tournament.rounds).flat,
+      game_id: tournament.game_id,
+      owner_id: tournament.owner_id,
+      rounds: RoundsRepresenter.new(tournament.rounds).basic,
+      teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).basic,
     }
   end
 
-  def shallow(_ = {})
+  def with_permissions(current_user)
     basic.merge(
-      teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).shallow,
+      rounds: RoundsRepresenter.new(tournament.rounds).with_permissions(current_user),
+      editable: TournamentPolicy.new(current_user, tournament).update?,
     )
   end
 
-  def as_json(_ = {})
+  def with_teams
     basic.merge(
       teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).with_teams,
-      # teams_info: teams_info,
-      # rounds_info: rounds_info,
-      # winning_team: winning_team,
     )
   end
-
-  # def teams_info
-  #   if tournament.open?
-  #     tournament.team_tournaments.map { |tt| [tt.team.members.size, tt.number_of_slots] }
-  #   end
-  # end
 end
