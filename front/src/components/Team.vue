@@ -1,11 +1,13 @@
 <template>
 <div class="team">
   <strong>{{name}}</strong>
-  <TeamMemberList :members="members"></TeamMemberList>
+  <team-member-list :members="members"></team-member-list>
 </div>
 </template>
 
 <script>
+import TeamMemberList from './TeamMemberList'
+
 export default {
   name: 'Team',
   props: {
@@ -14,7 +16,7 @@ export default {
     member_ids: Array,
   },
   components: {
-    TeamMembers,
+    TeamMemberList,
   },
   data () {
     return {

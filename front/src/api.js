@@ -61,6 +61,14 @@ export default {
   },
   async updateMatch (params) {
     let id = params.id
+    params = {
+      team_one_id: params.team_one_id,
+      team_two_id: params.team_two_id,
+      team_one_score: params.team_one_score,
+      team_two_score: params.team_two_score,
+      game_id: params.game_id,
+      played_at: params.played_at,
+    }
     return (await axios.patch(`/matches/${id}`, { match: params })).data
   },
   destroyMatch (id) {
