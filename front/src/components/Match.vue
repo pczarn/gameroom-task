@@ -23,28 +23,29 @@
     </div>
     <div class="row">
       <team-member-list :member_ids="teams[0].member_ids"
-                        :class="left-col">
+                        class="left-col">
       </team-member-list>
       <span class="middle-col">:</span>
       <team-member-list :member_ids="teams[1].member_ids"
-                        :class="right-col">
+                        class="right-col">
       </team-member-list>
     </div>
-  </div>
 
-  <match-form :match="newMatch"
+    <match-form :match="newMatch"
                 button="Update the match"
                 @submit="update()"
                 v-if="editable">
-  </match-form>
+    </match-form>
+  </div>
 
-  <button v-if="editable" @click="$emit('remove')">Remove</button>
+  <button v-if="editable" @click="remove()">Remove</button>
 
   <a href="#" @click="goBack()">Go back</a>
 </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import TeamMemberList from './TeamMemberList'
@@ -72,10 +73,10 @@ export default {
       return parseInt(this.$route.params.id)
     },
     match () {
-      let match = this.matchList.find(m => m.id === this.id)
+      let match = this.matchMap.get(this.id)
       if(match) {
-        match.team_one_id = match.team_one.id
-        match.team_two_id = match.team_two.id
+        match.team_one_id = match.teamOne.id
+        match.team_two_id = match.teamTwo.id
         return match
       }
     },
@@ -92,10 +93,10 @@ export default {
     },
     editable () {
       let userId = this.currentUser && this.currentUser.id
-      userId && this.match && this.teams && (
-        this.match.owner_id === userId ||
-        this.teams[0].member_ids.include(userId) ||
-        this.teams[1].member_ids.include(userId)
+      return userId && this.match && this.teams && (
+        this.match.owner.id === userId ||
+        this.teams[0].member_ids.includes(userId) ||
+        this.teams[1].member_ids.includes(userId)
       )
     },
     ...mapGetters(['matchList', 'teamList', 'gameList', 'currentUser']),
@@ -105,8 +106,19 @@ export default {
       this.$router.go(-1)
     },
     update () {
-      this.newMatch.id = this.match.id
       this.$store.dispatch('UPDATE_MATCH', this.newMatch)
+    },
+    async remove () {
+      await this.$store.dispatch('DESTROY_MATCH', this.match)
+      this.$router.push('/matches')
+    },
+  },
+  watch: {
+    match (newValue) {
+      this.newMatch = Vue.util.extend({}, newValue)
+      if(newValue) {
+        this.newMatch.id = newValue.id
+      }
     },
   },
 }
