@@ -1,22 +1,21 @@
 <template>
   <div id="main">
-    <nav>
-      <ul>
-        <li><router-link to="/">Home</router-link></li>
-
-        <li v-if="$store.getters.isLoggedIn">
-          <router-link to="/logout">Log out</router-link>
-        </li>
-        <li v-else>
-          <router-link to="/login">Log in</router-link>
-        </li>
-      </ul>
-    </nav>
+    <navigation-bar></navigation-bar>
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
   </div>
 </template>
+
+<script>
+  import NavigationBar from 'src/components/NavigationBar'
+
+  export default {
+    components: {
+      NavigationBar,
+    },
+  }
+</script>
 
 <style>
 html {
