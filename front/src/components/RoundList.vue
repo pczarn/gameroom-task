@@ -2,19 +2,19 @@
 </template>
 
 <script>
-  import Round from './Round'
+import Round from './Round'
 
-  export default {
-    data () {
-      return {
-        editable: false,
-      }
-    },
-    props: ['rounds'],
-    components: {
-      round: Round,
-    },
-  }
+export default {
+  data () {
+    return {
+      editable: false,
+    }
+  },
+  props: ['rounds'],
+  components: {
+    round: Round,
+  },
+}
 </script>
 
 <style scoped>
