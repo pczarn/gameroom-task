@@ -8,7 +8,7 @@ const CURRENT_USER_KEY = 'currentUserData'
 export default {
   // Send a request to the login URL and save the returned JWT
   logIn ({ user, token }) {
-    localStorage.setItem(CURRENT_USER_KEY, user)
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user))
     localStorage.setItem(SESSION_KEY, token)
     api.logIn(token)
   },
@@ -56,6 +56,7 @@ export default {
   },
 
   getCurrentUser () {
-    return localStorage.getItem(CURRENT_USER_KEY)
+    let stringifiedInfo = localStorage.getItem(CURRENT_USER_KEY)
+    return stringifiedInfo && JSON.parse(stringifiedInfo)
   },
 }

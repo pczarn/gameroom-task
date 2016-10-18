@@ -33,6 +33,7 @@ export default {
     return (await axios.post('/games', { game: params })).data
   },
   async updateGame (params) {
+    let id = params.id
     return (await axios.patch(`/games/${id}`, { game: params })).data
   },
   destroyGame (id) {
@@ -46,6 +47,7 @@ export default {
     return (await axios.post('/teams', { team: params })).data
   },
   async updateTeam (params) {
+    let id = params.id
     return (await axios.patch(`/teams/${id}`, { team: params })).data
   },
   destroyTeam (id) {
@@ -59,6 +61,7 @@ export default {
     return (await axios.post('/matches', { match: params })).data
   },
   async updateMatch (params) {
+    let id = params.id
     return (await axios.patch(`/matches/${id}`, { match: params })).data
   },
   destroyMatch (id) {
@@ -72,6 +75,7 @@ export default {
     return (await axios.post('/tournaments', { tournament: params })).data
   },
   async updateTournament (params) {
+    let id = params.id
     return (await axios.patch(`/tournaments/${id}`, { tournament: params })).data
   },
   destroyTournament (id) {
@@ -79,9 +83,9 @@ export default {
   },
 
   createTournamentTeamParticipation (id, team) {
-    return axios.post('/tournaments/${id}/add_team', { team: team })
+    return axios.post(`/tournaments/${id}/add_team`, { team: team })
   },
   destroyTournamentTeamParticipation (id, team) {
-    return axios.post('/tournaments/${id}/remove_team', { team: team })
+    return axios.post(`/tournaments/${id}/remove_team`, { team: team })
   },
 }

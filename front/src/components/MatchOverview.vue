@@ -21,9 +21,6 @@
     <div class="row">
       <router-link :to="`/matches/${id}`">See more</router-link>
     </div>
-
-
-    <button v-if="editable" @click="$emit('remove')">Remove</button>
   </div>
 </template>
 
@@ -63,29 +60,25 @@
 </script>
 
 <style scoped>
-.match {
-}
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+  .left-col {
+    width: 50%;
+    flex: 0 1 auto;
+    text-align: right;
+  }
 
-.left-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: right;
-}
+  .right-col {
+    width: 50%;
+    flex: 0 1 auto;
+    text-align: left;
+  }
 
-.right-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: left;
-}
-
-.middle-col {
-  padding: 0 5px;
-}
-
+  .middle-col {
+    padding: 0 5px;
+  }
 </style>
