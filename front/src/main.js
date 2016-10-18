@@ -84,7 +84,10 @@ export var store = new Vuex.Store({
       return state.currentUser !== null
     },
     isAdmin (state) {
-      return state.currentUser && state.currentUser.role == 'admin'
+      return state.currentUser && state.currentUser.role === 'admin'
+    },
+    currentUser (state) {
+      return state.currentUser
     },
     userMatches (state) {
       if(state.currentUser) {
@@ -168,7 +171,7 @@ export var store = new Vuex.Store({
     },
     SET_MATCH (state, match) {
       let idx = state.matches.findIndex(({ id }) => id == match.id)
-      state.matches[idx] = match
+      Vue.set(state.matches, idx, match)
     },
     REMOVE_MATCH (state, match) {
       let idx = state.matches.findIndex(({ id }) => id == match.id)
@@ -209,9 +212,9 @@ export var store = new Vuex.Store({
   },
   actions: {
     async LOG_IN ({ commit }, creds) {
-      let user_with_token = await api.getUserWithToken(creds)
-      commit('SET_CURRENT_USER', user_with_token)
-      auth.logIn(user_with_token)
+      let userWithToken = await api.getUserWithToken(creds)
+      commit('SET_CURRENT_USER', userWithToken)
+      auth.logIn(userWithToken)
       router.push('/')
     },
     LOG_OUT ({ commit }) {
@@ -294,12 +297,12 @@ export var store = new Vuex.Store({
 
     async ADD_TEAM_TO_TOURNAMENT ({ commit }, { tournament, team }) {
       await api.createTournamentTeamParticipation(tournament.id, { id: team.id })
-      commit('ADD_TEAM_TO_TOURNAMENT', { tournamentId, teamId })
+      commit('ADD_TEAM_TO_TOURNAMENT', { tournamentId: tournament.id, teamId: team.id })
     },
     async CREATE_AND_ADD_TEAM_TO_TOURNAMENT ({ commit }, { tournament, team }) {
       await api.createTournamentTeamParticipation(tournament.id, { member_ids: team.member_ids })
       commit('ADD_TEAM', team)
-      commit('ADD_TEAM_TO_TOURNAMENT', { tournamentId, teamId: team.id })
+      commit('ADD_TEAM_TO_TOURNAMENT', { tournamentId: tournament.id, teamId: team.id })
     },
     async REMOVE_TEAM_FROM_TOURNAMENT ({ commit }, { tournamentId, team }) {
       await api.destroyTournamentTeamParticipation(tournamentId, team.id)
@@ -308,7 +311,21 @@ export var store = new Vuex.Store({
   }
 })
 
-const app = new Vue({
+router.beforeEach((to, from, next) => {
+  if(to.path === '/login') {
+    if(store.getters.isLoggedIn) {
+      next('/')
+    } else {
+      next()
+    }
+  } else if(!store.getters.isLoggedIn) {
+    next('/login')
+  } else {
+    next()
+  }
+})
+
+new Vue({
   router,
   store,
   render: h => h(App),
@@ -317,6 +334,7 @@ const app = new Vue({
   },
   async beforeMount () {
     let token = auth.getToken()
+    let redirectToLogin
     if(token) {
       try {
         api.logIn(token)
@@ -324,15 +342,20 @@ const app = new Vue({
         this.$store.commit('SET_CURRENT_USER', { user: currentUser, token: token })
       } catch(err) {
         auth.logOut()
-        this.$router.push('/login')
+        redirectToLogin = true
       }
     } else {
-      this.$router.push('/login')
+      redirectToLogin = true
     }
-    this.$store.dispatch('GET_GAMES')
-    this.$store.dispatch('GET_TEAMS')
-    this.$store.dispatch('GET_MATCHES')
-    this.$store.dispatch('GET_TOURNAMENTS')
-    this.$store.dispatch('GET_USERS')
+
+    if(redirectToLogin) {
+      this.$router.push('/login')
+    } else {
+      this.$store.dispatch('GET_GAMES')
+      this.$store.dispatch('GET_TEAMS')
+      this.$store.dispatch('GET_MATCHES')
+      this.$store.dispatch('GET_TOURNAMENTS')
+      this.$store.dispatch('GET_USERS')
+    }
   },
 }).$mount('#app')

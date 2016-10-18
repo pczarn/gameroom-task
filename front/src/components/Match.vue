@@ -1,91 +1,142 @@
 <template>
   <div class="match">
-    <div class="row">
-      <span v-if="played_at">
-        Played at <time :datetime="played_at">{{ playedAtFormatted }}</time>
-      </span>
-      <span v-else>
-        Played at an unknown time
-      </span>
-    </div>
-    <div class="row">
-      <strong class="left-col">{{ team_one.name }}</strong>
-      <span class="middle-col">vs</span>
-      <strong class="right-col">{{ team_two.name }}</strong>
-    </div>
-    <div class="row">
-      <span class="left-col">{{ scoreOne }}</span>
-      <span class="middle-col">:</span>
-      <span class="right-col">{{ scoreTwo }}</span>
-    </div>
-    <div class="row">
-      <router-link :to="`/matches/${id}`">See more</router-link>
+    <div v-if="match && game && teams">
+      Match owned by {{ match.owner.name }} <br>
+      Game {{ game.name }}
+      <div class="row">
+        <span v-if="match.played_at">
+          Played at <time :datetime="match.played_at">{{ playedAtFormatted }}</time>
+        </span>
+        <span v-else>
+          Played at an unknown time
+        </span>
+      </div>
+      <div class="row">
+        <strong class="left-col">{{ teams[0].name }}</strong>
+        <span class="middle-col">vs</span>
+        <strong class="right-col">{{ teams[1].name }}</strong>
+      </div>
+      <div class="row">
+        <span class="left-col">{{ match.scoreOne }}</span>
+        <span class="middle-col">:</span>
+        <span class="right-col">{{ match.scoreTwo }}</span>
+      </div>
+      <div class="row">
+        <team-member-list :member_ids="teams[0].member_ids"
+                          :class="left-col">
+        </team-member-list>
+        <span class="middle-col">:</span>
+        <team-member-list :member_ids="teams[1].member_ids"
+                          :class="right-col">
+        </team-member-list>
+      </div>
     </div>
 
+    <match-form :match="newMatch"
+                  button="Update the match"
+                  @submit="update()"
+                  v-if="editable">
+    </match-form>
 
     <button v-if="editable" @click="$emit('remove')">Remove</button>
+
+    <a href="#" @click="goBack()">Go back</a>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
   import moment from 'moment'
-  import Team from './Team'
+  import TeamMemberList from './TeamMemberList'
+  import MatchForm from './MatchForm'
 
   export default {
+    name: 'Match',
     data () {
       return {
-        editable: false,
+        newMatch: { owner: {} },
       }
     },
     components: {
-      Team,
-    },
-    props: {
-      id: Number,
-      played_at: String,
-      team_one: Object,
-      team_two: Object,
-      team_one_score: Number,
-      team_two_score: Number,
+      TeamMemberList,
+      MatchForm,
     },
     computed: {
       scoreOne () {
-        return this.team_one_score || "—"
+        return this.match.team_one_score || '—'
       },
       scoreTwo () {
-        return this.team_two_score || "—"
+        return this.match.team_two_score || '—'
+      },
+      id () {
+        return parseInt(this.$route.params.id)
+      },
+      match () {
+        let match = this.matchList.find(m => m.id === this.id)
+        if(match) {
+          match.team_one_id = match.team_one.id
+          match.team_two_id = match.team_two.id
+          return match
+        }
       },
       playedAtFormatted () {
-        return moment(this.played_at).format('YYYY-MM-DD HH:MM')
+        return moment(this.match.played_at).format('YYYY-MM-DD HH:MM')
+      },
+      game () {
+        return this.gameList.find(m => m.id === this.match.game_id)
+      },
+      teams () {
+        let teamOne = this.teamList.find(m => m.id === this.match.team_one_id)
+        let teamTwo = this.teamList.find(m => m.id === this.match.team_two_id)
+        return teamOne && teamTwo ? [teamOne, teamTwo] : false
+      },
+      editable () {
+        let userId = this.currentUser && this.currentUser.id
+        userId && this.match && this.teams && (
+          this.match.owner_id === userId ||
+          this.teams[0].member_ids.include(userId) ||
+          this.teams[1].member_ids.include(userId)
+        )
+      },
+      ...mapGetters(['matchList', 'teamList', 'gameList', 'currentUser']),
+    },
+    methods: {
+      goBack () {
+        this.$router.go(-1)
+      },
+      update () {
+        this.newMatch.id = this.match.id
+        this.$store.dispatch('UPDATE_MATCH', this.newMatch)
       },
     },
   }
 </script>
 
 <style scoped>
-.match {
-}
+  .match {
+   /* display: flex;*/
+   flex-direction: column;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /*flex: 2 2 auto;*/
+  }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+  .left-col {
+    width: 50%;
+    flex: 0 1 auto;
+    text-align: right;
+  }
 
-.left-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: right;
-}
+  .right-col {
+    width: 50%;
+    flex: 0 1 auto;
+    text-align: left;
+  }
 
-.right-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: left;
-}
-
-.middle-col {
-  padding: 0 5px;
-}
-
+  .middle-col {
+    padding: 0 5px;
+  }
 </style>
