@@ -2,7 +2,7 @@
 <div>
   <h1>Matches</h1>
   <ul class="matches">
-    <li v-for="match in matchList">
+    <li v-for="match in matchListForUser">
       <match-overview v-bind="match" @remove="remove(match)"></match-overview>
     </li>
   </ul>
@@ -24,6 +24,27 @@ export default {
     MatchForm,
   },
   data () {
+    return {
+      newMatch: {},
+    }
+  },
+  props: {
+    forUser: Object,
+  },
+  computed: {
+    matchListForUser () {
+      let matchList = this.matchList
+      if(this.forUser) {
+        let userId = this.forUser.id
+        matchList = matchList.filter(match => {
+          return match.owner_id === userId ||
+            match.teamOne && match.teamOne.member_ids.includes(userId) ||
+            match.teamTwo && match.teamTwo.member_ids.includes(userId)
+        })
+      }
+      return matchList
+    },
+    ...mapGetters(['matchList']),
   },
   methods: {
     remove (match) {
@@ -33,7 +54,6 @@ export default {
       this.$store.dispatch('CREATE_MATCH', this.newMatch).then(_ => { this.newMatch = {} })
     },
   },
-  computed: mapGetters(['matchList']),
 }
 </script>
 
