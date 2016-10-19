@@ -21,11 +21,7 @@ class TeamRepresenter
     }
   end
 
-  def shallow
-    as_json
-  end
-
-  def with_members
-    as_json
+  def as_json(_ = {})
+    shallow
   end
 end
