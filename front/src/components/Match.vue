@@ -73,12 +73,7 @@ export default {
       return parseInt(this.$route.params.id)
     },
     match () {
-      let match = this.matchMap.get(this.id)
-      if(match) {
-        match.team_one_id = match.teamOne.id
-        match.team_two_id = match.teamTwo.id
-        return match
-      }
+      return this.matchMap.get(this.id)
     },
     playedAtFormatted () {
       return moment(this.match.played_at).format('YYYY-MM-DD HH:MM')
@@ -99,7 +94,7 @@ export default {
         this.teams[1].member_ids.includes(userId)
       )
     },
-    ...mapGetters(['matchList', 'teamList', 'gameList', 'currentUser']),
+    ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
   },
   methods: {
     goBack () {
