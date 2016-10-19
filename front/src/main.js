@@ -121,9 +121,9 @@ export var store = new Vuex.Store({
     },
   },
   mutations: {
-    SET_CURRENT_USER (state, { user, sessionToken }) {
+    SET_CURRENT_USER (state, { user, token }) {
       state.currentUser = user
-      state.sessionToken = sessionToken
+      state.sessionToken = token
     },
     RESET_CURRENT_USER (state) {
       state.currentUser = null
@@ -209,14 +209,10 @@ export var store = new Vuex.Store({
   },
   actions: {
     async LOG_IN ({ commit }, creds) {
-      let token = await api.getUserToken(creds)
-      if(token) {
-        commit('SET_CURRENT_USER', { user: {}, sessionToken: token })
-        auth.logIn(token)
-        router.push('/')
-        let currentUser = await api.getCurrentUser()
-        commit('SET_CURRENT_USER', { user: currentUser, sessionToken: token })
-      }
+      let user_with_token = await api.getUserWithToken(creds)
+      commit('SET_CURRENT_USER', user_with_token)
+      auth.logIn(user_with_token)
+      router.push('/')
     },
     LOG_OUT ({ commit }) {
       auth.logOut()
@@ -226,6 +222,10 @@ export var store = new Vuex.Store({
     async GET_USERS ({ commit }) {
       let users = await api.getUsers()
       commit('SET_USER_LIST', users)
+    },
+    async CREATE_USER ({ dispatch }, userParams) {
+      let user = await api.createUser(userParams)
+      dispatch('LOG_IN', { email: user.email, password: user.password })
     },
 
     async GET_GAMES ({ commit }) {
@@ -320,9 +320,8 @@ const app = new Vue({
     if(token) {
       try {
         api.logIn(token)
-        this.$store.commit('SET_CURRENT_USER', { user: {}, sessionToken: token })
-        let currentUser = await api.getCurrentUser()
-        this.$store.commit('SET_CURRENT_USER', { user: currentUser, sessionToken: token })
+        let currentUser = auth.getCurrentUser()
+        this.$store.commit('SET_CURRENT_USER', { user: currentUser, token: token })
       } catch(err) {
         auth.logOut()
         this.$router.push('/login')
