@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TeamTournamentParticipationsController < BaseController
+    class TournamentLineupsController < BaseController
       before_action :authenticate
       after_action :verify_authorized
       expose :team_tournament, with: :authorize

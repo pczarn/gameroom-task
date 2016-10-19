@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TeamTournamentMembershipController < BaseController
+    class TeamLineupMembersController < BaseController
       after_action :verify_authorized
       expose :team_tournament
       expose :user
