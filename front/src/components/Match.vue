@@ -1,8 +1,8 @@
 <template>
 <div class="match">
-  <div v-if="match && game && teams">
+  <div v-if="match && match.game && teams">
     Match owned by {{ match.owner.name }} <br>
-    Game {{ game.name }}
+    Game {{ match.game.name }}
     <div class="row">
       <span v-if="match.played_at">
         Played at <time :datetime="match.played_at">{{ playedAtFormatted }}</time>
@@ -78,21 +78,12 @@ export default {
     playedAtFormatted () {
       return moment(this.match.played_at).format('YYYY-MM-DD HH:MM')
     },
-    game () {
-      return this.gameList.find(m => m.id === this.match.game_id)
-    },
     teams () {
-      let teamOne = this.teamList.find(m => m.id === this.match.team_one_id)
-      let teamTwo = this.teamList.find(m => m.id === this.match.team_two_id)
+      let { teamOne, teamTwo } = this.match
       return teamOne && teamTwo ? [teamOne, teamTwo] : false
     },
     editable () {
-      let userId = this.currentUser && this.currentUser.id
-      return userId && this.match && this.teams && (
-        this.match.owner.id === userId ||
-        this.teams[0].member_ids.includes(userId) ||
-        this.teams[1].member_ids.includes(userId)
-      )
+      return this.match && this.match.editable
     },
     ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
   },

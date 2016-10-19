@@ -3,25 +3,22 @@
   <h3>Round {{ number }}</h3>
   <ul>
     <li v-for="match in matches">
-      <match v-bind="match" @remove="remove(match)">
+      <tournament-match v-bind="match" @remove="remove(match)"></tournament-match>
     </li>
   </ul>
 </div>
 </template>
 
 <script>
-import axios from 'axios'
-import Match from './Match'
+import TournamentMatch from './TournamentMatch'
 
 export default {
-  data () {
-    return {
-      admin: false,
-    }
+  props: {
+    number: Number,
+    matches: Array,
   },
-  props: ['number', 'matches'],
   components: {
-    match: Match,
+    TournamentMatch,
   },
 }
 </script>

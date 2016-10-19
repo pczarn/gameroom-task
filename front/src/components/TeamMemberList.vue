@@ -12,14 +12,8 @@
   export default {
     name: 'TeamMemberList',
     props: {
-      member_ids: Array,
-      editable: Boolean,
-    },
-    computed: {
-      members () {
-        let users = this.$store.getters.userMap
-        return this.member_ids.map(id => users.get(id))
-      },
+      members: Array,
+      // editable: Boolean,
     },
   }
 </script>
