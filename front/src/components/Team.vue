@@ -13,7 +13,7 @@ export default {
   props: {
     id: Number,
     name: String,
-    member_ids: Array,
+    members: Array,
   },
   components: {
     TeamMemberList,
@@ -24,10 +24,6 @@ export default {
     }
   },
   computed: {
-    members () {
-      let users = this.$store.getters.userMap
-      return this.member_ids.map(id => users.get(id))
-    }
   },
 }
 </script>

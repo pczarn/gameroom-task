@@ -1,8 +1,8 @@
 <template>
 <div>
-  <div v-for="team_tournament in teams">
-    size {{ team_tournament.team_size_limit || 'no limit' }}
-    <Team v-bind="team_tournament.team"></Team>
+  <div v-for="team in teams">
+    size {{ team.team_size_limit || 'no limit' }}
+    <team v-bind="team"></team>
   </div>
 </div>
 </template>
