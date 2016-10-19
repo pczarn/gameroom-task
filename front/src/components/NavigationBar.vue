@@ -7,7 +7,7 @@
 
     <li v-if="isLoggedIn">
       Hi, {{ currentUser.name }} <br>
-      <a href="#" @mouseup="logout()">
+      <a href="#" @mouseup="logOut()">
         Log out
       </a>
     </li>
@@ -20,15 +20,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import auth from 'src/auth'
 
 export default {
   computed: mapGetters(['currentUser', 'isLoggedIn']),
   methods: {
-    logout () {
-      auth.logOut()
-      this.$store.commit('RESET_CURRENT_USER')
-      this.$router.push('/logout')
+    logOut () {
+      this.$store.dispatch('LOG_OUT')
     },
   },
 }

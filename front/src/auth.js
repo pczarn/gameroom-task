@@ -1,4 +1,5 @@
-import api from '../api'
+import api from 'src/api'
+import { router } from 'src/main'
 
 // Session related constants
 const SESSION_KEY = 'sessionData'
@@ -17,6 +18,7 @@ export default {
     localStorage.removeItem(CURRENT_USER_KEY)
     localStorage.removeItem(SESSION_KEY)
     api.logOut()
+    router.push('/logout')
   },
 
   // checkAuth() {
