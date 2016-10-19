@@ -26,75 +26,6 @@ RSpec.describe Api::V1::MatchesController, type: :controller do
     sign_in(current_user)
   end
 
-  let(:parsed_body) { JSON.parse(response.body) }
-
-  describe "#index" do
-    subject(:get_index) { get :index, params: params }
-    let(:params) { {} }
-
-    it "responds successfully" do
-      expect(get_index).to be_success
-    end
-
-    it "responds with json by default" do
-      expect(get_index.content_type).to eq "application/json"
-    end
-
-    describe "list of matches" do
-      let(:player) { create(:user) }
-      let(:user_team) { create(:user_team, user: player) }
-      let!(:my_match) { create(:match, team_one: user_team.team) }
-      let!(:other_match) { create(:match) }
-
-      let(:response_match_ids) do
-        parsed_body.map { |match| match["id"].to_i }
-      end
-
-      it "shows both matches" do
-        get_index
-        expect(response_match_ids).to include(my_match.id, other_match.id)
-      end
-
-      context "with an involving_user parameter passed" do
-        let(:params) { { involving_user: player.id } }
-
-        it "shows the match involving the specified user" do
-          get_index
-          expect(response_match_ids).to include(my_match.id)
-        end
-
-        it "does not show matches not involving the specified user" do
-          get_index
-          expect(response_match_ids).not_to include(other_match.id)
-        end
-      end
-    end
-  end
-
-  describe "#create" do
-    subject(:creation) { post :create, params: { match: match.attributes } }
-    let(:match) { build(:match) }
-
-    it { is_expected.to be_success }
-
-    it "stores a new match" do
-      expect { creation }.to change(Match, :count).by(1)
-    end
-
-    context "with invalid data" do
-      let(:match) { build(:match, team_one_score: -1) }
-
-      it { is_expected.to be_unprocessable }
-    end
-  end
-
-  describe "#show" do
-    subject(:action) { get :show, params: { id: match.id } }
-    let(:match) { create(:match, owner: current_user) }
-
-    it { is_expected.to be_success }
-  end
-
   describe "#update" do
     subject(:action) { patch :update, params: { id: match.id, match: { team_one_score: 2 } } }
     let(:match) { create(:match, team_one_score: 1, owner: current_user) }
@@ -118,17 +49,6 @@ RSpec.describe Api::V1::MatchesController, type: :controller do
       end
 
       it { is_expected.to be_success }
-    end
-
-    it_behaves_like "an action that modifies matches"
-  end
-
-  describe "#destroy" do
-    subject(:action) { delete :destroy, params: { id: match.id } }
-    let!(:match) { create(:match, owner: current_user) }
-
-    it "removes a match" do
-      expect { action }.to change(Match, :count).by(-1)
     end
 
     it_behaves_like "an action that modifies matches"
