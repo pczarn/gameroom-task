@@ -5,7 +5,15 @@ class TeamRepresenter
     @team = team
   end
 
-  def as_json(_ = {})
+  def shallow(_ = {})
+    {
+      id: team.id,
+      name: team.name,
+      member_ids: team.member_ids,
+    }
+  end
+
+  def with_members(_ = {})
     {
       id: team.id,
       name: team.name,
