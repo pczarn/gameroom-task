@@ -1,16 +1,16 @@
 import axios from 'axios'
 import {store} from './main'
 
-const API_URL = 'http://localhost:5100/api/v1/'
+const API_URL = 'http://localhost:3000/api/v1/'
 const TOKEN_TYPE = 'Bearer '
 
 axios.defaults.baseURL = API_URL
 
 export default {
-  async getUserToken (creds) {
-    let jwt
-    ({ data: { jwt } } = await axios.post('/user_token', { auth: creds }))
-    return jwt
+  async getUserWithToken (creds) {
+    let jwt, user
+    ({ data: { knock: { jwt }, user } } = await axios.post('/user_token', { auth: creds }))
+    return { user: user, token: jwt }
   },
   logIn (token) {
     axios.defaults.headers.common['Authorization'] = TOKEN_TYPE + token
@@ -18,12 +18,12 @@ export default {
   logOut () {
     axios.defaults.headers.common['Authorization'] = ''
   },
-  async getCurrentUser () {
-    return (await axios.get('/session')).data
-  },
 
   async getUsers () {
     return (await axios.get('/users')).data
+  },
+  async createUser (user) {
+    return (await axios.post('/users', { user })).data
   },
 
   async getGames () {

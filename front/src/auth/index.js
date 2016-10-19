@@ -3,16 +3,19 @@ import api from '../api'
 
 // Session related constants
 const SESSION_KEY = 'sessionData'
+const CURRENT_USER_KEY = 'currentUserData'
 
 export default {
   // Send a request to the login URL and save the returned JWT
-  logIn(token, redirect) {
+  logIn ({ user, token }) {
+    localStorage.setItem(CURRENT_USER_KEY, user)
     localStorage.setItem(SESSION_KEY, token)
     api.logIn(token)
   },
 
   // To log out, we just need to remove the token
-  logOut() {
+  logOut () {
+    localStorage.removeItem(CURRENT_USER_KEY)
     localStorage.removeItem(SESSION_KEY)
     api.logOut()
   },
@@ -50,5 +53,9 @@ export default {
 
   getToken () {
     return localStorage.getItem(SESSION_KEY)
-  }
+  },
+
+  getCurrentUser () {
+    return localStorage.getItem(CURRENT_USER_KEY)
+  },
 }
