@@ -54,15 +54,12 @@ class ChangeMembershipInTournament
   def save_members(new_team)
     # for validation, not for saving.
     tournament.team_tournaments.build(team: new_team)
-    if new_team.member_ids != current_team.member_ids
-      if tournament.invalid?
-        [false, tournament.errors.full_messages.to_sentence]
-      else
-        new_team.save!
-        @team_tournament.destroy!
-        [true, nil]
-      end
+    return [true, nil] if new_team.member_ids == current_team.member_ids
+    if tournament.invalid?
+      [false, tournament.errors.full_messages.to_sentence]
     else
+      new_team.save!
+      @team_tournament.destroy!
       [true, nil]
     end
   end
