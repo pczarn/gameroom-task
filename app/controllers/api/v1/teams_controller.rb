@@ -10,7 +10,7 @@ module Api
       end
 
       def index
-        teams = Team.page(params[:page])
+        teams = Team.all
         render json: TeamsRepresenter.new(teams)
       end
 
