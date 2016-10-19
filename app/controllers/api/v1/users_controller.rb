@@ -10,8 +10,8 @@ module Api
         render json: UserRepresenter.new(user)
       end
 
-      def show
-        render json: UserRepresenter.new(@user)
+      def index
+        render json: UsersRepresenter.new(User.all)
       end
 
       def update

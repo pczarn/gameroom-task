@@ -8,4 +8,8 @@ class TeamTournamentsRepresenter
   def with_teams(_ = {})
     team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).with_team }
   end
+
+  def shallow(_ = {})
+    team_tournaments.map { |elem| TeamTournamentRepresenter.new(elem).shallow }
+  end
 end
