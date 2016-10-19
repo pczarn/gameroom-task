@@ -1,10 +1,11 @@
-Hi, <%= @user.name -%>
+Hi, <%= @user.name %>
 =============================
 
-<% if @result == :win %>
-  You won the match.
-<% elsif @result == :loss %>
-  You lost the match.
+<% case @result %>
+<% when :win %>
+You won the match.
+<% when :loss %>
+You lost the match.
 <% else %>
-  The match is finished.
+The match is finished.
 <% end %>
