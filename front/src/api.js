@@ -1,9 +1,21 @@
 import axios from 'axios'
+import auth from 'src/auth'
 
 const API_URL = 'http://localhost:3000/api/v1/'
 const TOKEN_TYPE = 'Bearer '
 
 axios.defaults.baseURL = API_URL
+
+// Add a response interceptor
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.log(error)
+    if(error.response.status == 401 || error.response.status == 403) {
+      auth.logOut()
+    }
+    return Promise.reject(error)
+  })
 
 export default {
   async getUserWithToken (creds) {
