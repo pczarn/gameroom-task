@@ -54,10 +54,10 @@ export default {
   },
 
   async getMatches () {
-    return (await axios.get('/matches')).data
+    return (await axios.get('/friendly_matches')).data
   },
   async createMatch (params) {
-    return (await axios.post('/matches', { match: params })).data
+    return (await axios.post('/friendly_matches', { match: params })).data
   },
   async updateMatch (params) {
     let id = params.id
@@ -69,10 +69,10 @@ export default {
       game_id: params.game_id,
       played_at: params.played_at,
     }
-    return (await axios.patch(`/matches/${id}`, { match: params })).data
+    return (await axios.patch(`/friendly_matches/${id}`, { match: params })).data
   },
   destroyMatch (id) {
-    return axios.delete(`/matches/${id}`)
+    return axios.delete(`/friendly_matches/${id}`)
   },
 
   async getTournaments () {
