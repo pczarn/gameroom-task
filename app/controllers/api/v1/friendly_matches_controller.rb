@@ -3,6 +3,7 @@ module Api
     class FriendlyMatchesController < BaseController
       before_action :authenticate
       after_action :verify_authorized, only: [:update, :destroy]
+      expose :friendly_match, model: Match, scope: -> { Match.friendly }, with: :authorize
 
       def create
         match = current_user.owned_matches.create!(friendly_match_params)
@@ -32,10 +33,6 @@ module Api
       end
 
       private
-
-      def friendly_match
-        @match ||= authorize Match.friendly.find(params[:id])
-      end
 
       def friendly_match_params
         params.require(:match).permit(

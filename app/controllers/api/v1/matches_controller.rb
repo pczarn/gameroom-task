@@ -3,6 +3,7 @@ module Api
     class MatchesController < BaseController
       before_action :authenticate
       after_action :verify_authorized
+      expose :match, with: :authorize
 
       def update
         service = FinishMatch.new(match, params: match_params)
@@ -11,10 +12,6 @@ module Api
       end
 
       private
-
-      def match
-        @match ||= authorize Match.find(params[:id])
-      end
 
       def match_params
         params.require(:match).permit(
