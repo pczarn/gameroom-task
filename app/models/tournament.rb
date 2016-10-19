@@ -5,6 +5,8 @@ class Tournament < ApplicationRecord
   belongs_to :owner, class_name: User, inverse_of: :owned_tournaments
   has_many :team_tournaments, dependent: :destroy
   has_many :teams, through: :team_tournaments
+  has_many :members, through: :teams, class_name: User
+  has_many :related_teams, through: :members, source: :teams, class_name: Team
   has_many :rounds
   has_many :matches, through: :rounds
 
@@ -41,10 +43,6 @@ class Tournament < ApplicationRecord
     User.where.not(id: members.pluck(:id))
   end
 
-  def members
-    User.joins(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
-  end
-
   def potential_teams
     Team.where.not(id: related_teams.pluck(:id))
   end
@@ -79,9 +77,5 @@ class Tournament < ApplicationRecord
     if teams.length > number_of_teams
       errors.add(:number_of_teams, "Can't be lower than the current number of teams")
     end
-  end
-
-  def related_teams
-    Team.related_to(members.pluck(:id))
   end
 end
