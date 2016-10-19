@@ -9,7 +9,9 @@ Rails.application.routes.draw do
 
       resources :teams, only: [:create, :index, :show, :update]
 
-      resources :matches, only: [:create, :index, :show, :update, :destroy]
+      resources :matches, only: :update
+
+      resources :friendly_matches, only: [:create, :index, :show, :update, :destroy]
 
       resources :tournaments, only: [:create, :index, :show, :update, :destroy]
 
