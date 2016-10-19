@@ -1,8 +1,12 @@
 require "rails_helper"
 
 describe "tournament_status_mailer/notify_about_match_result.text.erb" do
+  let(:match) { build(:match) }
+
   before do
-    assign(:user, User.new(name: "tester"))
+    assign(:user, build(:user))
+    assign(:winning_team, match.winning_team)
+    assign(:defeated_team, match.defeated_team)
   end
 
   context "when user won" do
@@ -12,7 +16,7 @@ describe "tournament_status_mailer/notify_about_match_result.text.erb" do
     end
 
     it "does not have leading whitespace" do
-      expect(rendered).not_to match(/^\h+/)
+      expect(rendered).not_to be(/^\h+/)
     end
 
     it { expect(render).to include(" won ") }
@@ -27,7 +31,7 @@ describe "tournament_status_mailer/notify_about_match_result.text.erb" do
     it { expect(render).to include(" lost ") }
 
     it "does not have leading whitespace" do
-      expect(rendered).not_to match(/^\h+/)
+      expect(rendered).not_to be(/^\h+/)
     end
   end
 
@@ -38,7 +42,7 @@ describe "tournament_status_mailer/notify_about_match_result.text.erb" do
     it { expect(render).not_to include(" lost ") }
 
     it "does not have leading whitespace" do
-      expect(rendered).not_to match(/^\h+/)
+      expect(rendered).not_to be(/^\h+/)
     end
   end
 end

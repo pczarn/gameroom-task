@@ -19,6 +19,8 @@ class TournamentStatusMailer < ApplicationMailer
     tournament = match.round.tournament
     subject = subject_for_team_result_in_match(tournament, match, @user)
     @result = player_result_in_match(match, @user)
+    @winning_team = match.winning_team
+    @defeated_team = match.defeated_team
     mail(to: @user.email, subject: subject)
   end
 

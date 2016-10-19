@@ -3,9 +3,12 @@ Hi, <%= @user.name %>
 
 <% case @result %>
 <% when :win %>
-You won the match.
+You and your team <%= @winning_team.name %> played a match against <%= @defeated_team.name %>.
+You won the match with a score of <%= @winning_team.score %>:<%= @defeated_team.score %>.
 <% when :loss %>
-You lost the match.
+You and your team <%= @defeated_team.name %> played a match against <%= @winning_team.name %>.
+You lost the match with a score of <%= @defeated_team.score %>:<%= @winning_team.score %>.
 <% else %>
-The match is finished.
+A match was played between teams <%= @winning_team.name %> and <%= @defeated_team.name %>.
+The match is finished with a score of <%= @winning_team.score %>:<%= @defeated_team.score %>.
 <% end %>
