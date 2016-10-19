@@ -11,7 +11,8 @@ module Api
       end
 
       def index
-        render json: UsersRepresenter.new(User.all)
+        users = UsersRepository.new.users
+        render json: UsersRepresenter.new(users)
       end
 
       def update

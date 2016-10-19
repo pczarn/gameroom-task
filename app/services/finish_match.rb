@@ -90,6 +90,14 @@ class UpdateMatch
   end
 
   def save
+    # [[@match.team_one, :team_one], [@match.team_two, :team_two]].each do |current_team, key|
+    #   if team_one = @params[key]
+    #     team = CopyOrReuseTeam.new(@match.team_one, member_ids: team_one[:member_ids])
+    #     team.save!
+    #     @params[key] = nil
+    #     @params[:"team_one_id#{key}"] = team.id
+    #   end
+    # end
     @match.update!(@params)
   end
 

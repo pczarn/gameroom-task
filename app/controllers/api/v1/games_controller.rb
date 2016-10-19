@@ -11,7 +11,8 @@ module Api
       end
 
       def index
-        render json: GamesRepresenter.new(Game.all)
+        games = GamesRepository.new.games
+        render json: GamesRepresenter.new(games)
       end
 
       def show

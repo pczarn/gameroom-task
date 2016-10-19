@@ -6,7 +6,8 @@ module Api
       expose :tournament, with: :authorize
 
       def index
-        render json: TournamentsRepresenter.new(Tournament.all).with_teams_and_rounds
+        tournaments = TournamentsRepository.new.tournaments
+        render json: TournamentsRepresenter.new(tournaments).with_teams_and_rounds
       end
 
       def create

@@ -6,7 +6,7 @@ class UpdateLineup
     @member_ids = member_ids
   end
 
-  def in_match(match)
+  def in_friendly_match(match)
     @matches = [match]
     @team_tournament = nil
     self
@@ -35,6 +35,7 @@ class UpdateLineup
       team = CreateOrReuseTeam.new(name: current_team.name, member_ids: @member_ids).perform
       replace_team_in_tournament_with(team) if tournament
       replace_team_in_matches_with(team)
+      team
     end
   end
 
