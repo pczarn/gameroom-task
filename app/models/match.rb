@@ -1,5 +1,3 @@
-require "delegate"
-
 class Match < ApplicationRecord
   belongs_to :game
   belongs_to :team_one, class_name: Team
@@ -61,20 +59,5 @@ class Match < ApplicationRecord
       TeamInMatchDecorator.new(team_one, score: team_one_score),
       TeamInMatchDecorator.new(team_two, score: team_two_score),
     ]
-  end
-end
-
-class TeamInMatchDecorator < SimpleDelegator
-  include Comparable
-
-  attr_reader :score
-
-  def initialize(team, score:)
-    @score = score
-    super(team)
-  end
-
-  def <=>(other)
-    (other.score || -1) <=> (@score || -1)
   end
 end
