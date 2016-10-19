@@ -12,7 +12,7 @@ class TeamTournament < ApplicationRecord
     !number_of_slots.nil? && team.members.count > number_of_slots
   end
 
-  private
+  # private
 
   def number_of_slots
     [tournament.number_of_members_per_team, team_size_limit].compact.max

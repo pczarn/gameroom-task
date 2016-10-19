@@ -5,11 +5,23 @@ class TeamTournamentRepresenter
     @team_tournament = team_tournament
   end
 
-  def with_team(_ = {})
+  def basic
     {
       id: team_tournament.id,
-      team_size_limit: team_tournament.team_size_limit,
-      team: TeamRepresenter.new(team_tournament.team),
+      number_of_slots: team_tournament.number_of_slots,
+      number_of_members: team_tournament.team.members.count,
     }
+  end
+
+  def shallow(_ = {})
+    basic.merge(
+      team_id: team_tournament.team_id,
+    )
+  end
+
+  def with_team(_ = {})
+    basic.merge(
+      team: TeamRepresenter.new(team_tournament.team).shallow,
+    )
   end
 end

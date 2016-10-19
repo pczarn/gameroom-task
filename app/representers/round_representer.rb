@@ -8,6 +8,7 @@ class RoundRepresenter
   def as_json(_ = {})
     {
       number: round.number,
+      # number_of_matches: round.number_of_matches,
       matches: MatchesRepresenter.new(round.matches),
     }
   end
