@@ -15,15 +15,16 @@
   <br>
 
   <h3 v-if="tournament.teams.length > 0">Teams</h3>
-  <TournamentTeamList :teams="tournament.teams"></TournamentTeamList>
+  <tournament-team-list :teams="tournament.teams" :editable="true"></tournament-team-list>
   <button v-if="editable" @click="remove()">Remove</button>
 
   <h3 v-if="tournament.rounds.length > 0">Rounds</h3>
-  <Round v-for="(round, index) in tournament.rounds" :matches="round" :number="index"></Round>
+  <round v-for="(round, index) in tournament.rounds" :matches="round" :number="index"></round>
 </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import TournamentTeamList from './TournamentTeamList'
 import Round from './Round'
 
@@ -35,20 +36,16 @@ export default {
   },
   computed: {
     editable () {
-      return this.$store.getters.isAdmin
+      return this.tournament.editable
     },
     id () {
       return parseInt(this.$route.params.id)
     },
     tournament () {
-      return this.$store.getters.tournamentList.find(t => t.id == this.id)
+      return this.tournamentMap.get(this.id)
     },
+    ...mapGetters(['tournamentMap']),
   },
-  // watch: {
-  //   '$route' (to, from) {
-  //     this.id = parseInt(this.$route.params.id)
-  //   }
-  // }
 }
 </script>
 
