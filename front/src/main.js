@@ -75,6 +75,20 @@ export var router = new VueRouter({
   routes
 })
 
+function enrichMatch(match, getters) {
+  return Vue.util.extend(match, {
+    teamOne: getters.teamMap.get(match.team_one_id),
+    teamTwo: getters.teamMap.get(match.team_two_id),
+    game: getters.gameMap.get(match.game_id),
+  })
+}
+
+function enrichFriendlyMatch(match, getters) {
+  match = enrichMatch(match, getters)
+  match.owner = getters.userMap.get(match.owner_id)
+  return match
+}
+
 export var store = new Vuex.Store({
   state: {
     currentUser: null,
@@ -129,14 +143,7 @@ export var store = new Vuex.Store({
       return state.matches
     },
     matchList (state, getters) {
-      return getters.rawMatchList.map(match => {
-        return Vue.util.extend(match, {
-          teamOne: getters.teamMap.get(match.team_one_id),
-          teamTwo: getters.teamMap.get(match.team_two_id),
-          game: getters.gameMap.get(match.game_id),
-          owner: match.owner_id && getters.userMap.get(match.owner_id),
-        })
-      })
+      return getters.rawMatchList.map(match => enrichFriendlyMatch(match, getters))
     },
     matchMap (state, getters) {
       return new Map(getters.matchList.map(match => [match.id, match]))
@@ -157,13 +164,24 @@ export var store = new Vuex.Store({
       return state.tournaments
     },
     tournamentList (state, getters) {
-      let toMatch = matchId => getters.matchMap.get(matchId)
-      let toListOfMatches = matchIds => matchIds.map(toMatch)
+      let toRichMatch = match => enrichMatch(match, getters)
+      let toListOfRichMatches = matches => matches.map(toRichMatch)
       return getters.rawTournamentList.map(tournament => {
         tournament = Vue.util.extend({}, tournament)
-        tournament.rounds = tournament.rounds.map(toListOfMatches)
+        tournament.rounds = tournament.rounds.map(toListOfRichMatches)
+        tournament.teams = tournament.teams.map(teamTournament => {
+          let team = getters.teamMap.get(teamTournament.team_id)
+          return Vue.util.extend(teamTournament, {
+            name: team.name,
+            member_ids: team.member_ids,
+            members: team.members,
+          })
+        })
         return tournament
       })
+    },
+    tournamentMap (state, getters) {
+      return new Map(getters.tournamentList.map(tournament => [tournament.id, tournament]))
     },
 
     activeGames (state) {
