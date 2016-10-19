@@ -3,6 +3,8 @@ module Api
     class TeamTournamentParticipationsController < BaseController
       before_action :authenticate
       after_action :verify_authorized
+      expose :team_tournament, with: :authorize
+      expose :tournament
 
       def create
         authorize tournament.team_tournaments.build(team_param)
@@ -17,24 +19,16 @@ module Api
 
       private
 
-      def tournament
-        @tournament ||= Tournament.find(params[:tournament_id])
-      end
-
-      def team_tournament
-        @team_tournament ||= authorize TeamTournament.find(params[:id])
-      end
-
-      def team_id
-        params[:team_id]
-      end
-
       def team_param
         if team_id
           { team_id: team_id }
         else
           { team: added_or_reused_team }
         end
+      end
+
+      def team_id
+        params[:team_id]
       end
 
       def added_or_reused_team

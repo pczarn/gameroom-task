@@ -6,6 +6,10 @@ class UserPolicy < ApplicationPolicy
     @account = account
   end
 
+  def create?
+    true
+  end
+
   def update?
     account == user || user && user.admin?
   end

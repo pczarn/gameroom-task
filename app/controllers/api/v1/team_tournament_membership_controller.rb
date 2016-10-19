@@ -1,11 +1,10 @@
 module Api
   module V1
     class TeamTournamentMembershipController < BaseController
-      include TournamentsHelper
-
-      delegate :tournament, to: :team_tournament
-
       after_action :verify_authorized
+      expose :team_tournament
+      expose :user
+      delegate :tournament, to: :team_tournament
 
       def create
         authorize tournament, :join?
@@ -29,14 +28,6 @@ module Api
 
       def change_membership_service(user)
         ChangeMembershipInTournament.new(team_tournament: team_tournament, user: user)
-      end
-
-      def team_tournament
-        @team_tournament ||= TeamTournament.find(params[:id])
-      end
-
-      def user
-        @user ||= params[:user_id] && User.find(params[:user_id])
       end
     end
   end

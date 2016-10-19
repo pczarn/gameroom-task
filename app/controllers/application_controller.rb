@@ -2,8 +2,10 @@ class ApplicationController < ActionController::Base
   include Pundit
   include Knock::Authenticable
 
+  exposure_config :authorize, decorate: ->(thing) { authorize thing }
+
   def authorize(record, *params)
-    Pundit.instance_method(:authorize).bind(self).(record, *params)
+    Pundit.instance_method(:authorize).bind(self).call(record, *params)
     record
   end
 
