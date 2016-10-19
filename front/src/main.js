@@ -407,28 +407,17 @@ new Vue({
   render: h => h(App),
   async beforeMount () {
     let token = auth.getToken()
-    let redirectToLogin
     if(token) {
-      try {
-        api.logIn(token)
-        let currentUser = auth.getCurrentUser()
-        this.$store.commit('SET_CURRENT_USER', { user: currentUser, token: token })
-      } catch(err) {
-        auth.logOut()
-        redirectToLogin = true
-      }
-    } else {
-      redirectToLogin = true
-    }
-
-    if(redirectToLogin) {
-      this.$router.push('/login')
-    } else {
+      api.logIn(token)
+      let currentUser = auth.getCurrentUser()
+      this.$store.commit('SET_CURRENT_USER', { user: currentUser, token: token })
       this.$store.dispatch('GET_GAMES')
       this.$store.dispatch('GET_TEAMS')
       this.$store.dispatch('GET_MATCHES')
       this.$store.dispatch('GET_TOURNAMENTS')
       this.$store.dispatch('GET_USERS')
+    } else {
+      this.$router.push('/login')
     }
   },
 }).$mount('#app')
