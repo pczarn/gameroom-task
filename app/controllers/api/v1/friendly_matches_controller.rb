@@ -7,24 +7,22 @@ module Api
 
       def create
         match = current_user.owned_matches.create!(friendly_match_params)
-        render json: MatchRepresenter.new(match)
+        render json: MatchRepresenter.new(match).with_permissions(current_user)
       end
 
       def index
-        recent = Match.friendly.order(played_at: :desc)
-        recent = recent.involving(params[:involving_user]) if params[:involving_user]
-        recent = recent.page(params[:page])
-        render json: MatchesRepresenter.new(recent)
+        matches = FriendlyMatchesRepository.new.friendly_matches
+        render json: MatchesRepresenter.new(matches).shallow
       end
 
       def show
-        render json: MatchRepresenter.new(friendly_match)
+        render json: MatchRepresenter.new(friendly_match).shallow
       end
 
       def update
         service = FinishMatch.new(friendly_match, params: friendly_match_params)
         service.perform
-        render json: MatchRepresenter.new(friendly_match)
+        render json: MatchRepresenter.new(friendly_match).shallow
       end
 
       def destroy
