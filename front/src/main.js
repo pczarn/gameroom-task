@@ -146,8 +146,8 @@ export var store = new Vuex.Store({
     userMatches (state) {
       if(state.currentUser) {
         let userId = state.currentUser.id
-        return state.matches.map(match => match.team_one + match.team_two)
-                            .filter(members => members.includes(userId))
+        return getters.matchList.map(match => match.teamOne.member_ids + match.teamTwo.member_ids)
+                                .filter(memberIds => memberIds.includes(userId))
       } else {
         return []
       }
