@@ -220,11 +220,11 @@ export var store = new Vuex.Store({
       state.games.push(game)
     },
     SET_GAME (state, game) {
-      let idx = state.games.findIndex(({ id }) => id == game.id)
-      state.games[idx] = game
+      let idx = state.games.findIndex(({ id }) => id === game.id)
+      state.games.$set(idx, game)
     },
     REMOVE_GAME (state, game) {
-      let idx = state.games.findIndex(({ id }) => id == game.id)
+      let idx = state.games.findIndex(({ id }) => id === game.id)
       state.games.splice(idx, 1)
     },
 
@@ -235,8 +235,8 @@ export var store = new Vuex.Store({
       state.teams.push(team)
     },
     SET_TEAM (state, team) {
-      let idx = state.teams.findIndex(({ id }) => id == team.id)
-      state.teams[idx] = team
+      let idx = state.teams.findIndex(({ id }) => id === team.id)
+      state.teams.$set(idx, team)
     },
 
     SET_MATCH_LIST (state, matches) {
@@ -246,11 +246,11 @@ export var store = new Vuex.Store({
       state.matches.push(match)
     },
     SET_MATCH (state, match) {
-      let idx = state.matches.findIndex(({ id }) => id == match.id)
-      Vue.set(state.matches, idx, match)
+      let idx = state.matches.findIndex(({ id }) => id === match.id)
+      state.matches.$set(idx, match)
     },
     REMOVE_MATCH (state, match) {
-      let idx = state.matches.findIndex(({ id }) => id == match.id)
+      let idx = state.matches.findIndex(({ id }) => id === match.id)
       state.matches.splice(idx, 1)
     },
 
@@ -261,29 +261,29 @@ export var store = new Vuex.Store({
       state.tournaments.push(tournament)
     },
     SET_TOURNAMENT (state, tournament) {
-      let idx = state.tournaments.findIndex(({ id }) => id == tournament.id)
-      state.tournaments[idx] = tournament
+      let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
+      state.tournaments.$set(idx, tournament)
     },
     REMOVE_TOURNAMENT (state, tournament) {
-      let idx = state.tournaments.findIndex(({ id }) => id == tournament.id)
+      let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
       state.tournaments.splice(idx, 1)
     },
 
     ADD_TEAM_TO_TOURNAMENT (state, { tournamentId, teamId }) {
-      let tournament = state.tournaments.find(({ id }) => id == tournamentId)
-      let team = state.teams.find(({ id }) => id == teamId)
+      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      let team = state.teams.find(({ id }) => id === teamId)
       tournament.teams.push(team)
     },
     REMOVE_TEAM_FROM_TOURNAMENT (state, { tournamentId, teamId }) {
-      let tournament = state.tournaments.find(({ id }) => id == tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id == fromTeamId)
+      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeamId)
       tournament.teams.splice(teamIndex, 1)
     },
     SET_TOURNAMENT_TEAM (state, { tournamentId, fromTeamId, toTeamId }) {
-      let tournament = state.tournaments.find(({ id }) => id == tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id == fromTeamId)
-      let toTeam = state.teams.find(({ id }) => id == toTeamId)
-      tournament.teams[teamIndex] = toTeam
+      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeamId)
+      let toTeam = state.teams.find(({ id }) => id === toTeamId)
+      tournament.teams.$set(teamIndex, toTeam)
     },
   },
   actions: {
@@ -405,9 +405,6 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  data () {
-    return {}
-  },
   async beforeMount () {
     let token = auth.getToken()
     let redirectToLogin

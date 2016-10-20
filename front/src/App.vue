@@ -11,6 +11,7 @@
 import NavigationBar from 'src/components/NavigationBar'
 
 export default {
+  name: 'App',
   components: {
     NavigationBar,
   },
