@@ -1,7 +1,7 @@
 <template>
 <div>
   <div v-for="team in teamList">
-    <team-overview v-bind="team" :editable="false"></team-overview>
+    <team-overview v-bind="team"></team-overview>
   </div>
 </div>
 </template>
@@ -11,6 +11,7 @@ import { mapGetters } from 'vuex'
 import TeamOverview from './TeamOverview'
 
 export default {
+  name: 'TeamList',
   beforeMount () {
     // this.$store.dispatch('GET_TEAMS')
   },
