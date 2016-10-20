@@ -23,7 +23,7 @@
   <TournamentStatus v-if="isStarted" :status="roundsInfo" label="Rounds"></TournamentStatus>
   <span v-if="isEnded">Team {{ winningTeam && winningTeam.name }} won</span>
 
-  <router-link append :to="''+id">See more</router-link>
+  <router-link :to="{ name: 'tournament', params: { id } }">See more</router-link>
 </div>
 </template>
 
