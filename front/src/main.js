@@ -14,6 +14,7 @@ import Tournament from './components/Tournament'
 import Match from './components/Match'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
+import Team from './components/Team'
 import auth from './auth'
 import api from './api'
 
@@ -63,11 +64,18 @@ const routes = [
   },
   {
     path: '/tournaments/:id',
+    name: 'tournament',
     component: Tournament,
   },
   {
     path: '/matches/:id',
+    name: 'match',
     component: Match,
+  },
+  {
+    path: '/teams/:id',
+    name: 'team',
+    component: Team,
   },
 ]
 
