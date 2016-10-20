@@ -19,7 +19,7 @@
     <span class="right-col">{{ scoreTwo }}</span>
   </div>
   <div class="row">
-    <router-link :to="`/matches/${id}`">See more</router-link>
+    <router-link :to="{ name: 'match', params: { id } }">See more</router-link>
   </div>
 </div>
 </template>
