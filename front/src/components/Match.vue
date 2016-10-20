@@ -50,6 +50,7 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import TeamMemberList from './TeamMemberList'
 import MatchForm from './MatchForm'
+import policies from 'src/policies'
 
 export default {
   name: 'Match',
@@ -83,7 +84,7 @@ export default {
       return teamOne && teamTwo ? [teamOne, teamTwo] : false
     },
     editable () {
-      return this.match && this.match.editable
+      return policies.friendlyMatchPolicy(this.match).update
     },
     ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
   },
