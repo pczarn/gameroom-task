@@ -2,13 +2,13 @@
 <div>
   <div v-for="team in teams">
     size {{ team.team_size_limit || 'no limit' }}
-    <team v-bind="team"></team>
+    <tournament-team v-bind="team"></tournament-team>
   </div>
 </div>
 </template>
 
 <script>
-import Team from './Team'
+import TournamentTeam from './TournamentTeam'
 
 export default {
   props: {
@@ -16,7 +16,7 @@ export default {
     editable: Boolean,
   },
   components: {
-    Team,
+    TournamentTeam,
   },
 }
 </script>
