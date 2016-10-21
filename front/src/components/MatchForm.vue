@@ -1,6 +1,6 @@
 <template>
 <div>
-  <form @submit.prevent="$emit('submit')">
+  <form @submit.prevent="$emit('submit')" v-if="match && match.teamOne && match.teamTwo">
     <fieldset class="row">
       <legend>Choose game</legend>
       <select v-model="match.game_id">
@@ -37,7 +37,7 @@
       <div class="left-col">
         <span v-for="member in match.teamOne.members">
           {{ member.name }}
-          <button @click="remove(match.teamOne, member)"></button>
+          <button @click.prevent="remove(match.teamOne, member)"></button>
         </span>
         <multiselect :options="potentialPlayers"
                      :searchable="true"
@@ -51,7 +51,7 @@
       <div class="right-col">
         <span v-for="member in match.teamTwo.members">
           {{ member.name }}
-          <button @click="remove(match.teamTwo, member)"></button>
+          <button @click.prevent="remove(match.teamTwo, member)"></button>
         </span>
         <multiselect :options="potentialPlayers"
                      :searchable="true"

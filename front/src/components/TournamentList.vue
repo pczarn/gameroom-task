@@ -18,12 +18,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import TournamentOverview from './TournamentOverview'
+import TournamentForm from './TournamentForm'
 
 export default {
   name: 'TournamentList',
   data () {
     return {
-      newTournament: {},
+      newTournament: {
+        teams: [],
+      },
       fields: [
         { name: 'title', type: 'text' },
         { name: 'description', type: 'textarea' },
@@ -37,6 +40,7 @@ export default {
   },
   components: {
     TournamentOverview,
+    TournamentForm,
   },
   computed: {
     ...mapGetters(['tournamentList']),
@@ -44,7 +48,7 @@ export default {
   methods: {
     async add () {
       await this.$store.dispatch('CREATE_TOURNAMENT', this.newTournament)
-      this.newTournament = {}
+      this.newTournament = { teams: [] }
     },
   },
 }

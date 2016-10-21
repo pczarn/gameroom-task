@@ -181,6 +181,8 @@ export var store = new Vuex.Store({
       let toListOfRichMatches = matches => matches.map(toRichMatch)
       return getters.rawTournamentList.map(tournament => {
         tournament = Vue.util.extend({}, tournament)
+        tournament.owner = getters.userMap.get(tournament.owner_id)
+        console.log(tournament)
         tournament.rounds = tournament.rounds.map(toListOfRichMatches)
         tournament.teams = tournament.teams.map(teamTournament => {
           let team = getters.teamMap.get(teamTournament.team_id)
