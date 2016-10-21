@@ -20,6 +20,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
+    name: 'TeamForm',
     props: {
       button: String,
       team: Object,

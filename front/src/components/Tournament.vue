@@ -1,5 +1,5 @@
 <template>
-<div class="tournament">
+<div class="tournament" v-if="tournament">
   <a href="#" @click="$router.go(-1)">Go back</a>
 
   <h2>Tournament {{ tournament.title }}</h2>
@@ -45,6 +45,13 @@ export default {
     TournamentTeamList,
     TournamentForm,
     Round,
+  },
+  data () {
+    return {
+      newTournament: {
+        teams: [],
+      }
+    }
   },
   computed: {
     editable () {
