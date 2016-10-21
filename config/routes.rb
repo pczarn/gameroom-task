@@ -11,13 +11,13 @@ Rails.application.routes.draw do
 
       resources :matches, only: :update
 
-      resources :friendly_matches, only: [:create, :index, :show, :update, :destroy]
+      resources :friendly_matches, only: [:create, :index, :show, :update, :destroy] do
+        resources :lineups, only: :update
+      end
 
-      resources :tournaments, only: [:create, :index, :show, :update, :destroy]
-
-      resources :team_tournament_participations, only: [:create, :destroy]
-
-      resources :team_tournament_membership, only: [:create, :destroy]
+      resources :tournaments, only: [:create, :index, :show, :update, :destroy] do
+        resources :lineups, only: [:update, :create, :destroy]
+      end
 
       resources :games, only: [:create, :index, :show, :update, :destroy]
     end

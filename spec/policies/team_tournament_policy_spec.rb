@@ -7,24 +7,19 @@ RSpec.describe TeamTournamentPolicy do
 
   permissions :leave? do
     context "when tournament is not ended" do
-      context "when user is a member of the team" do
-        let(:team) { create(:team, members: [user]) }
-        let(:team_tournament) { build(:team_tournament, team: team) }
-
-        it { is_expected.to permit(user, team_tournament) }
-      end
-
-      context "when user is not a member of the team" do
-        it { is_expected.not_to permit(user, team_tournament) }
-      end
+      it { is_expected.to permit(user, team_tournament) }
     end
 
     context "when tournament is ended" do
+      before do
+        team_tournament.tournament.ended!
+      end
+
       it { is_expected.not_to permit(user, team_tournament) }
     end
   end
 
-  permissions :remove_member? do
+  permissions :update? do
     context "when tournament is not ended" do
       context "when user is the owner of the tournament" do
         before do

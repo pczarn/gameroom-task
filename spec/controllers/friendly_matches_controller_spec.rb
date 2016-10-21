@@ -54,20 +54,6 @@ RSpec.describe Api::V1::FriendlyMatchesController, type: :controller do
         get_index
         expect(response_match_ids).to include(my_match.id, other_match.id)
       end
-
-      context "with an involving_user parameter passed" do
-        let(:params) { { involving_user: player.id } }
-
-        it "shows the match involving the specified user" do
-          get_index
-          expect(response_match_ids).to include(my_match.id)
-        end
-
-        it "does not show matches not involving the specified user" do
-          get_index
-          expect(response_match_ids).not_to include(other_match.id)
-        end
-      end
     end
   end
 

@@ -14,19 +14,15 @@ class TeamTournamentPolicy < ApplicationPolicy
     TournamentPolicy.new(@user, tournament).destroy_team?
   end
 
-  def leave?
-    !tournament.ended? && team.members.exists?(user.id)
-  end
-
-  def remove_member?
+  def update?
     !tournament.ended? && (tournament.owner == user || user.admin?)
   end
 
-  private
-
-  def team
-    team_tournament.team
+  def leave?
+    !tournament.ended?
   end
+
+  private
 
   def tournament
     team_tournament.tournament
