@@ -21,7 +21,7 @@ export default {
     return {
       email: 'p@monterail.com',
       password: 'hunter2',
-      error: ''
+      error: '',
     }
   },
   components: { Register },

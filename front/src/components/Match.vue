@@ -17,16 +17,16 @@
       <strong class="right-col">{{ teams[1].name }}</strong>
     </div>
     <div class="row">
-      <span class="left-col">{{ match.scoreOne }}</span>
+      <span class="left-col">{{ scoreOne }}</span>
       <span class="middle-col">:</span>
-      <span class="right-col">{{ match.scoreTwo }}</span>
+      <span class="right-col">{{ scoreTwo }}</span>
     </div>
     <div class="row">
-      <team-member-list :member_ids="teams[0].member_ids"
+      <team-member-list :members="teams[0].members"
                         class="left-col">
       </team-member-list>
-      <span class="middle-col">:</span>
-      <team-member-list :member_ids="teams[1].member_ids"
+      <span class="middle-col"></span>
+      <team-member-list :members="teams[1].members"
                         class="right-col">
       </team-member-list>
     </div>
