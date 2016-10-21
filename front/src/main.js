@@ -4,6 +4,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import VueTimeago from 'vue-timeago'
+import axios from 'axios'
 
 import App from './App'
 import GameList from './components/GameList'
@@ -15,6 +16,7 @@ import Match from './components/Match'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Team from './components/Team'
+import Account from './components/Account' 
 import auth from './auth'
 import api from './api'
 
@@ -39,8 +41,13 @@ const routes = [
     component: Dashboard,
   },
   {
+    path: '/account',
+    component: Account,
+  },
+  {
     path: '/games',
     component: GameList,
+    // component: resolve => require(['./components/GameList'], resolve)
   },
   {
     path: '/teams',
@@ -53,6 +60,12 @@ const routes = [
   {
     path: '/tournaments',
     component: TournamentList,
+    // component: resolve => require(['./components/TournamentList', './components/Tournament'], resolve)
+  },
+  {
+    path: '/tournaments/:id',
+    name: 'tournament',
+    component: Tournament,
   },
   {
     path: '/login',
@@ -61,11 +74,6 @@ const routes = [
   {
     path: '/logout',
     redirect: '/login',
-  },
-  {
-    path: '/tournaments/:id',
-    name: 'tournament',
-    component: Tournament,
   },
   {
     path: '/matches/:id',
@@ -159,13 +167,10 @@ export var store = new Vuex.Store({
 
     // need or not?
     userMatches (state) {
-      if(state.currentUser) {
-        let userId = state.currentUser.id
-        return getters.matchList.map(match => match.teamOne.member_ids + match.teamTwo.member_ids)
-                                .filter(memberIds => memberIds.includes(userId))
-      } else {
-        return []
-      }
+      if(!state.currentUser) return []
+      let userId = state.currentUser.id
+      return getters.matchList.map(match => match.teamOne.member_ids + match.teamTwo.member_ids)
+                              .filter(memberIds => memberIds.includes(userId))
     },
 
     rawTournamentList (state) {
@@ -180,6 +185,8 @@ export var store = new Vuex.Store({
         tournament.teams = tournament.teams.map(teamTournament => {
           let team = getters.teamMap.get(teamTournament.team_id)
           return Vue.util.extend(teamTournament, {
+            id: teamTournament.team_id,
+            team_tournament_id: teamTournament.id,
             name: team.name,
             member_ids: team.member_ids,
             members: team.members,
@@ -303,8 +310,8 @@ export var store = new Vuex.Store({
       commit('SET_USER_LIST', users)
     },
     async CREATE_USER ({ dispatch }, userParams) {
-      let user = await api.createUser(userParams)
-      dispatch('LOG_IN', { email: user.email, password: user.password })
+      await api.createUser(userParams)
+      dispatch('LOG_IN', { email: userParams.email, password: userParams.password })
     },
 
     async GET_GAMES ({ commit }) {
@@ -331,6 +338,7 @@ export var store = new Vuex.Store({
     async CREATE_TEAM ({ commit }, team) {
       team = await api.createTeam(team)
       commit('ADD_TEAM', team)
+      return team
     },
     async UPDATE_TEAM ({ commit }, team) {
       team = await api.updateTeam(team)
@@ -345,8 +353,29 @@ export var store = new Vuex.Store({
       match = await api.createMatch(match)
       commit('ADD_MATCH', match)
     },
-    async UPDATE_MATCH ({ commit }, match) {
+    async UPDATE_MATCH ({ commit, dispatch, getters }, match) {
+      const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
+      const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
+      const currentMatch = getters.matchMap.get(match.id)
+      if(teamOneMemberIds !== currentMatch.teamOne.member_ids.sort()) {
+        this.newMatch.teamOne.member_ids = teamOneMemberIds
+        dispatch('UPDATE_MATCH_LINEUP', match, match.teamOne)
+      }
+      if(teamTwoMemberIds !== currentMatch.teamTwo.member_ids.sort()) {
+        this.newMatch.teamTwo.member_ids = teamTwoMemberIds
+        dispatch('UPDATE_MATCH_LINEUP', match, match.teamTwo)
+      }
       match = await api.updateMatch(match)
+      commit('SET_MATCH', match)
+    },
+    async UPDATE_MATCH_LINEUP ({ commit, getters }, match, team) {
+      const newTeam = await api.updateMatchLineup(match, team)
+      match = getters.matchMap.get(match.id)
+      if(team.id === match.team_one_id) {
+        match.team_one_id = newTeam.id
+      } else {
+        match.team_two_id = newTeam.id
+      }
       commit('SET_MATCH', match)
     },
     async DESTROY_MATCH ({ commit }, { id }) {
@@ -362,8 +391,36 @@ export var store = new Vuex.Store({
       tournament = await api.createTournament(tournament)
       commit('ADD_TOURNAMENT', tournament)
     },
-    async UPDATE_TOURNAMENT ({ commit }, tournament) {
-      tournament = await api.updateTournament(tournament)
+    async UPDATE_TOURNAMENT ({ commit, dispatch, getters }, tournament) {
+      const prevTournament = getters.tournamentMap.get(tournament.id)
+      const prevTeams = prevTournament.teams
+      const newTeams = tournament.teams
+      const prevTeamIds = new Set(prevTeams.map(t => t.id))
+      const newTeamIds = new Set(newTeams.map(t => t.id))
+      const createTeams = [...newTeams].filter(team => !prevTeamIds.has(team.id))
+      const destroyTeams = [...prevTeams].filter(team => !newTeamIds.has(team.id))
+      const teamsIntersection = [...newTeams].filter(team => prevTeamIds.has(team.id))
+      let promises = []
+      for(const team of createTeams) {
+        promises.push(api.createTournamentLineup(tournament, team))
+        // dispatch('CREATE_TOURNAMENT_LINEUP', tournament, team)
+      }
+      for(const team of destroyTeams) {
+        promises.push(api.destroyTournamentLineup(tournament, team))
+        // dispatch('DESTROY_TOURNAMENT_LINEUP', tournament, team)
+      }
+      for(const team of teamsIntersection) {
+        const prevMemberIds = getters.teamMap.get(team.id).member_ids
+        const newMemberIds = team.members.map(m => m.id)
+        if(prevMemberIds.sort() !== newMemberIds.sort()) {
+          promises.push(api.updateTournamentLineup(tournament, team))
+          // dispatch('UPDATE_TOURNAMENT_LINEUP', tournament, team)
+        }
+      }
+      promises = [api.updateTournament(tournament), ...promises]
+      await axios.all(promises)
+      // do not use the response of updateTournament, because we don't know the order in which
+      // the requests will be processed.
       commit('SET_TOURNAMENT', tournament)
     },
     async DESTROY_TOURNAMENT ({ commit }, { id }) {
@@ -405,7 +462,7 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  async beforeMount () {
+  beforeMount () {
     let token = auth.getToken()
     if(token) {
       api.logIn(token)
