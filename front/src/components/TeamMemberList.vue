@@ -2,7 +2,7 @@
   <div class="team-members">
     <ul>
       <li v-for="member in members">
-        <strong>{{ member.name }}</strong>
+        {{ member.name }}
       </li>
     </ul>
   </div>
@@ -19,4 +19,9 @@
 </script>
 
 <style scoped>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
 </style>
