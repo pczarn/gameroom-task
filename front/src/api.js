@@ -10,8 +10,7 @@ axios.defaults.baseURL = API_URL
 axios.interceptors.response.use(
   response => response,
   error => {
-    console.log(error)
-    if(error.response.status == 401 || error.response.status == 403) {
+    if(error.response.status === 401 || error.response.status === 403) {
       auth.logOut()
     }
     return Promise.reject(error)
@@ -83,6 +82,14 @@ export default {
     }
     return (await axios.patch(`/friendly_matches/${id}`, { match: params })).data
   },
+  async updateMatchLineup (match, team) {
+    const matchId = match.id
+    const lineupId = team.id
+    const teamParams = {
+      team: { member_ids: team.member_ids },
+    }
+    return (await axios.patch(`/friendly_matches/${matchId}/lineups/${lineupId}`, teamParams)).data
+  },
   destroyMatch (id) {
     return axios.delete(`/friendly_matches/${id}`)
   },
@@ -99,6 +106,21 @@ export default {
   },
   destroyTournament (id) {
     return axios.delete(`/tournaments/${id}`)
+  },
+
+  async createTournamentLineup (tournament, team) {
+    return (await axios.post(`tournaments/${tournament.id}/lineups`, { team: team })).data
+  },
+  async updateTournamentLineup (tournament, team) {
+    let id = team.id
+    team = {
+      member_ids: team.member_ids,
+    }
+    return (await axios.patch(`/tournaments/${tournament.id}/lineups/${id}`, { team: team })).data
+  },
+  destroyTournamentLineup (tournament, team) {
+    let id = team.id
+    return axios.delete(`/tournaments/${tournament.id}/lineups/${id}`)
   },
 
   createTournamentTeamParticipation (id, team) {

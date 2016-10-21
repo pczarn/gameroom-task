@@ -7,6 +7,7 @@
 
     <li v-if="isLoggedIn">
       Hi, {{ currentUser.name }} <br>
+      <router-link to="/account">Your account</router-link>
       <a href="#" @mouseup="logOut()">
         Log out
       </a>

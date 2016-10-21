@@ -2,14 +2,21 @@
 <div>
   <form @submit.prevent="register">
     <fieldset>
-      <legend>Registration</legend>
-      <label for="name">Name</label>
-      <input type="name" v-model="user.name">
+      <label for="username">Name</label>
+      <input type="name" v-model="user.name" name="username"> <br>
+
       <label for="email">Email</label>
-      <input type="email" v-model="user.email">
-      <input type="password" v-model="user.password">
-      <input type="password" v-model="user.password_confirmation">
-      <input type="image" v-model="user.image">
+      <input type="email" v-model="user.email" name="email"> <br>
+
+      <label for="pass">Password</label>
+      <input type="password" v-model="user.password" name="pass"> <br>
+
+      <label for="pass_confirmation">Confirm the password</label>
+      <input type="password" v-model="user.password_confirmation" name="pass_confirmation"> <br>
+
+      <label for="avatar">Avatar</label>
+      <input type="image" v-model="user.image" accept="image/*" name="avatar"> <br>
+
       <button type="submit">Register</button>
     </fieldset>
     <div class="alert">{{ error }}</div>
@@ -21,14 +28,13 @@
 export default {
   data: function () {
     return {
-
-      userFields: [
-        { name: 'name', type: 'text' },
-        { name: 'image', type: 'file', accept: 'image/*' },
-        { name: 'email', type: 'email' },
-        { name: 'password', type: 'password' },
-        { name: 'password_confirmation', type: 'password' },
-      ],
+      // userFields: [
+      //   { name: 'name', type: 'text' },
+      //   { name: 'image', type: 'file', accept: 'image/*' },
+      //   { name: 'email', type: 'email' },
+      //   { name: 'password', type: 'password' },
+      //   { name: 'password_confirmation', type: 'password' },
+      // ],
       user: {
         name: '',
         email: '',
@@ -40,11 +46,11 @@ export default {
     }
   },
   methods: {
-    register() {
+    async register () {
       try {
-        this.$store.dispatch('CREATE_USER', this.user)
+        await this.$store.dispatch('CREATE_USER', this.user)
       } catch(err) {
-        this.error = err
+        this.error = err.response.data.error
       }
     }
   },
