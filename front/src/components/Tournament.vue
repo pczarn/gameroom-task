@@ -24,7 +24,7 @@
   <div v-if="editable">
     Edit tournament
     <tournament-form button-text="Update tournament"
-                     :tournament="newTournament"
+                     :value="tournament"
                      @submit="update">
     </tournament-form>
   </div>
@@ -67,15 +67,15 @@ export default {
     ...mapGetters(['tournamentMap', 'currentUser', 'isAdmin']),
   },
   methods: {
-    async update () {
-      const newTeams = this.newTournament.teams.filter(team => team.id === undefined)
+    async update (newTournament) {
+      const newTeams = newTournament.teams.filter(team => team.id === undefined)
       const promises = newTeams.map(team => this.$store.dispatch('CREATE_TEAM'))
       const createdTeams = await axios.all(promises)
       for(const team of createdTeams) {
         this.tournament.teams.push(team)
-        this.newTournament.teams.push(team)
+        newTournament.teams.push(team)
       }
-      this.updateTournament(this.newTournament)
+      this.updateTournament(newTournament)
     },
     destroy () {
       this.destroyTournament(this.tournament)
@@ -84,11 +84,6 @@ export default {
       updateTournament: 'UPDATE_TOURNAMENT',
       destroyTournament: 'DESTROY_TOURNAMENT',
     }),
-  },
-  watch: {
-    tournament () {
-      this.newTournament = Vue.util.extend({}, this.tournament)
-    },
   },
 }
 </script>

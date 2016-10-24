@@ -1,6 +1,6 @@
 <template>
 <div>
-  <form @submit.prevent="$emit('submit')" v-if="match && match.teamOne && match.teamTwo">
+  <form @submit.prevent="submit" v-if="match && match.teamOne && match.teamTwo">
     <fieldset class="row">
       <legend>Choose game</legend>
       <select v-model="match.game_id">
@@ -69,16 +69,20 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 
 export default {
   props: {
-    button: String,
-    match: Object,
+    buttonText: String,
+    value: Object,
   },
   components: {
     Multiselect,
+  },
+  data () {
+    return { match: Vue.util.extend({}, this.value) }
   },
   computed: {
     potentialPlayers () {
@@ -97,6 +101,12 @@ export default {
     },
     selectMemberOfTeamTwo (member) {
       this.match.teamTwo.members.push(member)
+    },
+    submit () {
+      this.$emit('submit', this.match)
+      if(this.clearOnSubmit) {
+        this.match = {}
+      }
     },
   },
 }

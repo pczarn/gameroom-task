@@ -22,8 +22,8 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'TeamForm',
   props: {
-    button: String,
-    team: Object,
+    value: Object,
+    buttonText: String,
   },
   computed: mapGetters(['userList']),
 }

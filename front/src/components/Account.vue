@@ -1,6 +1,9 @@
 <template>
 <div>
-  <account-form :value="currentUser" @submit="update"></account-form>
+  <account-form button-text="Update account"
+                :value="currentUser"
+                @submit="update">
+  </account-form>
 </div>
 </template>
 
