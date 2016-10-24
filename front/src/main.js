@@ -8,6 +8,7 @@ import axios from 'axios'
 
 import App from './App'
 import GameList from './components/GameList'
+import Game from './components/Game'
 import TeamList from './components/TeamList'
 import MatchList from './components/MatchList'
 import TournamentList from './components/TournamentList'
@@ -47,6 +48,24 @@ const routes = [
   {
     path: '/games',
     component: GameList,
+  },
+  {
+    path: '/games/:id',
+    name: 'games',
+    component: Game,
+    redirect: '/games/:id/tournaments',
+    children: [
+      {
+        path: 'tournaments',
+        name: 'game tournaments',
+        component: TournamentList,
+      },
+      {
+        path: 'matches',
+        name: 'game matches',
+        component: MatchList,
+      },
+    ],
     // component: resolve => require(['./components/GameList'], resolve)
   },
   {
