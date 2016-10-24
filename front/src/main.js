@@ -297,7 +297,7 @@ export var store = new Vuex.Store({
     },
     SET_MATCH (state, match) {
       let idx = state.matches.findIndex(({ id }) => id === match.id)
-      state.matches.$set(idx, match)
+      state.matches.splice(idx, 1, match)
     },
     REMOVE_MATCH (state, match) {
       let idx = state.matches.findIndex(({ id }) => id === match.id)
@@ -417,17 +417,17 @@ export var store = new Vuex.Store({
       const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
       const currentMatch = getters.matchMap.get(match.id)
       if(teamOneMemberIds !== currentMatch.teamOne.member_ids.sort()) {
-        this.newMatch.teamOne.member_ids = teamOneMemberIds
-        dispatch('UPDATE_MATCH_LINEUP', match, match.teamOne)
+        match.teamOne.member_ids = teamOneMemberIds
+        dispatch('UPDATE_MATCH_LINEUP', [match, match.teamOne])
       }
       if(teamTwoMemberIds !== currentMatch.teamTwo.member_ids.sort()) {
-        this.newMatch.teamTwo.member_ids = teamTwoMemberIds
-        dispatch('UPDATE_MATCH_LINEUP', match, match.teamTwo)
+        match.teamTwo.member_ids = teamTwoMemberIds
+        dispatch('UPDATE_MATCH_LINEUP', [match, match.teamTwo])
       }
       match = await api.updateMatch(match)
       commit('SET_MATCH', match)
     },
-    async UPDATE_MATCH_LINEUP ({ commit, getters }, match, team) {
+    async UPDATE_MATCH_LINEUP ({ commit, getters }, [match, team]) {
       const newTeam = await api.updateMatchLineup(match, team)
       match = getters.matchMap.get(match.id)
       if(team.id === match.team_one_id) {
