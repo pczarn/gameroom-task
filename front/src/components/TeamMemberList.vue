@@ -9,13 +9,12 @@
 </template>
 
 <script>
-  export default {
-    name: 'TeamMemberList',
-    props: {
-      members: Array,
-      // editable: Boolean,
-    },
-  }
+export default {
+  name: 'TeamMemberList',
+  props: {
+    members: Array,
+  },
+}
 </script>
 
 <style scoped>

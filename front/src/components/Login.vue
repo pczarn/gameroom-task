@@ -1,5 +1,6 @@
 <template>
 <div>
+  Log in
   <form @submit.prevent="logIn">
     <fieldset>
       <legend>Auth</legend>
@@ -9,6 +10,7 @@
     </fieldset>
     <div class="alert">{{ error }}</div>
   </form>
+  Register
   <register></register>
 </div>
 </template>
@@ -17,6 +19,10 @@
 import Register from './Register'
 
 export default {
+  name: 'Login',
+  components: {
+    Register,
+  },
   data: function () {
     return {
       email: 'p@monterail.com',
@@ -24,7 +30,6 @@ export default {
       error: '',
     }
   },
-  components: { Register },
   methods: {
     logIn () {
       try {

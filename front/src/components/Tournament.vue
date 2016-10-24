@@ -34,7 +34,7 @@
 <script>
 import Vue from 'vue'
 import axios from 'axios'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import TournamentTeamList from './TournamentTeamList'
 import TournamentForm from './TournamentForm'
 import Round from './Round'
@@ -50,7 +50,7 @@ export default {
     return {
       newTournament: {
         teams: [],
-      }
+      },
     }
   },
   computed: {
@@ -75,11 +75,15 @@ export default {
         this.tournament.teams.push(team)
         this.newTournament.teams.push(team)
       }
-      this.$store.dispatch('UPDATE_TOURNAMENT', this.newTournament)
+      this.updateTournament(this.newTournament)
     },
     destroy () {
-      this.$store.dispatch('DESTROY_TOURNAMENT', this.tournament)
+      this.destroyTournament(this.tournament)
     },
+    ...mapActions({
+      updateTournament: 'UPDATE_TOURNAMENT',
+      destroyTournament: 'DESTROY_TOURNAMENT',
+    }),
   },
   watch: {
     tournament () {
@@ -88,6 +92,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

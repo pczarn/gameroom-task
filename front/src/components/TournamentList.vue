@@ -26,6 +26,10 @@ export default {
     user: Object,
     game: Object,
   },
+  components: {
+    TournamentOverview,
+    TournamentForm,
+  },
   data () {
     return {
       newTournament: {
@@ -41,10 +45,6 @@ export default {
       ],
       admin: false,
     }
-  },
-  components: {
-    TournamentOverview,
-    TournamentForm,
   },
   computed: {
     filteredTournaments () {

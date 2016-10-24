@@ -33,10 +33,5 @@ export default {
       return Vue.util.extend({}, this.value)
     },
   },
-  // watch: {
-  //   value () {
-  //     this.$emit('input', this.value)
-  //   },
-  // },
 }
 </script>

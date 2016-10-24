@@ -29,14 +29,6 @@ import moment from 'moment'
 import Team from './Team'
 
 export default {
-  data () {
-    return {
-      editable: false,
-    }
-  },
-  components: {
-    Team,
-  },
   props: {
     id: Number,
     played_at: String,
@@ -44,6 +36,14 @@ export default {
     teamTwo: Object,
     team_one_score: Number,
     team_two_score: Number,
+  },
+  components: {
+    Team,
+  },
+  data () {
+    return {
+      editable: false,
+    }
   },
   computed: {
     scoreOne () {

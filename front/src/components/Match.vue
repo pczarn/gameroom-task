@@ -54,14 +54,14 @@ import policies from 'src/policies'
 
 export default {
   name: 'Match',
+  components: {
+    TeamMemberList,
+    MatchForm,
+  },
   data () {
     return {
       newMatch: { owner: {} },
     }
-  },
-  components: {
-    TeamMemberList,
-    MatchForm,
   },
   computed: {
     scoreOne () {

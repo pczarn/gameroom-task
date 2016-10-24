@@ -19,6 +19,10 @@ import MatchForm from './MatchForm'
 
 export default {
   name: 'MatchList',
+  props: {
+    user: Object,
+    game: Object,
+  },
   components: {
     MatchOverview,
     MatchForm,
@@ -27,10 +31,6 @@ export default {
     return {
       newMatch: {},
     }
-  },
-  props: {
-    user: Object,
-    game: Object,
   },
   computed: {
     filteredMatches () {
