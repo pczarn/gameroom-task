@@ -51,9 +51,6 @@ export default {
   watch: {
     team (newValue) {
       this.newTeam = Vue.util.extend({}, newValue)
-      // if(newValue) {
-      //   this.newTeam.id = newValue.id
-      // }
     },
   },
 }
