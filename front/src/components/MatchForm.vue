@@ -10,7 +10,7 @@
 
     <fieldset class="row">
       <label for="played_at">Played at</label>
-      <input type="datetime" name="played_at" v-model="match.played_at">
+      <input type="datetime-local" name="played_at" v-model="match.played_at">
     </fieldset>
 
     <fieldset class="row">
