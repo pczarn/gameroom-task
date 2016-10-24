@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="$emit('submit')">
+<form @submit.prevent="submit">
   <fieldset>
     <legend>Properties</legend>
     <template v-for="attrs in fields">
@@ -48,12 +48,18 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 
 export default {
   props: {
-    tournament: Object,
+    value: {
+      type: Object,
+      default () {
+        return { teams: [] }
+      },
+    },
     buttonText: String,
   },
   components: {
@@ -69,6 +75,7 @@ export default {
         { name: 'number_of_members_per_team', type: 'num' },
         { name: 'started_at', type: 'datetime' },
       ],
+      tournament: Vue.util.extend({}, this.value),
     }
   },
   computed: {
@@ -107,6 +114,9 @@ export default {
     removeMember (team, member) {
       let memberIdx = team.members.findIndex(m => m.id === member.id)
       team.members.splice(memberIdx, 1)
+    },
+    submit () {
+      this.$emit('submit', this.tournament)
     },
   },
 }

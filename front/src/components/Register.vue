@@ -1,6 +1,8 @@
 <template>
 <div>
-  <account-form @submit="register"></account-form>
+  <account-form button-text="Register"
+                @submit="register">
+  </account-form>
   <div class="alert">{{ error }}</div>
 </div>
 </template>

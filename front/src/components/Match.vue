@@ -31,9 +31,9 @@
       </team-member-list>
     </div>
 
-    <match-form :match="newMatch"
-                button="Update the match"
-                @submit="update()"
+    <match-form button-text="Update the match"
+                :value="match"
+                @submit="update"
                 v-if="editable">
     </match-form>
   </div>
@@ -57,11 +57,6 @@ export default {
   components: {
     TeamMemberList,
     MatchForm,
-  },
-  data () {
-    return {
-      newMatch: { owner: {} },
-    }
   },
   computed: {
     scoreOne () {
@@ -92,20 +87,12 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    update () {
-      this.$store.dispatch('UPDATE_MATCH', this.newMatch)
+    update (newMatch) {
+      this.$store.dispatch('UPDATE_MATCH', newMatch)
     },
     async remove () {
       await this.$store.dispatch('DESTROY_MATCH', this.match)
       this.$router.push('/matches')
-    },
-  },
-  watch: {
-    match (newValue) {
-      this.newMatch = Vue.util.extend({}, newValue)
-      if(newValue) {
-        this.newMatch.id = newValue.id
-      }
     },
   },
 }
