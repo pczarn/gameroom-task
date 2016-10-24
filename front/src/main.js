@@ -40,6 +40,17 @@ const routes = [
   {
     path: '/dashboard',
     component: Dashboard,
+    redirect: '/dashboard/tournaments',
+    children: [
+      {
+        path: 'tournaments',
+        component: TournamentList,
+      },
+      {
+        path: 'matches',
+        component: MatchList,
+      },
+    ],
   },
   {
     path: '/account',
