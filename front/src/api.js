@@ -36,6 +36,16 @@ export default {
   async createUser (user) {
     return (await axios.post('/users', { user })).data
   },
+  async updateUser (user) {
+    let id = user.id
+    let params = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      password_confirmation: user.password_confirmation,
+    }
+    return (await axios.patch(`/users/${id}`, { user: params })).data
+  },
 
   async getGames () {
     return (await axios.get('/games')).data
