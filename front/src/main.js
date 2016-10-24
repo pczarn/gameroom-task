@@ -16,7 +16,7 @@ import Match from './components/Match'
 import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import Team from './components/Team'
-import Account from './components/Account' 
+import Account from './components/Account'
 import auth from './auth'
 import api from './api'
 
@@ -221,6 +221,10 @@ export var store = new Vuex.Store({
     SET_USER_LIST (state, users) {
       state.users = users
     },
+    SET_USER (state, user) {
+      let idx = state.users.findIndex(({ id }) => id === user.id)
+      state.users.splice(idx, 1, user)
+    },
 
     SET_GAME_LIST (state, games) {
       state.games = games
@@ -314,6 +318,13 @@ export var store = new Vuex.Store({
     async CREATE_USER ({ dispatch }, userParams) {
       await api.createUser(userParams)
       dispatch('LOG_IN', { email: userParams.email, password: userParams.password })
+    },
+    async UPDATE_USER ({ commit, getters }, userParams) {
+      let user = await api.updateUser(userParams)
+      commit('SET_USER', user)
+      if(getters.currentUser && user.id === getters.currentUser.id) {
+        commit('SET_CURRENT_USER', user)
+      }
     },
 
     async GET_GAMES ({ commit }) {
