@@ -209,11 +209,14 @@ export var store = new Vuex.Store({
     },
   },
   mutations: {
-    SET_CURRENT_USER (state, { user, token }) {
+    SET_CURRENT_USER_AND_TOKEN (state, { user, token }) {
       state.currentUser = user
       state.sessionToken = token
     },
-    RESET_CURRENT_USER (state) {
+    SET_CURRENT_USER (state, user) {
+      state.currentUser = user
+    },
+    RESET_CURRENT_USER_AND_TOKEN (state) {
       state.currentUser = null
       state.sessionToken = null
     },
@@ -300,15 +303,24 @@ export var store = new Vuex.Store({
     },
   },
   actions: {
-    async LOG_IN ({ commit }, creds) {
+    async LOG_IN ({ commit, dispatch }, creds) {
       let userWithToken = await api.getUserWithToken(creds)
-      commit('SET_CURRENT_USER', userWithToken)
+      commit('SET_CURRENT_USER_AND_TOKEN', userWithToken)
       auth.logIn(userWithToken)
       router.push('/')
+      dispatch('GET_EVERYTHING')
     },
     LOG_OUT ({ commit }) {
       auth.logOut()
-      commit('RESET_CURRENT_USER')
+      commit('RESET_CURRENT_USER_AND_TOKEN')
+    },
+
+    GET_EVERYTHING ({ dispatch }) {
+      dispatch('GET_GAMES')
+      dispatch('GET_TEAMS')
+      dispatch('GET_MATCHES')
+      dispatch('GET_TOURNAMENTS')
+      dispatch('GET_USERS')
     },
 
     async GET_USERS ({ commit }) {
@@ -480,12 +492,8 @@ new Vue({
     if(token) {
       api.logIn(token)
       let currentUser = auth.getCurrentUser()
-      this.$store.commit('SET_CURRENT_USER', { user: currentUser, token: token })
-      this.$store.dispatch('GET_GAMES')
-      this.$store.dispatch('GET_TEAMS')
-      this.$store.dispatch('GET_MATCHES')
-      this.$store.dispatch('GET_TOURNAMENTS')
-      this.$store.dispatch('GET_USERS')
+      this.$store.commit('SET_CURRENT_USER_AND_TOKEN', { user: currentUser, token: token })
+      this.$store.dispatch('GET_EVERYTHING')
     } else {
       this.$router.push('/login')
     }
