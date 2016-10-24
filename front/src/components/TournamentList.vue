@@ -9,7 +9,6 @@
 
   <h2>Add a tournament</h2>
   <tournament-form button-text="Add a tournament"
-                   :tournament="newTournament"
                    @submit="add()">
   </tournament-form>
 </div>
@@ -32,9 +31,6 @@ export default {
   },
   data () {
     return {
-      newTournament: {
-        teams: [],
-      },
       fields: [
         { name: 'title', type: 'text' },
         { name: 'description', type: 'textarea' },

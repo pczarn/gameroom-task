@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="$emit('submit', user)">
+<form @submit.prevent="submit">
   <fieldset>
     <label for="username">Name</label>
     <input type="name" v-model="user.name" name="username"> <br>
@@ -28,9 +28,12 @@ export default {
   props: {
     value: Object,
   },
-  computed: {
-    user () {
-      return Vue.util.extend({}, this.value)
+  data () {
+    return { user: Vue.util.extend({}, this.value) }
+  },
+  methods: {
+    submit (event) {
+      this.$emit('submit', this.user)
     },
   },
 }

@@ -5,7 +5,10 @@
 
   <div v-if="editable">
     Update
-    <team-form button="Update team" :team="newTeam" @submit="update()"></team-form>
+    <team-form button-text="Update team"
+               :value="team"
+               @submit="update">
+    </team-form>
   </div>
 
   <a href="#" @click.prevent="$router.go(-1)">Go back</a>
@@ -28,7 +31,6 @@ export default {
   data () {
     return {
       editable: false,
-      newTeam: {},
     }
   },
   computed: {
@@ -44,13 +46,8 @@ export default {
     ...mapGetters(['teamMap']),
   },
   methods: {
-    update () {
-      this.$store.dispatch('UPDATE_TEAM', this.newTeam)
-    },
-  },
-  watch: {
-    team (newValue) {
-      this.newTeam = Vue.util.extend({}, newValue)
+    update (newTeam) {
+      this.$store.dispatch('UPDATE_TEAM', newTeam)
     },
   },
 }

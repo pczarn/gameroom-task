@@ -8,7 +8,9 @@
   </ul>
 
   <h2>Add a match</h2>
-  <match-form :match="newMatch" button="Add the match" @submit="add()"></match-form>
+  <match-form button-text="Add the match"
+              @submit="add">
+  </match-form>
 </div>
 </template>
 
@@ -26,11 +28,6 @@ export default {
   components: {
     MatchOverview,
     MatchForm,
-  },
-  data () {
-    return {
-      newMatch: {},
-    }
   },
   computed: {
     filteredMatches () {
@@ -54,8 +51,8 @@ export default {
     remove (match) {
       this.$store.dispatch('REMOVE_MATCH', match)
     },
-    add () {
-      this.$store.dispatch('CREATE_MATCH', this.newMatch).then(_ => { this.newMatch = {} })
+    add (newMatch) {
+      this.$store.dispatch('CREATE_MATCH', newMatch)
     },
   },
 }
