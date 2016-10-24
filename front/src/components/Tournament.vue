@@ -3,6 +3,7 @@
   <a href="#" @click="$router.go(-1)">Go back</a>
 
   <h2>Tournament {{ tournament.title }}</h2>
+  Owner {{ tournament.owner.name }}<br>
   <span v-if="tournament.started_at">
     Starts at <time :datetime="tournament.started_at">{{ tournament.started_at }}</time>
   </span>

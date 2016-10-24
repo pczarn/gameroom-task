@@ -1,6 +1,6 @@
 <template>
-<div class="match">
-  <div v-if="match && match.game && teams">
+<div class="match" v-if="match && match.game && teams">
+  <div>
     Match owned by {{ match.owner.name }} <br>
     Game {{ match.game.name }}
     <div class="row">
