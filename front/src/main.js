@@ -81,7 +81,6 @@ const routes = [
         component: MatchList,
       },
     ],
-    // component: resolve => require(['./components/GameList'], resolve)
   },
   {
     path: '/teams',
@@ -200,7 +199,7 @@ export var store = new Vuex.Store({
     },
 
     // need or not?
-    userMatches (state) {
+    userMatches (state, getters) {
       if(!state.currentUser) return []
       let userId = state.currentUser.id
       return getters.matchList.map(match => match.teamOne.member_ids + match.teamTwo.member_ids)

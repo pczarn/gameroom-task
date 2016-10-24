@@ -17,16 +17,16 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
-  export default {
-    name: 'TeamForm',
-    props: {
-      button: String,
-      team: Object,
-    },
-    computed: mapGetters(['userList']),
-  }
+export default {
+  name: 'TeamForm',
+  props: {
+    button: String,
+    team: Object,
+  },
+  computed: mapGetters(['userList']),
+}
 </script>
 
 <style scoped>

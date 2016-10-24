@@ -52,6 +52,13 @@ import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 
 export default {
+  props: {
+    tournament: Object,
+    buttonText: String,
+  },
+  components: {
+    Multiselect,
+  },
   data () {
     return {
       fields: [
@@ -63,13 +70,6 @@ export default {
         { name: 'started_at', type: 'datetime' },
       ],
     }
-  },
-  props: {
-    tournament: Object,
-    buttonText: String,
-  },
-  components: {
-    Multiselect,
   },
   computed: {
     playerIds () {
@@ -111,6 +111,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-</style>

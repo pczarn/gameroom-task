@@ -5,12 +5,12 @@
 import Round from './Round'
 
 export default {
+  props: ['rounds'],
   data () {
     return {
       editable: false,
     }
   },
-  props: ['rounds'],
   components: {
     round: Round,
   },

@@ -10,7 +10,10 @@
 <script>
 export default {
   name: 'TournamentStatus',
-  props: ['status', 'label'],
+  props: {
+    status: Object,
+    label: String,
+  },
   computed: {
     present () {
       return this.status.slots.map(([number, limit]) => {
@@ -28,7 +31,7 @@ export default {
     slots () {
       let rest = Array(this.status.size - this.present.length).fill({ class: '', text: '' })
       return this.present.concat(rest)
-    }
+    },
   },
 }
 </script>

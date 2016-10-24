@@ -94,10 +94,6 @@ export default {
         return { name: '(unknown)' }
       }
     },
-    // startedAt () {
-    //   if(this.started_at < new Date())
-    // },
-
   },
 }
 </script>
