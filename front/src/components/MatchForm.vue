@@ -63,7 +63,7 @@
       </div>
     </fieldset>
 
-    <button type="submit">{{ button }}</button>
+    <button type="submit">{{ buttonText }}</button>
   </form>
 </div>
 </template>
@@ -77,6 +77,7 @@ export default {
   props: {
     buttonText: String,
     value: Object,
+    clearOnSubmit: Boolean,
   },
   components: {
     Multiselect,
@@ -86,7 +87,7 @@ export default {
   },
   computed: {
     potentialPlayers () {
-      let selected = (this.match.teamOne.members + this.match.teamTwo.member_ids).map(m => m.id)
+      let selected = (this.match.teamOne.members.concat(this.match.teamTwo.members)).map(m => m.id)
       return this.userList.filter(user => !selected.includes(user.id))
     },
     ...mapGetters(['teamList', 'gameList', 'userList']),
