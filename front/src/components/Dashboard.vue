@@ -1,32 +1,21 @@
 <template>
 <div id="dashboard">
-  <router-link to="/games">Game list</router-link>
+  <router-link to="/dashboard/tournaments">Your tournaments</router-link>
+  <router-link to="/dashboard/matches">Your matches</router-link>
+  <router-link to="/dashboard/teams">Your teams</router-link>
   <router-link to="/teams">Team list</router-link>
-  <router-link to="/matches">All match list</router-link>
   <router-link to="/tournaments">All tournament list</router-link>
+  <router-link to="/matches">All match list</router-link>
 
-  <match-list :for-user="currentUser"></match-list>
-  <tournament-list></tournament-list>
+  <router-view></router-view>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import MatchList from './MatchList'
-import TournamentList from './TournamentList'
 
 export default {
   name: 'Dashboard',
-  data () {
-    return {
-    }
-  },
-  components: {
-    MatchList,
-    TournamentList,
-  },
-  methods: {
-  },
   computed: {
     ...mapGetters(['isAdmin', 'activeGames', 'archivizedGames', 'currentUser']),
   },
