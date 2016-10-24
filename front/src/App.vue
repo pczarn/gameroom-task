@@ -1,9 +1,7 @@
 <template>
 <div id="main">
   <navigation-bar></navigation-bar>
-  <keep-alive>
-    <router-view></router-view>
-  </keep-alive>
+  <router-view></router-view>
 </div>
 </template>
 

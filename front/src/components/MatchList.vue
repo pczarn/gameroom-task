@@ -2,7 +2,7 @@
 <div>
   <h1>Matches</h1>
   <ul class="matches">
-    <li v-for="match in matchListForUser">
+    <li v-for="match in filteredMatches">
       <match-overview v-bind="match" @remove="remove(match)"></match-overview>
     </li>
   </ul>
@@ -29,18 +29,22 @@ export default {
     }
   },
   props: {
-    forUser: Object,
+    user: Object,
+    game: Object,
   },
   computed: {
-    matchListForUser () {
+    filteredMatches () {
       let matchList = this.matchList
-      if(this.forUser) {
-        let userId = this.forUser.id
+      if(this.user) {
+        let userId = this.user.id
         matchList = matchList.filter(match => {
           return match.owner_id === userId ||
             match.teamOne && match.teamOne.member_ids.includes(userId) ||
             match.teamTwo && match.teamTwo.member_ids.includes(userId)
         })
+      }
+      if(this.game) {
+        matchList = matchList.filter(match => match.game.id === this.game.id)
       }
       return matchList
     },
