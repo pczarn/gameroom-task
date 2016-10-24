@@ -5,14 +5,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import AccountForm from './AccountForm'
 
 export default {
-  // data () {
-  //   return { user: this.currentUser || {} }
-  // },
+  name: 'Account',
   components: {
     AccountForm,
   },
@@ -24,11 +21,5 @@ export default {
       this.$store.dispatch('UPDATE_USER', user)
     },
   },
-  // watch: {
-  //   '$store.getters.currentUser' () {
-  //     console.log(this.currentUser)
-  //     this.user = Vue.util.extend({}, this.currentUser)
-  //   },
-  // },
 }
 </script>

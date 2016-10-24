@@ -9,13 +9,13 @@
 import AccountForm from './AccountForm'
 
 export default {
+  components: {
+    AccountForm,
+  },
   data: function () {
     return {
       error: '',
     }
-  },
-  components: {
-    AccountForm,
   },
   methods: {
     async register (user) {

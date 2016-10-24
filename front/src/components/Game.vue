@@ -16,10 +16,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  data () {
-    return {
-    }
-  },
+  name: 'Game',
   computed: {
     id () {
       return parseInt(this.$route.params.id)

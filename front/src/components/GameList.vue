@@ -33,6 +33,7 @@ import GameOverview from './GameOverview'
 import GameForm from './GameForm'
 
 export default {
+  name: 'GameList',
   components: {
     GameOverview,
     GameForm,
