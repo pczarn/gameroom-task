@@ -1,6 +1,6 @@
 <template>
-<div>
-  <div v-for="team in teamList">
+<div v-if="teamList">
+  <div v-for="team in filteredTeams">
     <team-overview v-bind="team"></team-overview>
   </div>
 </div>
@@ -12,13 +12,22 @@ import TeamOverview from './TeamOverview'
 
 export default {
   name: 'TeamList',
-  beforeMount () {
-    // this.$store.dispatch('GET_TEAMS')
+  props: {
+    user: Object,
   },
   components: {
     TeamOverview,
   },
-  computed: mapGetters(['teamList']),
+  computed: {
+    filteredTeams () {
+      let list = this.teamList
+      if(this.user) {
+        list = list.filter(team => team.member_ids.includes(this.user.id))
+      }
+      return list
+    },
+    ...mapGetters(['teamList']),
+  },
 }
 </script>
 

@@ -2,7 +2,7 @@
 <div class="tournaments">
   <h1>Tournaments</h1>
   <ul>
-    <li v-for="tournament in tournamentList" :key="tournament.id">
+    <li v-for="tournament in filteredTournaments" :key="tournament.id">
       <tournament-overview v-bind="tournament"></tournament-overview>
     </li>
   </ul>
@@ -22,6 +22,10 @@ import TournamentForm from './TournamentForm'
 
 export default {
   name: 'TournamentList',
+  props: {
+    user: Object,
+    game: Object,
+  },
   data () {
     return {
       newTournament: {
@@ -43,6 +47,20 @@ export default {
     TournamentForm,
   },
   computed: {
+    filteredTournaments () {
+      let list = this.tournamentList
+      console.log(list)
+      if(this.user) {
+        list = list.filter(tournament =>
+          tournament.teams.some(team => team.member_ids.includes(this.user.id)) ||
+          tournament.owner.id === this.user.id
+        )
+      }
+      if(this.game) {
+        list = list.filter(tournament => tournament.game.id === this.game.id)
+      }
+      return list
+    },
     ...mapGetters(['tournamentList']),
   },
   methods: {
