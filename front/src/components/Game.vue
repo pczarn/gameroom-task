@@ -3,8 +3,11 @@
   <img :src="game.image_thumb_url">
   <strong>{{ game.name }}</strong>
   <button v-if="editable" @click="remove">Remove</button>
+
   <router-link :to="{ name: 'game tournaments', params: { id: game.id } }">Tournaments</router-link>
   <router-link :to="{ name: 'game matches', params: { id: game.id } }">Matches</router-link>
+  Statistics
+
   <router-view :game="game"></router-view>
 </div>
 </template>

@@ -50,6 +50,10 @@ const routes = [
         path: 'matches',
         component: MatchList,
       },
+      {
+        path: 'teams',
+        component: TeamList,
+      },
     ],
   },
   {
@@ -212,6 +216,7 @@ export var store = new Vuex.Store({
       return getters.rawTournamentList.map(tournament => {
         tournament = Vue.util.extend({}, tournament)
         tournament.owner = getters.userMap.get(tournament.owner_id)
+        tournament.game = getters.gameMap.get(tournament.game_id)
         console.log(tournament)
         tournament.rounds = tournament.rounds.map(toListOfRichMatches)
         tournament.teams = tournament.teams.map(teamTournament => {
