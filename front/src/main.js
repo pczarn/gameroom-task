@@ -100,6 +100,24 @@ const routes = [
     path: '/tournaments/:id',
     name: 'tournament',
     component: Tournament,
+    children: [
+      {
+        path: 'rounds',
+        name: 'tournament rounds',
+      },
+      {
+        path: 'teams',
+        name: 'tournament teams',
+      },
+      {
+        path: 'update',
+        name: 'tournament update',
+      },
+      {
+        path: 'delete',
+        name: 'tournament delete',
+      },
+    ],
   },
   {
     path: '/login',

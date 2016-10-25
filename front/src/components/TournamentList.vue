@@ -37,7 +37,6 @@ export default {
   computed: {
     filteredTournaments () {
       let list = this.tournamentList
-      console.log(list)
       if(this.user) {
         list = list.filter(tournament =>
           tournament.teams.some(team => team.member_ids.includes(this.user.id)) ||
