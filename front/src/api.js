@@ -113,6 +113,14 @@ export default {
   },
   async updateTournament (params) {
     let id = params.id
+    params = {
+      title: params.title,
+      description: params.description,
+      game_id: params.game_id,
+      started_at: params.started_at,
+      number_of_teams: params.number_of_teams,
+      number_of_members_per_team: params.number_of_members_per_team,
+    }
     return (await axios.patch(`/tournaments/${id}`, { tournament: params })).data
   },
   destroyTournament (id) {
