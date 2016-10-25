@@ -1,11 +1,12 @@
-import { store } from 'src/main'
+import store from 'src/store'
 
 export default {
   teamPolicy (team) {
     let userId = store.getters.currentUser && store.getters.currentUser.id
     let isAdmin = store.getters.isAdmin
+    const isMember = team.members.some(m => m.id === userId)
     return {
-      update: team.member_ids.includes(userId) || isAdmin,
+      update: isMember || isAdmin,
     }
   },
   friendlyMatchPolicy (match) {
@@ -30,5 +31,13 @@ export default {
     const update = (isOwner || isAdmin) && tournament.status !== 'ended'
     const destroy = update && tournament.status === 'open'
     return { update, destroy }
+  },
+  teamTournamentPolicy (tournament, team) {
+    let userId = store.getters.currentUser && store.getters.currentUser.id
+    const notFull = !team.team_size_limit || this.team.members.length < team.team_size_limit
+    const notMember = tournament.teams.every(team => !team.member_ids.includes(userId))
+    const join = notFull && notMember
+    const leave = team.members.map(m => m.id).includes(userId)
+    return { join, leave }
   },
 }
