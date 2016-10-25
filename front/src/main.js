@@ -344,13 +344,12 @@ export var store = new Vuex.Store({
     },
     REMOVE_TEAM_FROM_TOURNAMENT (state, { tournamentId, teamId }) {
       let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeamId)
+      let teamIndex = tournament.teams.findIndex(({ id }) => id === teamId)
       tournament.teams.splice(teamIndex, 1)
     },
-    SET_TOURNAMENT_TEAM (state, { tournamentId, fromTeamId, toTeamId }) {
+    SET_TOURNAMENT_TEAM (state, { tournamentId, fromTeam, toTeam }) {
       let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeamId)
-      let toTeam = state.teams.find(({ id }) => id === toTeamId)
+      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeam.id)
       tournament.teams.splice(teamIndex, 1, toTeam)
     },
   },
@@ -504,6 +503,11 @@ export var store = new Vuex.Store({
     async DESTROY_TOURNAMENT ({ commit }, { id }) {
       await api.destroyTournament(id)
       commit('REMOVE_TOURNAMENT', { id: id })
+    },
+    async UPDATE_TOURNAMENT_LINEUP ({ commit, getters }, [tournament, team]) {
+      const newTeam = await api.updateTournamentLineup(tournament, team)
+      commit('SET_TEAM', newTeam)
+      commit('SET_TOURNAMENT_TEAM', { tournament, fromTeam: team, toTeam: newTeam })
     },
 
     async ADD_TEAM_TO_TOURNAMENT ({ commit }, { tournament, team }) {
