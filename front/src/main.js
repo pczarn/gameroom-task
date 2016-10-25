@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import VueTimeago from 'vue-timeago'
 import axios from 'axios'
+import _ from 'lodash'
 
 import App from './App'
 import GameList from './components/GameList'
@@ -216,7 +217,6 @@ export var store = new Vuex.Store({
         tournament = Vue.util.extend({}, tournament)
         tournament.owner = getters.userMap.get(tournament.owner_id)
         tournament.game = getters.gameMap.get(tournament.game_id)
-        console.log(tournament)
         tournament.rounds = tournament.rounds.map(toListOfRichMatches)
         tournament.teams = tournament.teams.map(teamTournament => {
           let team = getters.teamMap.get(teamTournament.team_id)
@@ -271,7 +271,7 @@ export var store = new Vuex.Store({
     },
     SET_GAME (state, game) {
       let idx = state.games.findIndex(({ id }) => id === game.id)
-      state.games.$set(idx, game)
+      state.games.splice(idx, 1, game)
     },
     REMOVE_GAME (state, game) {
       let idx = state.games.findIndex(({ id }) => id === game.id)
@@ -286,7 +286,7 @@ export var store = new Vuex.Store({
     },
     SET_TEAM (state, team) {
       let idx = state.teams.findIndex(({ id }) => id === team.id)
-      state.teams.$set(idx, team)
+      state.teams.splice(idx, 1, team)
     },
 
     SET_MATCH_LIST (state, matches) {
@@ -312,7 +312,7 @@ export var store = new Vuex.Store({
     },
     SET_TOURNAMENT (state, tournament) {
       let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
-      state.tournaments.$set(idx, tournament)
+      state.tournaments.splice(idx, 1, tournament)
     },
     REMOVE_TOURNAMENT (state, tournament) {
       let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
@@ -333,7 +333,7 @@ export var store = new Vuex.Store({
       let tournament = state.tournaments.find(({ id }) => id === tournamentId)
       let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeamId)
       let toTeam = state.teams.find(({ id }) => id === toTeamId)
-      tournament.teams.$set(teamIndex, toTeam)
+      tournament.teams.splice(teamIndex, 1, toTeam)
     },
   },
   actions: {
@@ -416,11 +416,12 @@ export var store = new Vuex.Store({
       const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
       const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
       const currentMatch = getters.matchMap.get(match.id)
-      if(teamOneMemberIds !== currentMatch.teamOne.member_ids.sort()) {
+      console.log(teamOneMemberIds, currentMatch.teamOne.member_ids.sort())
+      if(!_.isEqual(teamOneMemberIds, currentMatch.teamOne.member_ids.sort())) {
         match.teamOne.member_ids = teamOneMemberIds
         dispatch('UPDATE_MATCH_LINEUP', [match, match.teamOne])
       }
-      if(teamTwoMemberIds !== currentMatch.teamTwo.member_ids.sort()) {
+      if(!_.isEqual(teamTwoMemberIds, currentMatch.teamTwo.member_ids.sort())) {
         match.teamTwo.member_ids = teamTwoMemberIds
         dispatch('UPDATE_MATCH_LINEUP', [match, match.teamTwo])
       }
@@ -471,7 +472,7 @@ export var store = new Vuex.Store({
       for(const team of teamsIntersection) {
         const prevMemberIds = getters.teamMap.get(team.id).member_ids
         const newMemberIds = team.members.map(m => m.id)
-        if(prevMemberIds.sort() !== newMemberIds.sort()) {
+        if(!_.isEqual(prevMemberIds.sort(), newMemberIds.sort())) {
           promises.push(api.updateTournamentLineup(tournament, team))
           // dispatch('UPDATE_TOURNAMENT_LINEUP', tournament, team)
         }
