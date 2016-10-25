@@ -34,11 +34,11 @@
     <match-form button-text="Update the match"
                 :value="match"
                 @submit="update"
-                v-if="editable">
+                v-if="canEdit">
     </match-form>
   </div>
 
-  <button v-if="editable" @click="remove()">Remove</button>
+  <button v-if="canDestroy" @click="remove()">Remove</button>
 
   <a href="#" @click="goBack()">Go back</a>
 </div>
@@ -78,8 +78,11 @@ export default {
       let { teamOne, teamTwo } = this.match
       return teamOne && teamTwo ? [teamOne, teamTwo] : false
     },
-    editable () {
+    canEdit () {
       return policies.friendlyMatchPolicy(this.match).update
+    },
+    canDestroy () {
+      return policies.friendlyMatchPolicy(this.match).destroy
     },
     ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
   },

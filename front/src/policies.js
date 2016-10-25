@@ -11,13 +11,16 @@ export default {
   friendlyMatchPolicy (match) {
     let userId = store.getters.currentUser && store.getters.currentUser.id
     let isAdmin = store.getters.isAdmin
-    return {
-      update: userId && match && (
-        match.owner.id === userId ||
-        match.teamOne.member_ids.includes(userId) ||
-        match.teamTwo.member_ids.includes(userId) ||
-        isAdmin
-      ),
+    if(userId && match) {
+      let isOwner = match.owner.id === userId
+      let isMember = match.teamOne.member_ids.includes(userId) ||
+        match.teamTwo.member_ids.includes(userId)
+      return {
+        update: isOwner || isMember || isAdmin,
+        destroy: isMember || isAdmin,
+      }
+    } else {
+      return {}
     }
   }
 }
