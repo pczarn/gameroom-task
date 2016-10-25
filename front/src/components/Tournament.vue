@@ -15,19 +15,39 @@
 
   <br>
 
-  <h3 v-if="tournament.teams.length > 0">Teams</h3>
-  <tournament-team-list :teams="tournament.teams" :editable="true"></tournament-team-list>
-  <button v-if="editable" @click="remove()">Remove</button>
+  <router-link v-if="hasRounds" :to="{ name: 'tournament rounds', params: { id } }">Rounds</router-link>
+  <span v-else>Rounds</span>
 
-  <h3 v-if="tournament.rounds.length > 0">Rounds</h3>
-  <round v-for="(round, index) in tournament.rounds" :matches="round" :number="index"></round>
+  <router-link :to="{ name: 'tournament teams', params: { id } }">Teams</router-link>
 
-  <div v-if="editable">
+  <router-link v-if="canEdit" :to="{ name: 'tournament update', params: { id } }">Edit</router-link>
+  <span v-else>Edit</span>
+
+  <router-link v-if="canDestroy" :to="{ name: 'tournament delete', params: { id } }">Delete</router-link>
+  <span v-else>Delete</span>
+
+  <div v-show="showTeams">
+    <h3>Teams</h3>
+    <tournament-team-list :tournament="tournament">
+    </tournament-team-list>
+  </div>
+
+  <div v-show="showRounds">
+    <h3>Rounds</h3>
+    <round v-for="(round, index) in tournament.rounds" :matches="round" :number="index"></round>
+  </div>
+
+  <div v-show="showEdit" v-if="canEdit">
     Edit tournament
     <tournament-form button-text="Update tournament"
                      :value="tournament"
                      @submit="update">
     </tournament-form>
+  </div>
+
+  <div v-show="showDelete" v-if="canDestroy">
+    Delete the tournament.
+    <button v-if="canDestroy" @click="destroy()">Delete</button>
   </div>
 </div>
 </template>
@@ -36,6 +56,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
+import policies from 'src/policies'
 import TournamentTeamList from './TournamentTeamList'
 import TournamentForm from './TournamentForm'
 import Round from './Round'
@@ -55,15 +76,32 @@ export default {
     }
   },
   computed: {
-    editable () {
-      // return this.tournament.editable
-      return this.tournament.owner.id === this.currentUser.id || this.isAdmin
+    canEdit () {
+      return policies.tournamentPolicy(this.tournament).update
+    },
+    canDestroy () {
+      return policies.tournamentPolicy(this.tournament).destroy
     },
     id () {
       return parseInt(this.$route.params.id)
     },
     tournament () {
       return this.tournamentMap.get(this.id)
+    },
+    showRounds () {
+      return this.$route.name === 'tournament rounds'
+    },
+    showTeams () {
+      return this.$route.name === 'tournament teams'
+    },
+    showEdit () {
+      return this.$route.name === 'tournament update'
+    },
+    showDelete () {
+      return this.$route.name === 'tournament delete'
+    },
+    hasRounds () {
+      return this.tournament.rounds.length > 0
     },
     ...mapGetters(['tournamentMap', 'currentUser', 'isAdmin']),
   },
@@ -80,6 +118,7 @@ export default {
     },
     destroy () {
       this.destroyTournament(this.tournament)
+      this.$router.go(-1)
     },
     ...mapActions({
       updateTournament: 'UPDATE_TOURNAMENT',
