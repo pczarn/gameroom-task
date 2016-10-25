@@ -14,11 +14,11 @@
     </fieldset>
 
     <fieldset class="row">
-      <select v-model="match.team_one_id" class="left-col">
+      <select :value="match.team_one_id" @input="setTeamOne($event.target.value)" class="left-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
       <span class="middle-col">vs</span>
-      <select v-model="match.team_two_id" class="right-col">
+      <select :value="match.team_two_id" @input="setTeamTwo($event.target.value)" class="right-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
     </fieldset>
@@ -35,10 +35,12 @@
 
     <fieldset class="row">
       <div class="left-col">
-        <span v-for="member in match.teamOne.members">
-          {{ member.name }}
-          <button @click.prevent="remove(match.teamOne, member)"></button>
-        </span>
+        <ul>
+          <li v-for="member in match.teamOne.members">
+            {{ member.name }}
+            <button @click.prevent="remove(match.teamOne, member)">X</button>
+          </li>
+        </ul>
         <multiselect :options="potentialPlayers"
                      :searchable="true"
                      label="name"
@@ -49,10 +51,12 @@
       </div>
       <span class="middle-col"></span>
       <div class="right-col">
-        <span v-for="member in match.teamTwo.members">
-          {{ member.name }}
-          <button @click.prevent="remove(match.teamTwo, member)"></button>
-        </span>
+        <ul>
+          <li v-for="member in match.teamTwo.members">
+            {{ member.name }}
+            <button @click.prevent="remove(match.teamTwo, member)">X</button>
+          </li>
+        </ul>
         <multiselect :options="potentialPlayers"
                      :searchable="true"
                      label="name"
@@ -76,8 +80,13 @@ import Multiselect from 'vue-multiselect'
 export default {
   props: {
     buttonText: String,
-    value: Object,
     clearOnSubmit: Boolean,
+    value: {
+      type: Object,
+      default () {
+        return { teamOne: { members: [] }, teamTwo: { members: [] } }
+      },
+    },
   },
   components: {
     Multiselect,
@@ -87,10 +96,14 @@ export default {
   },
   computed: {
     potentialPlayers () {
-      let selected = (this.match.teamOne.members.concat(this.match.teamTwo.members)).map(m => m.id)
-      return this.userList.filter(user => !selected.includes(user.id))
+      if(this.match.teamOne.members && this.match.teamTwo.members) {
+        let selected = (this.match.teamOne.members.concat(this.match.teamTwo.members)).map(m => m.id)
+        return this.userList.filter(user => !selected.includes(user.id))
+      } else {
+        return this.userList
+      }
     },
-    ...mapGetters(['teamList', 'gameList', 'userList']),
+    ...mapGetters(['teamList', 'teamMap', 'gameList', 'userList']),
   },
   methods: {
     remove (team, member) {
@@ -102,6 +115,18 @@ export default {
     },
     selectMemberOfTeamTwo (member) {
       this.match.teamTwo.members.push(member)
+    },
+    setTeamOne (id) {
+      id = parseInt(id)
+      this.match.team_one_id = id
+      const team = this.teamMap.get(id)
+      this.match.teamOne = Vue.util.extend({}, team)
+    },
+    setTeamTwo (id) {
+      id = parseInt(id)
+      this.match.team_two_id = id
+      const team = this.teamMap.get(id)
+      this.match.teamTwo = Vue.util.extend({}, team)
     },
     submit () {
       this.$emit('submit', this.match)
