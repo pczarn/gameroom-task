@@ -17,6 +17,7 @@
     "babel-preset-es2017": "^6.16.0",
     "css-loader": "^0.25.0",
     "express-http-proxy": "^0.10.0",
+    "lodash": "^4.16.4",
     "moment": "^2.15.1",
     "style-loader": "^0.13.1",
     "vue": "^2.0.1",
