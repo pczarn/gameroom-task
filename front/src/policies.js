@@ -22,5 +22,13 @@ export default {
     } else {
       return {}
     }
-  }
+  },
+  tournamentPolicy (tournament) {
+    let userId = store.getters.currentUser && store.getters.currentUser.id
+    let isAdmin = store.getters.isAdmin
+    const isOwner = tournament.owner.id === userId
+    const update = (isOwner || isAdmin) && tournament.status !== 'ended'
+    const destroy = update && tournament.status === 'open'
+    return { update, destroy }
+  },
 }
