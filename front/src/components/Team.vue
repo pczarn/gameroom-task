@@ -28,11 +28,6 @@ export default {
     TeamMemberList,
     TeamForm,
   },
-  data () {
-    return {
-      editable: false,
-    }
-  },
   computed: {
     id () {
       return parseInt(this.$route.params.id)
@@ -41,7 +36,7 @@ export default {
       return this.teamMap.get(this.id)
     },
     editable () {
-      return this.team && policies.teamPolicy(this.team).update
+      return policies.teamPolicy(this.team).update
     },
     ...mapGetters(['teamMap']),
   },
