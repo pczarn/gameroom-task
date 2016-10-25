@@ -38,7 +38,7 @@
         <ul>
           <li v-for="member in match.teamOne.members">
             {{ member.name }}
-            <button @click.prevent="remove(match.teamOne, member)">X</button>
+            <button @click.prevent="remove('teamOne', member)">X</button>
           </li>
         </ul>
         <multiselect :options="potentialPlayers"
@@ -54,7 +54,7 @@
         <ul>
           <li v-for="member in match.teamTwo.members">
             {{ member.name }}
-            <button @click.prevent="remove(match.teamTwo, member)">X</button>
+            <button @click.prevent="remove('teamTwo', member)">X</button>
           </li>
         </ul>
         <multiselect :options="potentialPlayers"
@@ -92,7 +92,10 @@ export default {
     Multiselect,
   },
   data () {
-    return { match: Vue.util.extend({}, this.value) }
+    const match = Vue.util.extend({}, this.value)
+    match.teamOne = Vue.util.extend({}, match.teamOne)
+    match.teamTwo = Vue.util.extend({}, match.teamTwo)
+    return { match }
   },
   computed: {
     potentialPlayers () {
@@ -106,9 +109,11 @@ export default {
     ...mapGetters(['teamList', 'teamMap', 'gameList', 'userList']),
   },
   methods: {
-    remove (team, member) {
-      let memberIdx = team.members.findIndex(m => m.id === member.id)
-      team.members.splice(memberIdx, 1)
+    remove (whichTeam, member) {
+      let newTeam = this.match[whichTeam]
+      let memberIdx = newTeam.members.findIndex(m => m.id === member.id)
+      newTeam.members.splice(memberIdx, 1)
+      this.match[whichTeam] = newTeam
     },
     selectMemberOfTeamOne (member) {
       this.match.teamOne.members.push(member)
