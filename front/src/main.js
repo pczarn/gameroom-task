@@ -433,20 +433,24 @@ export var store = new Vuex.Store({
       const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
       const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
       const currentMatch = getters.matchMap.get(match.id)
-      console.log(teamOneMemberIds, currentMatch.teamOne.member_ids.sort())
-      if(!_.isEqual(teamOneMemberIds, currentMatch.teamOne.member_ids.sort())) {
+      if(!_.isEqual(teamOneMemberIds, currentMatch.teamOne.member_ids.concat().sort())) {
         match.teamOne.member_ids = teamOneMemberIds
         dispatch('UPDATE_MATCH_LINEUP', [match, match.teamOne])
       }
-      if(!_.isEqual(teamTwoMemberIds, currentMatch.teamTwo.member_ids.sort())) {
+      if(!_.isEqual(teamTwoMemberIds, currentMatch.teamTwo.member_ids.concat().sort())) {
         match.teamTwo.member_ids = teamTwoMemberIds
         dispatch('UPDATE_MATCH_LINEUP', [match, match.teamTwo])
       }
+      match.team_one_id = undefined
+      match.team_two_id = undefined
       match = await api.updateMatch(match)
       commit('SET_MATCH', match)
     },
     async UPDATE_MATCH_LINEUP ({ commit, getters }, [match, team]) {
       const newTeam = await api.updateMatchLineup(match, team)
+      if(!getters.teamMap.has(newTeam.id)) {
+        commit('ADD_TEAM', newTeam)
+      }
       match = getters.matchMap.get(match.id)
       if(team.id === match.team_one_id) {
         match.team_one_id = newTeam.id
@@ -506,7 +510,9 @@ export var store = new Vuex.Store({
     },
     async UPDATE_TOURNAMENT_LINEUP ({ commit, getters }, [tournament, team]) {
       const newTeam = await api.updateTournamentLineup(tournament, team)
-      commit('SET_TEAM', newTeam)
+      if(!getters.teamMap.has(newTeam.id)) {
+        commit('ADD_TEAM', newTeam)
+      }
       commit('SET_TOURNAMENT_TEAM', { tournament, fromTeam: team, toTeam: newTeam })
     },
 
