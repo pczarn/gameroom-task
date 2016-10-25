@@ -39,7 +39,7 @@ export default {
       let list = this.tournamentList
       if(this.user) {
         list = list.filter(tournament =>
-          tournament.teams.some(team => team.member_ids.includes(this.user.id)) ||
+          tournament.teams.some(team => team.members.some(m => m.id === this.user.id)) ||
           tournament.owner.id === this.user.id
         )
       }
