@@ -15,15 +15,16 @@
 
   <br>
 
-  <router-link v-if="hasRounds" :to="{ name: 'tournament rounds', params: { id } }">Rounds</router-link>
+  <router-link v-if="hasRounds && !showRounds" :to="{ name: 'tournament rounds', params: { id } }">Rounds</router-link>
   <span v-else>Rounds</span>
 
-  <router-link :to="{ name: 'tournament teams', params: { id } }">Teams</router-link>
+  <router-link v-if="!showTeams" :to="{ name: 'tournament teams', params: { id } }">Teams</router-link>
+  <span v-else>Teams</span>
 
-  <router-link v-if="canEdit" :to="{ name: 'tournament update', params: { id } }">Edit</router-link>
+  <router-link v-if="canEdit && !showEdit" :to="{ name: 'tournament update', params: { id } }">Edit</router-link>
   <span v-else>Edit</span>
 
-  <router-link v-if="canDestroy" :to="{ name: 'tournament delete', params: { id } }">Delete</router-link>
+  <router-link v-if="canDestroy && !showDelete" :to="{ name: 'tournament delete', params: { id } }">Delete</router-link>
   <span v-else>Delete</span>
 
   <div v-show="showTeams">
@@ -89,10 +90,14 @@ export default {
       return this.tournamentMap.get(this.id)
     },
     showRounds () {
-      return this.$route.name === 'tournament rounds'
+      return this.$route.name === 'tournament rounds' || (
+        this.$route.name == 'tournament' && this.hasRounds
+      )
     },
     showTeams () {
-      return this.$route.name === 'tournament teams'
+      return this.$route.name === 'tournament teams' || (
+        this.$route.name == 'tournament' && !this.hasRounds
+      )
     },
     showEdit () {
       return this.$route.name === 'tournament update'
