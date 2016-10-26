@@ -1,5 +1,5 @@
 import api from 'src/api'
-import { router } from 'src/main'
+import router from 'src/router'
 
 // Session related constants
 const SESSION_KEY = 'sessionData'
