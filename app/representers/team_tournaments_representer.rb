@@ -1,4 +1,4 @@
-class TeamTournamentsRepresenter
+class TeamTournamentsRepresenter < BaseRepresenter
   attr_reader :team_tournaments
 
   def initialize(team_tournaments)
