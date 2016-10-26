@@ -46,7 +46,8 @@ class TeamTournamentParticipationsController < ApplicationController
 
   def add_or_reuse_team
     team = Team.new(team_params)
-    reused = Team.related_to(team.member_ids).find { |elem| elem.member_ids == team.member_ids }
+    member_ids = team.member_ids.sort
+    reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
     reused || team
   end
 

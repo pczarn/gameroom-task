@@ -51,18 +51,15 @@ class FinishMatch
   end
 
   def tasks_for_tournament
-    if match_scores.all?
-      if next_round
-        if other_match_in_pair.scores.all?
-          [CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)]
-        else
-          []
-        end
+    return [] unless match_scores.all?
+    if next_round
+      if other_match_in_pair.scores.all?
+        [CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)]
       else
-        [EndTournament.new(tournament: @tournament, match: @match)]
+        []
       end
     else
-      []
+      [EndTournament.new(tournament: @tournament, match: @match)]
     end
   end
 
