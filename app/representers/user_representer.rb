@@ -1,4 +1,4 @@
-class UserRepresenter
+class UserRepresenter < BaseRepresenter
   attr_reader :user
 
   def initialize(user)

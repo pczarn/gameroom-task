@@ -1,4 +1,4 @@
-class RoundRepresenter
+class RoundRepresenter < BaseRepresenter
   attr_reader :round
 
   def initialize(round)

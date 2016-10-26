@@ -1,4 +1,4 @@
-class MatchRepresenter
+class MatchRepresenter < BaseRepresenter
   attr_reader :match
 
   def initialize(match)
