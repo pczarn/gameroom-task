@@ -8,7 +8,7 @@ module Api
       def update
         service = FinishMatch.new(match, params: match_params)
         service.perform
-        render json: MatchRepresenter.new(match).shallow
+        render json: MatchRepresenter.new(match).basic
       end
 
       private

@@ -21,7 +21,7 @@ module Api
           authorize_update team_tournament
           team = update_lineup_service.in_tournament(tournament).replace
         end
-        render json: TeamRepresenter.new(team).shallow
+        render json: TeamRepresenter.new(team).basic
       end
 
       def destroy

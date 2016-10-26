@@ -7,22 +7,22 @@ module Api
 
       def create
         match = current_user.owned_matches.create!(friendly_match_params)
-        render json: MatchRepresenter.new(match).with_permissions(current_user)
+        render json: MatchRepresenter.new(match).basic
       end
 
       def index
         matches = FriendlyMatchesRepository.new.friendly_matches
-        render json: MatchesRepresenter.new(matches).shallow
+        render json: MatchesRepresenter.new(matches).basic
       end
 
       def show
-        render json: MatchRepresenter.new(friendly_match).shallow
+        render json: MatchRepresenter.new(friendly_match).basic
       end
 
       def update
         service = FinishMatch.new(friendly_match, params: friendly_match_params)
         service.perform
-        render json: MatchRepresenter.new(friendly_match).shallow
+        render json: MatchRepresenter.new(friendly_match).basic
       end
 
       def destroy
