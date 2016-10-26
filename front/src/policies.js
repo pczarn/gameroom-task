@@ -14,8 +14,8 @@ export default {
     let isAdmin = store.getters.isAdmin
     if(userId && match) {
       let isOwner = match.owner.id === userId
-      let isMember = match.teamOne.member_ids.includes(userId) ||
-        match.teamTwo.member_ids.includes(userId)
+      let isMember = match.teamOne.members.some(m => m.id === userId) ||
+        match.teamTwo.members.some(m => m.id === userId)
       return {
         update: isOwner || isMember || isAdmin,
         destroy: isMember || isAdmin,
@@ -35,7 +35,7 @@ export default {
   teamTournamentPolicy (tournament, team) {
     let userId = store.getters.currentUser && store.getters.currentUser.id
     const notFull = !team.team_size_limit || this.team.members.length < team.team_size_limit
-    const notMember = tournament.teams.every(team => !team.member_ids.includes(userId))
+    const notMember = tournament.teams.every(team => !team.members.some(m => m.id === userId))
     const join = notFull && notMember
     const leave = team.members.map(m => m.id).includes(userId)
     return { join, leave }

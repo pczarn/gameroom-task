@@ -4,8 +4,8 @@
     Match owned by {{ match.owner.name }} <br>
     Game {{ match.game.name }}
     <div class="row">
-      <span v-if="match.played_at">
-        Played at <time :datetime="match.played_at">{{ playedAtFormatted }}</time>
+      <span v-if="match.playedAt">
+        Played at <time :datetime="match.playedAt">{{ playedAtFormatted }}</time>
       </span>
       <span v-else>
         Played at an unknown time
@@ -60,10 +60,10 @@ export default {
   },
   computed: {
     scoreOne () {
-      return this.match.team_one_score || '—'
+      return this.match.teamOneScore || '—'
     },
     scoreTwo () {
-      return this.match.team_two_score || '—'
+      return this.match.teamTwoScore || '—'
     },
     id () {
       return parseInt(this.$route.params.id)
@@ -72,7 +72,7 @@ export default {
       return this.matchMap.get(this.id)
     },
     playedAtFormatted () {
-      return moment(this.match.played_at).format('YYYY-MM-DD HH:MM')
+      return moment(this.match.playedAt).format('YYYY-MM-DD HH:MM')
     },
     teams () {
       let { teamOne, teamTwo } = this.match
