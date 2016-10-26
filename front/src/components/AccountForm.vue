@@ -16,7 +16,7 @@
     <label for="avatar">Avatar</label>
     <input type="image" v-model="user.image" accept="image/*" name="avatar"> <br>
 
-    <button type="submit">Register</button>
+    <button type="submit">{{ buttonText }}</button>
   </fieldset>
 </form>
 </template>
@@ -27,6 +27,7 @@ import Vue from 'vue'
 export default {
   props: {
     value: Object,
+    buttonText: String,
   },
   data () {
     return { user: Vue.util.extend({}, this.value) }
