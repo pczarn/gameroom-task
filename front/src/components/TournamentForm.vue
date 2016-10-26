@@ -8,9 +8,9 @@
       <br>
     </template>
   </fieldset>
-  <fieldset>
+  <fieldset v-if="tournament.game">
     <legend>Choose game</legend>
-    <select v-model="tournament.game_id">
+    <select v-model="tournament.game.id">
       <option v-for="game in gameList" :value="game.id">{{ game.name }}</option>
     </select>
   </fieldset>
@@ -57,7 +57,7 @@ export default {
     value: {
       type: Object,
       default () {
-        return { teams: [] }
+        return { teams: [], game: {} }
       },
     },
     buttonText: String,

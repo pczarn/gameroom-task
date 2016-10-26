@@ -3,33 +3,33 @@
   <form @submit.prevent="submit" v-if="match && match.teamOne && match.teamTwo">
     <fieldset class="row">
       <legend>Choose game</legend>
-      <select v-model="match.game_id">
+      <select v-model="match.game.id">
         <option v-for="game in gameList" :value="game.id">{{ game.name }}</option>
       </select>
     </fieldset>
 
     <fieldset class="row">
-      <label for="played_at">Played at</label>
-      <input type="datetime-local" name="played_at" v-model="match.played_at">
+      <label for="playedAt">Played at</label>
+      <input type="datetime-local" name="playedAt" v-model="match.playedAt">
     </fieldset>
 
     <fieldset class="row">
-      <select :value="match.team_one_id" @input="setTeamOne($event.target.value)" class="left-col">
+      <select :value="match.teamOne.id" @input="setTeamOne($event.target.value)" class="left-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
       <span class="middle-col">vs</span>
-      <select :value="match.team_two_id" @input="setTeamTwo($event.target.value)" class="right-col">
+      <select :value="match.teamTwo.id" @input="setTeamTwo($event.target.value)" class="right-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
     </fieldset>
 
     <fieldset class="row scores">
       <div class="left-col">
-        <input type="number" v-model="match.team_one_score">
+        <input type="number" v-model="match.teamOneScore">
       </div>
       <span class="middle-col">:</span>
       <div class="right-col">
-        <input type="number" v-model="match.team_two_score">
+        <input type="number" v-model="match.teamTwoScore">
       </div>
     </fieldset>
 
@@ -84,7 +84,7 @@ export default {
     value: {
       type: Object,
       default () {
-        return { teamOne: { members: [] }, teamTwo: { members: [] } }
+        return { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} }
       },
     },
   },
@@ -123,13 +123,13 @@ export default {
     },
     setTeamOne (id) {
       id = parseInt(id)
-      this.match.team_one_id = id
+      this.match.teamOne.id = id
       const team = this.teamMap.get(id)
       this.match.teamOne = Vue.util.extend({}, team)
     },
     setTeamTwo (id) {
       id = parseInt(id)
-      this.match.team_two_id = id
+      this.match.teamTwo.id = id
       const team = this.teamMap.get(id)
       this.match.teamTwo = Vue.util.extend({}, team)
     },

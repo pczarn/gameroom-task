@@ -9,6 +9,7 @@
 
   <h2>Add a match</h2>
   <match-form button-text="Add the match"
+              clear-on-submit
               @submit="add">
   </match-form>
 </div>
@@ -35,9 +36,9 @@ export default {
       if(this.user) {
         let userId = this.user.id
         matchList = matchList.filter(match => {
-          return match.owner_id === userId ||
-            match.teamOne && match.teamOne.member_ids.includes(userId) ||
-            match.teamTwo && match.teamTwo.member_ids.includes(userId)
+          return match.owner.id === userId ||
+            match.teamOne && match.teamOne.members.some(m => m.id === userId) ||
+            match.teamTwo && match.teamTwo.members.some(m => m.id === userId)
         })
       }
       if(this.game) {

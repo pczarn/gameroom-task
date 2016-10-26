@@ -1,8 +1,8 @@
 <template>
 <div class="match">
   <div class="row">
-    <span v-if="played_at">
-      Played at <time :datetime="played_at">{{ playedAtFormatted }}</time>
+    <span v-if="playedAt">
+      Played at <time :datetime="playedAt">{{ playedAtFormatted }}</time>
     </span>
     <span v-else>
       Played at an unknown time
@@ -28,11 +28,11 @@ import Team from './Team'
 export default {
   props: {
     id: Number,
-    played_at: String,
+    playedAt: String,
     teamOne: Object,
     teamTwo: Object,
-    team_one_score: Number,
-    team_two_score: Number,
+    teamOneScore: Number,
+    teamTwoScore: Number,
   },
   components: {
     Team,
@@ -44,13 +44,13 @@ export default {
   },
   computed: {
     scoreOne () {
-      return this.team_one_score || "—"
+      return this.teamOneScore || '—'
     },
     scoreTwo () {
-      return this.team_two_score || "—"
+      return this.teamTwoScore || '—'
     },
     playedAtFormatted () {
-      return moment(this.played_at).format('YYYY-MM-DD HH:MM')
+      return moment(this.playedAt).format('YYYY-MM-DD HH:MM')
     },
   },
 }
