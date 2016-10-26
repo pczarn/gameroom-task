@@ -22,7 +22,7 @@ export default {
     filteredTeams () {
       let list = this.teamList
       if(this.user) {
-        list = list.filter(team => team.member_ids.includes(this.user.id))
+        list = list.filter(team => team.members.some(m => m.id === this.user.id))
       }
       return list
     },

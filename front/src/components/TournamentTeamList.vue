@@ -1,10 +1,10 @@
 <template>
 <div>
-  <div v-for="team in tournament.teams">
+  <div v-for="(team, idx) in tournament.teams">
     size {{ team.team_size_limit || 'no limit' }}
     <tournament-team-overview v-bind="team"></tournament-team-overview>
-    <button v-if="canJoin(team)" @click.prevent="join(team)">Join</button>
-    <button v-if="canLeave(team)" @click.prevent="leave(team)">Leave</button>
+    <button v-if="canJoin[idx]" @click.prevent="join(team)">Join</button>
+    <button v-if="canLeave[idx]" @click.prevent="leave(team)">Leave</button>
   </div>
 </div>
 </template>
@@ -22,21 +22,25 @@ export default {
     TournamentTeamOverview,
   },
   computed: {
-    canJoin (team) {
-      return policies.teamTournamentPolicy(this.tournament, team).join
+    canJoin () {
+      return this.tournament.teams.map(team => {
+        return policies.teamTournamentPolicy(this.tournament, team).join
+      })
     },
-    canLeave (team) {
-      return policies.teamTournamentPolicy(this.tournament, team).leave
+    canLeave () {
+      return this.tournament.teams.map(team => {
+        return policies.teamTournamentPolicy(this.tournament, team).leave
+      })
     },
   },
   methods: {
     join (team) {
-      team.member_ids.push(this.currentUser.id)
+      team.members.push(this.currentUser)
       this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
     },
     leave (team) {
-      const idx = team.member_ids.findIndex(id => id === this.currentUser.id)
-      team.member_ids.splice(idx, 1)
+      const idx = team.members.findIndex(m => m.id === this.currentUser.id)
+      team.members.splice(idx, 1)
       this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
     },
   },
