@@ -122,6 +122,7 @@ export const store = new Vuex.Store({
     matches: [],
     tournaments: [],
     users: [],
+    alert: '',
   },
   getters: {
     isLoggedIn (state) {
@@ -132,6 +133,9 @@ export const store = new Vuex.Store({
     },
     currentUser (state) {
       return state.currentUser
+    },
+    alert (state) {
+      return state.alert
     },
 
     userList (state) {
