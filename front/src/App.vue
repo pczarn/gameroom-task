@@ -1,17 +1,20 @@
 <template>
 <div id="main">
   <navigation-bar></navigation-bar>
+  <alert-bar></alert-bar>
   <router-view></router-view>
 </div>
 </template>
 
 <script>
 import NavigationBar from 'src/components/NavigationBar'
+import AlertBar from 'src/components/AlertBar'
 
 export default {
   name: 'App',
   components: {
     NavigationBar,
+    AlertBar,
   },
 }
 </script>
