@@ -8,11 +8,4 @@ class RoundRepresenter < BaseRepresenter
   def basic
     MatchesRepresenter.new(round.matches)
   end
-
-  def with_number
-    {
-      number: round.number,
-      matches: MatchesRepresenter.new(round.matches),
-    }
-  end
 end

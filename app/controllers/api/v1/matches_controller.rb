@@ -5,8 +5,7 @@ module Api
       after_action :verify_authorized, only: [:update, :destroy]
 
       def create
-        match = current_user.owned_matches.build(friendly_match_params)
-        match.save!
+        match = current_user.owned_matches.create!(friendly_match_params)
         render json: MatchRepresenter.new(match)
       end
 
