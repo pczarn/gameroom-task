@@ -1,5 +1,6 @@
 import axios from 'axios'
 import auth from 'src/auth'
+import store from 'src/store'
 
 const API_URL = 'http://localhost:3000/api/v1/'
 const TOKEN_TYPE = 'Bearer '
@@ -10,9 +11,12 @@ axios.defaults.baseURL = API_URL
 axios.interceptors.response.use(
   response => response,
   error => {
-    // if(error.response.status === 401 || error.response.status === 403) {
     if(error.response.status === 401) {
-      auth.logOut()
+      if(auth.getToken()) {
+        auth.logOut()
+      }
+    } else if(error.response.status === 422) {
+      store.dispatch('SET_ERROR', error.response.data.error)
     }
     return Promise.reject(error)
   })
