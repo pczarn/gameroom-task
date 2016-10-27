@@ -34,10 +34,10 @@ export default {
   },
   teamTournamentPolicy (tournament, team) {
     let userId = store.getters.currentUser && store.getters.currentUser.id
-    const notFull = !team.team_size_limit || this.team.members.length < team.team_size_limit
+    const notFull = !team.numberOfSlots || this.team.members.length < team.numberOfSlots
     const notMember = tournament.teams.every(team => !team.members.some(m => m.id === userId))
     const join = notFull && notMember
     const leave = team.members.map(m => m.id).includes(userId)
-    return { join, leave }
+    return { join, leave, addMember: notFull }
   },
 }

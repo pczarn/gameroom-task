@@ -1,5 +1,5 @@
 <template>
-<div class="tournament" v-if="tournament">
+<div class="tournament" v-if="rawTournament">
   <a href="#" @click="$router.go(-1)">Go back</a>
 
   <h2>Tournament {{ tournament.title }}</h2>
@@ -29,7 +29,7 @@
 
   <div v-show="showTeams">
     <h3>Teams</h3>
-    <tournament-team-list :tournament="tournament">
+    <tournament-team-list :tournament="tournament" :editable="canEdit">
     </tournament-team-list>
   </div>
 
@@ -86,8 +86,17 @@ export default {
     id () {
       return parseInt(this.$route.params.id)
     },
-    tournament () {
+    rawTournament () {
       return this.tournamentMap.get(this.id)
+    },
+    playerIds () {
+      const teamMemberIds = this.rawTournament.teams.map(t => t.members.map(m => m.id))
+      return new Set([].concat.apply([], teamMemberIds))
+    },
+    tournament () {
+      this.rawTournament.potentialPlayers = this.userList.filter(user => !this.playerIds.has(user.id))
+      this.rawTournament.policy = policies.tournamentPolicy(this.rawTournament)
+      return this.rawTournament
     },
     showRounds () {
       return this.$route.name === 'tournament rounds' || (
@@ -108,7 +117,7 @@ export default {
     hasRounds () {
       return this.tournament.rounds.length > 0
     },
-    ...mapGetters(['tournamentMap', 'currentUser', 'isAdmin']),
+    ...mapGetters(['tournamentMap', 'currentUser', 'isAdmin', 'userList']),
   },
   methods: {
     async update (newTournament) {

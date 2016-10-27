@@ -3,6 +3,7 @@
     <ul>
       <li v-for="member in members">
         {{ member.name }}
+        <button v-if="editable" @click.prevent="$emit('remove', member)">X</button>
       </li>
     </ul>
   </div>
@@ -13,6 +14,10 @@ export default {
   name: 'TeamMemberList',
   props: {
     members: Array,
+    editable: {
+      type: Boolean,
+      default: false,
+    },
   },
 }
 </script>
