@@ -1,5 +1,5 @@
 class TeamsRepository
   def teams
-    Team.all
+    Team.includes(:members)
   end
 end
