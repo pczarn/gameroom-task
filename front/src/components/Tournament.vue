@@ -4,8 +4,8 @@
 
   <h2>Tournament {{ tournament.title }}</h2>
   Owner {{ tournament.owner.name }}<br>
-  <span v-if="tournament.started_at">
-    Starts at <time :datetime="tournament.started_at">{{ tournament.started_at }}</time>
+  <span v-if="tournament.startedAt">
+    Starts at <time :datetime="tournament.startedAt">{{ tournament.startedAt }}</time>
   </span>
   <span v-else>
     Starts at an unknown time
