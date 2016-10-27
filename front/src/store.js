@@ -161,6 +161,9 @@ export const store = new Vuex.Store({
     teamMap (state, getters) {
       return new Map(getters.teamList.map(team => [team.id, team]))
     },
+    teamByMemberIdsMap (state, getters) {
+      return new Map(getters.teamList.map(team => [team.members.map(m => m.id).sort().toString(), team]))
+    },
 
     rawMatchList (state) {
       return state.matches
@@ -200,6 +203,10 @@ export const store = new Vuex.Store({
     RESET_CURRENT_USER_AND_TOKEN (state) {
       state.currentUser = null
       state.sessionToken = null
+    },
+
+    SET_ERROR (state, alert) {
+      state.alert = alert
     },
 
     SET_EVERYTHING (state, lists) {
@@ -294,8 +301,8 @@ export const store = new Vuex.Store({
     },
     SET_TOURNAMENT_TEAM (state, { tournamentId, fromTeam, toTeam }) {
       let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id === fromTeam.id)
-      tournament.teams.splice(teamIndex, 1, toTeam)
+      let teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
+      Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
     },
   },
   actions: {
@@ -309,6 +316,10 @@ export const store = new Vuex.Store({
     LOG_OUT ({ commit }) {
       auth.logOut()
       commit('RESET_CURRENT_USER_AND_TOKEN')
+    },
+
+    SET_ERROR ({ commit }, alert) {
+      commit('SET_ERROR', alert)
     },
 
     async GET_EVERYTHING ({ commit }) {
@@ -379,7 +390,36 @@ export const store = new Vuex.Store({
       let teams = await api.getMatches()
       commit('SET_MATCH_LIST', teams)
     },
-    async CREATE_MATCH ({ commit }, match) {
+    async CREATE_MATCH ({ commit, getters, dispatch }, match) {
+      const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
+      const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
+      const currentTeamOne = getters.teamMap.get(match.teamOne.id)
+      const currentTeamTwo = getters.teamMap.get(match.teamTwo.id)
+      // console.log(teamOneMemberIds, currentTeamOne)
+      if(!currentTeamOne || !_.isEqual(teamOneMemberIds, currentTeamOne.members.map(m => m.id).sort())) {
+        const reusedTeam = getters.teamByMemberIdsMap.get(teamOneMemberIds.toString())
+        if(reusedTeam) {
+          match.teamOne.id = reusedTeam.id
+        } else {
+          const team = await dispatch('CREATE_TEAM', {
+            name: match.teamOne.name,
+            members: match.teamOne.members,
+          })
+          match.teamOne.id = team.id
+        }
+      }
+      if(!currentTeamTwo || !_.isEqual(teamTwoMemberIds, currentTeamTwo.members.map(m => m.id).sort())) {
+        const reusedTeam = getters.teamByMemberIdsMap.get(teamTwoMemberIds.toString())
+        if(reusedTeam) {
+          match.teamTwo.id = reusedTeam.id
+        } else {
+          const team = await dispatch('CREATE_TEAM', {
+            name: match.teamTwo.name,
+            members: match.teamTwo.members,
+          })
+          match.teamTwo.id = team.id
+        }
+      }
       match = await api.createMatch(rawFriendlyMatch(match))
       commit('ADD_MATCH', match)
     },
@@ -461,6 +501,8 @@ export const store = new Vuex.Store({
       const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
       if(!getters.teamMap.has(newTeam.id)) {
         commit('ADD_TEAM', newTeam)
+      } else {
+        commit('SET_TEAM', newTeam)
       }
       commit('SET_TOURNAMENT_TEAM', { tournamentId: tournament.id, fromTeam: team, toTeam: newTeam })
     },
