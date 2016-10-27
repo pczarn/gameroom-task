@@ -9,8 +9,6 @@ class ChangeMembershipInTournament
       team = copy_team(current_team, member_ids: current_team.member_ids + [@user.id])
       save_members(team)
     end
-  rescue ActiveModel::ValidationError => error
-    [false, error.model.errors.full_messages.to_sentence]
   end
 
   def leave_team
@@ -21,8 +19,6 @@ class ChangeMembershipInTournament
         replace_team
       end
     end
-  rescue ActiveModel::ValidationError => error
-    [false, error.model.errors.full_messages.to_sentence]
   end
 
   private
@@ -54,14 +50,9 @@ class ChangeMembershipInTournament
   def save_members(new_team)
     # for validation, not for saving.
     tournament.team_tournaments.build(team: new_team)
-    return [true, nil] if new_team.member_ids == current_team.member_ids
-    if tournament.invalid?
-      [false, tournament.errors.full_messages.to_sentence]
-    else
-      new_team.save!
-      @team_tournament.destroy!
-      [true, nil]
-    end
+    tournament.validate!
+    new_team.save!
+    @team_tournament.destroy!
   end
 
   def matches_in_tournament_played_by(team)

@@ -10,12 +10,8 @@ module Api
       def create
         authorize tournament, :join?
         service = change_membership_service(current_user)
-        valid, alert = service.join_team
-        if valid
-          head :ok
-        else
-          render json: { error: alert }, status: 422
-        end
+        service.join_team
+        head :ok
       end
 
       def destroy
@@ -25,12 +21,8 @@ module Api
           authorize team_tournament, :leave?
         end
         service = change_membership_service(user || current_user)
-        valid, alert = service.leave_team
-        if valid
-          head :ok
-        else
-          render json: { error: alert }, status: 422
-        end
+        service.leave_team
+        head :ok
       end
 
       private
