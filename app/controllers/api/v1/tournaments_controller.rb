@@ -6,22 +6,22 @@ module Api
       after_action :verify_authorized, only: [:update, :destroy]
 
       def index
-        render json: TournamentsRepresenter.new(Tournament.all)
+        render json: TournamentsRepresenter.new(Tournament.all).with_teams_and_rounds
       end
 
       def create
         tournament = current_user.owned_tournaments.build(tournament_params)
         tournament.save!
-        render json: TournamentRepresenter.new(tournament)
+        render json: TournamentRepresenter.new(tournament).with_teams_and_rounds
       end
 
       def show
-        render json: TournamentRepresenter.new(@tournament)
+        render json: TournamentRepresenter.new(@tournament).with_teams_and_rounds
       end
 
       def update
         @tournament.update!(tournament_params)
-        render json: TournamentRepresenter.new(@tournament)
+        render json: TournamentRepresenter.new(@tournament).with_teams_and_rounds
       end
 
       def destroy

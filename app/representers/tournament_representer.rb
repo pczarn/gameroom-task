@@ -15,9 +15,14 @@ class TournamentRepresenter < BaseRepresenter
       number_of_teams: tournament.number_of_teams,
       game_id: tournament.game_id,
       owner_id: tournament.owner_id,
+    }
+  end
+
+  def with_teams_and_rounds
+    basic.merge(
       rounds: RoundsRepresenter.new(tournament.rounds).basic,
       teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).basic,
-    }
+    )
   end
 
   def with_permissions(current_user)

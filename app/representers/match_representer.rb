@@ -18,9 +18,9 @@ class MatchRepresenter < BaseRepresenter
     }
   end
 
-  def with_winner
+  def with_winner_id
     basic.merge(
-      winner: match.winning_team.id == match.team_one_id ? 0 : 1,
+      winner_id: match.winning_team.id,
     )
   end
 

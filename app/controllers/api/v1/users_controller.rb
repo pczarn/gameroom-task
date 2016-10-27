@@ -2,7 +2,6 @@ module Api
   module V1
     class UsersController < BaseController
       before_action :authenticate, only: [:show, :update]
-      before_action :load_user, only: [:show, :update]
       before_action :verify_authorized, only: :update
 
       def create
@@ -15,15 +14,14 @@ module Api
       end
 
       def update
-        @user.update!(user_params)
-        render json: UserRepresenter.new(@user)
+        user.update!(user_params)
+        render json: UserRepresenter.new(user)
       end
 
       private
 
-      def load_user
-        @user = User.find(params[:id])
-        authorize @user
+      def user
+        @user ||= authorize User.find(params[:id])
       end
 
       def user_params
