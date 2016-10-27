@@ -24,12 +24,8 @@ module Api
       def update
         match_params = match.round.present? ? match_in_tournament_params : friendly_match_params
         service = FinishMatch.new(match, params: match_params)
-        valid, alert = service.perform
-        if valid
-          render json: MatchRepresenter.new(friendly_match)
-        else
-          render json: { error: alert }, status: 422
-        end
+        service.perform
+        render json: MatchRepresenter.new(friendly_match)
       end
 
       def destroy

@@ -30,9 +30,6 @@ class FinishMatch
     end
     Match.transaction { tasks.save }
     tasks.finish
-    [true, nil]
-  rescue ActiveModel::ValidationError => error
-    [false, error.model.errors.full_messages.to_sentence]
   end
 
   private
