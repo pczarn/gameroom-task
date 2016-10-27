@@ -51,6 +51,7 @@ import moment from 'moment'
 import TeamMemberList from './TeamMemberList'
 import MatchForm from './MatchForm'
 import policies from 'src/policies'
+import { score } from 'src/util'
 
 export default {
   name: 'Match',
@@ -60,10 +61,10 @@ export default {
   },
   computed: {
     scoreOne () {
-      return this.match.teamOneScore || '—'
+      return score(this.match.teamOneScore)
     },
     scoreTwo () {
-      return this.match.teamTwoScore || '—'
+      return score(this.match.teamTwoScore)
     },
     id () {
       return parseInt(this.$route.params.id)
