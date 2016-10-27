@@ -2,7 +2,7 @@ module Api
   module V1
     class UsersController < BaseController
       before_action :authenticate, only: [:show, :update]
-      before_action :verify_authorized, only: :update
+      after_action :verify_authorized, only: :update
 
       def create
         user = User.create!(user_params)
