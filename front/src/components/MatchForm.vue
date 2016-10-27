@@ -10,17 +10,23 @@
 
     <fieldset class="row">
       <label for="playedAt">Played at</label>
-      <input type="datetime-local" name="playedAt" v-model="match.playedAt">
+      <input type="datetime-local" name="playedAt" v-model="playedAtLocal">
     </fieldset>
 
     <fieldset class="row">
-      <select :value="match.teamOne.id" @input="setTeamOne($event.target.value)" class="left-col">
+      <select :value="match.teamOne.id" @input="setTeamOne" class="left-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
       <span class="middle-col">vs</span>
-      <select :value="match.teamTwo.id" @input="setTeamTwo($event.target.value)" class="right-col">
+      <select :value="match.teamTwo.id" @input="setTeamTwo" class="right-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
+    </fieldset>
+
+    <fieldset class="row">
+      <input type="text" v-model="match.teamOne.name" class="left-col">
+      <span class="middle-col">vs</span>
+      <input type="text" v-model="match.teamTwo.name" class="right-col">
     </fieldset>
 
     <fieldset class="row scores">
@@ -76,6 +82,8 @@
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
+import moment from 'moment'
+import _ from 'lodash'
 
 export default {
   props: {
@@ -92,10 +100,9 @@ export default {
     Multiselect,
   },
   data () {
-    const match = Vue.util.extend({}, this.value)
-    match.teamOne = Vue.util.extend({}, match.teamOne)
-    match.teamTwo = Vue.util.extend({}, match.teamTwo)
-    return { match }
+    const match = _.cloneDeep(this.value)
+    const playedAtLocal = moment(match.playedAt).toISOString().replace('Z', '')
+    return { match, playedAtLocal, teamOneName: '', teamTwoName: '' }
   },
   computed: {
     potentialPlayers () {
@@ -121,19 +128,20 @@ export default {
     selectMemberOfTeamTwo (member) {
       this.match.teamTwo.members.push(member)
     },
-    setTeamOne (id) {
-      id = parseInt(id)
-      this.match.teamOne.id = id
-      const team = this.teamMap.get(id)
-      this.match.teamOne = Vue.util.extend({}, team)
+    setTeamOne (event) {
+      const id = parseInt(event.target.value)
+      // this.match.teamOne.id = id
+      const team = _.cloneDeep(this.teamMap.get(id))
+      this.match.teamOne = team
     },
-    setTeamTwo (id) {
-      id = parseInt(id)
-      this.match.teamTwo.id = id
-      const team = this.teamMap.get(id)
-      this.match.teamTwo = Vue.util.extend({}, team)
+    setTeamTwo (event) {
+      const id = parseInt(event.target.value)
+      // this.match.teamTwo.id = id
+      const team = _.cloneDeep(this.teamMap.get(id))
+      this.match.teamTwo = team
     },
     submit () {
+      this.match.playedAt = moment(this.playedAtLocal).toISOString()
       this.$emit('submit', this.match)
       if(this.clearOnSubmit) {
         this.match = {}
