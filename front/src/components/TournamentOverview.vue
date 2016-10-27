@@ -5,11 +5,11 @@
     Ready to start. Waiting for teams.
   </span>
   <span v-else>
-    <span v-if="started_at">
+    <span v-if="startedAt">
       <span v-if="futureStartDate">Will start on</span>
       <span v-else>Started</span>
 
-      <timeago v-if="!futureStartDate" :since="started_at"></timeago>
+      <timeago v-if="!futureStartDate" :since="startedAt"></timeago>
       <span v-if="futureStartDate">{{ futureStartDate }}</span>
     </span>
     <span v-else>
@@ -36,11 +36,11 @@ export default {
   props: {
     id: Number,
     title: String,
-    started_at: String,
+    startedAt: String,
     status: String,
     teams: Array,
     rounds: Array,
-    number_of_teams: Number,
+    numberOfTeams: Number,
   },
   components: {
     TournamentStatus,
@@ -59,20 +59,20 @@ export default {
       return this.status == 'ended'
     },
     isReadyToStart () {
-      return this.isOpen && this.started_at && new Date(this.started_at) < new Date()
+      return this.isOpen && this.startedAt && new Date(this.startedAt) < new Date()
     },
     startDateInPast () {
-      return new Date(this.started_at) < new Date()
+      return new Date(this.startedAt) < new Date()
     },
     futureStartDate () {
-      if(new Date(this.started_at) > new Date()) {
-        return moment(this.started_at).format('YYYY-MM-DD HH:MM')
+      if(new Date(this.startedAt) > new Date()) {
+        return moment(this.startedAt).format('YYYY-MM-DD HH:MM')
       }
     },
     teamsInfo () {
       return {
-        size: this.number_of_teams,
-        slots: this.teams.map(tt => [tt.number_of_members, tt.number_of_slots]),
+        size: this.numberOfTeams,
+        slots: this.teams.map(tt => [tt.members.length, tt.numberOfSlots]),
       }
     },
     roundsInfo () {
