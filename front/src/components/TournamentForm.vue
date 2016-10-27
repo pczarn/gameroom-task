@@ -71,9 +71,9 @@ export default {
         { name: 'title', type: 'text' },
         { name: 'description', type: 'textarea' },
         { name: 'image', type: 'file', accept: "image/*" },
-        { name: 'number_of_teams', type: 'number' },
+        { name: 'numberOfTeams', type: 'number' },
         { name: 'number_of_members_per_team', type: 'num' },
-        { name: 'started_at', type: 'datetime-local' },
+        { name: 'startedAt', type: 'datetime-local' },
       ],
       tournament: Vue.util.extend({}, this.value),
     }
