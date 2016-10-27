@@ -27,6 +27,7 @@
 <script>
 import moment from 'moment'
 import Team from './Team'
+import { score } from 'src/util'
 
 export default {
   props: {
@@ -47,10 +48,10 @@ export default {
   },
   computed: {
     scoreOne () {
-      return this.teamOneScore || '—'
+      return score(this.teamOneScore)
     },
     scoreTwo () {
-      return this.teamTwoScore || '—'
+      return score(this.teamTwoScore)
     },
     playedAtFormatted () {
       return moment(this.playedAt).format('YYYY-MM-DD HH:MM')
