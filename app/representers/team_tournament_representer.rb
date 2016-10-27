@@ -10,7 +10,6 @@ class TeamTournamentRepresenter < BaseRepresenter
       id: team_tournament.id,
       team_id: team_tournament.team_id,
       number_of_slots: team_tournament.number_of_slots,
-      number_of_members: team_tournament.team.members.count,
     }
   end
 

@@ -56,7 +56,7 @@ class UpdateLineup
   def replace_team_in_tournament_with(team)
     team.team_tournaments.build(tournament: tournament)
     # for validation, not for saving.
-    tournament.team_tournaments.build(team: new_team)
+    tournament.team_tournaments.build(team: team)
     tournament.validate!
     team.save!
     @team_tournament.destroy!
