@@ -87,8 +87,6 @@ export default {
   methods: {
     update () {
       this.form.playedAt = moment(this.form.playedAtLocal).toISOString()
-      // this.form.teamOne = {}
-      // this.form.teamTwo = {}
       this.form.id = this.id
       this.$store.dispatch('UPDATE_TOURNAMENT_MATCH', [this.tournament, this.form])
     },
