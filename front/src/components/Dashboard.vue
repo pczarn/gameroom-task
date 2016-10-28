@@ -7,6 +7,7 @@
   <router-link to="/teams">Team list</router-link>
   <router-link to="/tournaments">All tournament list</router-link>
   <router-link to="/matches">All match list</router-link>
+  <router-link to="/games">Game list</router-link>
 
   <router-view :user="currentUser"></router-view>
 </div>

@@ -133,7 +133,7 @@ export default {
     },
     destroy () {
       this.destroyTournament(this.tournament)
-      this.$router.go(-1)
+      this.$router.push('/tournaments')
     },
     ...mapActions({
       updateTournament: 'UPDATE_TOURNAMENT',
