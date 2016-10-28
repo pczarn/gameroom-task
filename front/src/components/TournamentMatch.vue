@@ -18,12 +18,33 @@
     <span class="middle-col">:</span>
     <span class="right-col">{{ scoreTwo }}</span>
   </div>
+
+  <form v-if="editable" @submit.prevent="update">
+    <fieldset class="row">
+      <label for="playedAt">Played at</label>
+      <input type="datetime-local" name="playedAt" v-model="form.playedAtLocal">
+    </fieldset>
+
+    <fieldset class="row scores">
+      <div class="left-col">
+        <input type="number" v-model="form.teamOneScore">
+      </div>
+      <span class="middle-col">:</span>
+      <div class="right-col">
+        <input type="number" v-model="form.teamTwoScore">
+      </div>
+    </fieldset>
+
+    <button type="submit">Update</button>
+  </form>
 </div>
 </template>
 
 <script>
 import moment from 'moment'
+import policies from 'src/policies'
 import Team from './Team'
+import { score } from 'src/util'
 
 export default {
   props: {
@@ -33,24 +54,43 @@ export default {
     teamTwo: Object,
     teamOneScore: Number,
     teamTwoScore: Number,
+    tournament: Object,
   },
   components: {
     Team,
   },
   data () {
+    const playedAtLocal = moment(this.playedAt).toISOString().replace('Z', '')
     return {
-      editable: false,
+      form: {
+        playedAt: null,
+        playedAtLocal,
+        teamOneScore: this.teamOneScore,
+        teamTwoScore: this.teamTwoScore,
+      },
     }
   },
   computed: {
+    editable () {
+      return policies.tournamentMatchPolicy(this.tournament, this).update
+    },
     scoreOne () {
-      return this.teamOneScore || '—'
+      return score(this.teamOneScore)
     },
     scoreTwo () {
-      return this.teamTwoScore || '—'
+      return score(this.teamTwoScore)
     },
     playedAtFormatted () {
       return moment(this.playedAt).format('YYYY-MM-DD HH:MM')
+    },
+  },
+  methods: {
+    update () {
+      this.form.playedAt = moment(this.form.playedAtLocal).toISOString()
+      // this.form.teamOne = {}
+      // this.form.teamTwo = {}
+      this.form.id = this.id
+      this.$store.dispatch('UPDATE_TOURNAMENT_MATCH', [this.tournament, this.form])
     },
   },
 }
