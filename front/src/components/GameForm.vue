@@ -28,7 +28,7 @@ export default {
     }
   },
   methods: {
-    submit() {
+    submit () {
       this.$emit('submit', this.game)
     },
   },

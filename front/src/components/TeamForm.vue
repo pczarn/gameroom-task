@@ -34,6 +34,3 @@ export default {
   computed: mapGetters(['userList']),
 }
 </script>
-
-<style scoped>
-</style>

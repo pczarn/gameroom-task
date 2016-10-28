@@ -22,7 +22,7 @@ export default {
         } else {
           const defaultText = `${number}/${limit}`
           return {
-            class: number == limit ? 'full' : 'present',
+            class: number === limit ? 'full' : 'present',
             text: defaultText,
           }
         }
