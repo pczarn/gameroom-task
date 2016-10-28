@@ -57,7 +57,7 @@ export default {
   },
 
   getCurrentUser () {
-    let stringifiedInfo = localStorage.getItem(CURRENT_USER_KEY)
+    const stringifiedInfo = localStorage.getItem(CURRENT_USER_KEY)
     return stringifiedInfo && JSON.parse(stringifiedInfo)
   },
 }

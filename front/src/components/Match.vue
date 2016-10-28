@@ -76,7 +76,7 @@ export default {
       return moment(this.match.playedAt).format('YYYY-MM-DD HH:MM')
     },
     teams () {
-      let { teamOne, teamTwo } = this.match
+      const { teamOne, teamTwo } = this.match
       return teamOne && teamTwo ? [teamOne, teamTwo] : false
     },
     canEdit () {

@@ -106,14 +106,14 @@ export default {
     },
     removeTeam (team) {
       console.log(this.tournament, this.tournament.teams.length)
-      let teamIdx = this.tournament.teams.findIndex(t => t.id === team.id)
+      const teamIdx = this.tournament.teams.findIndex(t => t.id === team.id)
       console.log(teamIdx)
       this.tournament.teams.splice(teamIdx, 1)
       console.log(this.tournament.teams.length)
       this.tournament = this.tournament
     },
     removeMember (team, member) {
-      let memberIdx = team.members.findIndex(m => m.id === member.id)
+      const memberIdx = team.members.findIndex(m => m.id === member.id)
       team.members.splice(memberIdx, 1)
     },
     submit () {
