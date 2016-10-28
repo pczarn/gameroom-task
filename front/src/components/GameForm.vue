@@ -1,5 +1,5 @@
 <template>
-<form @submit.prevent="$emit('submit', game)">
+<form @submit.prevent="submit">
   <fieldset>
     <legend>Properties</legend>
     <template v-for="attrs in schema">
@@ -13,6 +13,7 @@
 
 <script>
 import Vue from 'vue'
+import _ from 'lodash'
 
 export default {
   props: {
@@ -24,11 +25,12 @@ export default {
         { name: 'name', label: 'Name', type: 'text' },
         { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
       ],
+      game: _.cloneDeep(this.value),
     }
   },
-  computed: {
-    game () {
-      return Vue.util.extend({}, this.value)
+  methods: {
+    submit() {
+      this.$emit('submit', this.game)
     },
   },
 }

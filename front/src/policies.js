@@ -49,4 +49,9 @@ export default {
     const update = scoreNotSet && (isMember || canEditTournament)
     return { update }
   },
+  gamePolicy (game) {
+    const isAdmin = store.getters.isAdmin
+    const update = isAdmin
+    return { update }
+  },
 }
