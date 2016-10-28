@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import _ from 'lodash'
 
 export default {

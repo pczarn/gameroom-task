@@ -79,7 +79,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 import moment from 'moment'
