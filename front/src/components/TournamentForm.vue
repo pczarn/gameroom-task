@@ -30,7 +30,9 @@
                      label="name"
                      track-by="name"
                      placeholder="Pick a member"
-                     @input="selectMemberInTeam(team, $event)">
+                     @input="selectMemberInTeam(team, $event)"
+                     :reset-after="true"
+        >
         </multiselect>
       </li>
     </ul>
@@ -41,7 +43,9 @@
                  label="name"
                  track-by="name"
                  placeholder="Pick a team"
-                 @input="selectTeam">
+                 @input="selectTeam"
+                 :reset-after="true"
+    >
     </multiselect>
   </fieldset>
   <button type="submit">{{ buttonText }}</button>
