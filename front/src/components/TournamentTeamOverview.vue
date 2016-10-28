@@ -10,7 +10,9 @@
                label="name"
                key="name"
                placeholder="Pick a member"
-               @select="selectMember">
+               @select="selectMember"
+               :reset-after="true"
+  >
   </multiselect>
   <button v-if="policy.join" @click.prevent="$emit('join')">Join</button>
   <button v-if="policy.leave" @click.prevent="$emit('leave')">Leave</button>
