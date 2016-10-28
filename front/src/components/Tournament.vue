@@ -16,16 +16,16 @@
   <br>
 
   <router-link v-if="hasRounds && !showRounds" :to="{ name: 'tournament rounds', params: { id } }">Rounds</router-link>
-  <span v-else>Rounds</span>
+  <span v-else :class="{ bold: showRounds }">Rounds</span>
 
   <router-link v-if="!showTeams" :to="{ name: 'tournament teams', params: { id } }">Teams</router-link>
-  <span v-else>Teams</span>
+  <span v-else :class="{ bold: showTeams }">Teams</span>
 
   <router-link v-if="canEdit && !showEdit" :to="{ name: 'tournament update', params: { id } }">Edit</router-link>
-  <span v-else>Edit</span>
+  <span v-else :class="{ bold: showEdit }">Edit</span>
 
   <router-link v-if="canDestroy && !showDelete" :to="{ name: 'tournament delete', params: { id } }">Delete</router-link>
-  <span v-else>Delete</span>
+  <span v-else :class="{ bold: showDelete }">Delete</span>
 
   <div v-show="showTeams">
     <h3>Teams</h3>
@@ -142,3 +142,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+span.bold {
+  font-weight: bold;
+}
+</style>
