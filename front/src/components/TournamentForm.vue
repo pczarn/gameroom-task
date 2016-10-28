@@ -2,9 +2,10 @@
 <form @submit.prevent="submit">
   <fieldset>
     <legend>Properties</legend>
-    <template v-for="attrs in fields">
-      <label :for="attrs.name">{{ attrs.name }}</label>
-      <input v-bind="attrs" v-model="tournament[attrs.name]">
+    <template v-for="field in schema">
+      <label :for="field.attrs.name">{{ field.label }}</label>
+      <br>
+      <input v-bind="field.attrs" v-model="tournament[field.attrs.name]">
       <br>
     </template>
   </fieldset>
@@ -67,13 +68,13 @@ export default {
   },
   data () {
     return {
-      fields: [
-        { name: 'title', type: 'text' },
-        { name: 'description', type: 'textarea' },
-        { name: 'image', type: 'file', accept: "image/*" },
-        { name: 'numberOfTeams', type: 'number' },
-        { name: 'number_of_members_per_team', type: 'num' },
-        { name: 'startedAt', type: 'datetime-local' },
+      schema: [
+        { attrs: { name: 'title', type: 'text' }, label: 'Title' },
+        { attrs: { name: 'description', type: 'textarea' }, label: 'Description' },
+        { attrs: { name: 'image', type: 'file', accept: "image/*" }, label: 'Image' },
+        { attrs: { name: 'numberOfTeams', type: 'number' }, label: 'Number of teams' },
+        { attrs: { name: 'number_of_members_per_team', type: 'num' }, label: 'Number of members per team' },
+        { attrs: { name: 'startedAt', type: 'datetime-local' }, label: 'Starts at' },
       ],
       tournament: Vue.util.extend({}, this.value),
     }
