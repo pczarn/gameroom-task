@@ -4,7 +4,6 @@
   <router-link :to="{ name: 'games', params: { id: id } }">
     <strong>{{ name }}</strong>
   </router-link>
-  <button v-if="editable" @click="$emit('remove')">Remove</button>
 </div>
 </template>
 
@@ -22,12 +21,6 @@ export default {
   data () {
     return {
     }
-  },
-  computed: {
-    editable () {
-      return this.isAdmin
-    },
-    ...mapGetters(['isAdmin']),
   },
 }
 </script>
