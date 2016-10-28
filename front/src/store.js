@@ -68,14 +68,16 @@ function rawMatch(match) {
     played_at: match.playedAt,
     team_one_score: match.teamOneScore,
     team_two_score: match.teamTwoScore,
-    team_one_id: match.teamOne.id,
-    team_two_id: match.teamTwo.id,
-    game_id: match.game.id,
   }
 }
 
 function rawFriendlyMatch(match) {
-  return rawMatch(match)
+  match = rawMatch(match)
+  return Object.assign(match, {
+    team_one_id: match.teamOne.id,
+    team_two_id: match.teamTwo.id,
+    game_id: match.game.id,
+  })
 }
 
 function rawTournamentParams(tournament) {
@@ -304,6 +306,16 @@ export const store = new Vuex.Store({
       let teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
       Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
     },
+    SET_TOURNAMENT_MATCH (state, { tournament, match }) {
+      tournament = state.tournaments.find(({ id }) => id === tournament.id)
+      for(const round of tournament.rounds) {
+        const idx = round.findIndex(m => m.id === match.id)
+        if(idx !== -1) {
+          Vue.set(round, idx, match)
+          break
+        }
+      }
+    },
   },
   actions: {
     async LOG_IN ({ commit, dispatch }, creds) {
@@ -505,6 +517,12 @@ export const store = new Vuex.Store({
         commit('SET_TEAM', newTeam)
       }
       commit('SET_TOURNAMENT_TEAM', { tournamentId: tournament.id, fromTeam: team, toTeam: newTeam })
+    },
+    async UPDATE_TOURNAMENT_MATCH ({ commit, getters }, [tournament, match]) {
+      const newMatch = await api.updateTournamentMatch(tournament, rawMatch(match))
+      commit('SET_TOURNAMENT_MATCH', { tournament, match: newMatch })
+      const rawTournament = await api.getTournament(tournament)
+      commit('SET_TOURNAMENT', rawTournament)
     },
   }
 })

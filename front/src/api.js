@@ -112,6 +112,10 @@ export default {
   async getTournaments () {
     return (await axios.get('/tournaments')).data
   },
+  async getTournament (tournament) {
+    const id = tournament.id
+    return (await axios.get(`/tournaments/${id}`)).data
+  },
   async createTournament (params) {
     return (await axios.post('/tournaments', { tournament: params })).data
   },
@@ -144,6 +148,10 @@ export default {
   destroyTournamentLineup (tournament, team) {
     let id = team.id
     return axios.delete(`/tournaments/${tournament.id}/lineups/${id}`)
+  },
+  async updateTournamentMatch (tournament, match) {
+    const id = match.id
+    return (await axios.patch(`/matches/${id}`, { match: match })).data
   },
 
   createTournamentTeamParticipation (id, team) {
