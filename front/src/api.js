@@ -23,9 +23,8 @@ axios.interceptors.response.use(
 
 export default {
   async getUserWithToken (creds) {
-    let jwt, user
-    ({ data: { knock: { jwt }, user } } = await axios.post('/user_token', { auth: creds }))
-    return { user: user, token: jwt }
+    const { data: { knock: { jwt }, user } } = await axios.post('/user_token', { auth: creds })
+    return { user, token: jwt }
   },
   logIn (token) {
     axios.defaults.headers.common['Authorization'] = TOKEN_TYPE + token
@@ -41,8 +40,8 @@ export default {
     return (await axios.post('/users', { user })).data
   },
   async updateUser (user) {
-    let id = user.id
-    let params = {
+    const id = user.id
+    const params = {
       name: user.name,
       email: user.email,
       password: user.password,
@@ -58,7 +57,7 @@ export default {
     return (await axios.post('/games', { game: params })).data
   },
   async updateGame (params) {
-    let id = params.id
+    const id = params.id
     return (await axios.patch(`/games/${id}`, { game: params })).data
   },
   destroyGame (id) {
@@ -72,7 +71,7 @@ export default {
     return (await axios.post('/teams', { team: params })).data
   },
   async updateTeam (params) {
-    let id = params.id
+    const id = params.id
     return (await axios.patch(`/teams/${id}`, { team: params })).data
   },
   destroyTeam (id) {
@@ -86,7 +85,7 @@ export default {
     return (await axios.post('/friendly_matches', { match: params })).data
   },
   async updateMatch (params) {
-    let id = params.id
+    const id = params.id
     params = {
       team_one_id: params.team_one_id,
       team_two_id: params.team_two_id,
@@ -120,7 +119,7 @@ export default {
     return (await axios.post('/tournaments', { tournament: params })).data
   },
   async updateTournament (params) {
-    let id = params.id
+    const id = params.id
     params = {
       title: params.title,
       description: params.description,
@@ -139,14 +138,14 @@ export default {
     return (await axios.post(`tournaments/${tournament.id}/lineups`, { team: team })).data
   },
   async updateTournamentLineup (tournament, team) {
-    let id = team.id
+    const id = team.id
     team = {
       member_ids: team.member_ids,
     }
     return (await axios.patch(`/tournaments/${tournament.id}/lineups/${id}`, { team: team })).data
   },
   destroyTournamentLineup (tournament, team) {
-    let id = team.id
+    const id = team.id
     return axios.delete(`/tournaments/${tournament.id}/lineups/${id}`)
   },
   async updateTournamentMatch (tournament, match) {

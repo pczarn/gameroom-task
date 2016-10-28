@@ -224,7 +224,7 @@ export const store = new Vuex.Store({
       state.users = users
     },
     SET_USER (state, user) {
-      let idx = state.users.findIndex(({ id }) => id === user.id)
+      const idx = state.users.findIndex(({ id }) => id === user.id)
       state.users.splice(idx, 1, user)
     },
 
@@ -235,11 +235,11 @@ export const store = new Vuex.Store({
       state.games.push(game)
     },
     SET_GAME (state, game) {
-      let idx = state.games.findIndex(({ id }) => id === game.id)
+      const idx = state.games.findIndex(({ id }) => id === game.id)
       state.games.splice(idx, 1, game)
     },
     REMOVE_GAME (state, game) {
-      let idx = state.games.findIndex(({ id }) => id === game.id)
+      const idx = state.games.findIndex(({ id }) => id === game.id)
       state.games.splice(idx, 1)
     },
 
@@ -250,7 +250,7 @@ export const store = new Vuex.Store({
       state.teams.push(team)
     },
     SET_TEAM (state, team) {
-      let idx = state.teams.findIndex(({ id }) => id === team.id)
+      const idx = state.teams.findIndex(({ id }) => id === team.id)
       state.teams.splice(idx, 1, team)
     },
 
@@ -261,11 +261,11 @@ export const store = new Vuex.Store({
       state.matches.push(match)
     },
     SET_MATCH (state, match) {
-      let idx = state.matches.findIndex(({ id }) => id === match.id)
+      const idx = state.matches.findIndex(({ id }) => id === match.id)
       state.matches.splice(idx, 1, match)
     },
     REMOVE_MATCH (state, match) {
-      let idx = state.matches.findIndex(({ id }) => id === match.id)
+      const idx = state.matches.findIndex(({ id }) => id === match.id)
       state.matches.splice(idx, 1)
     },
     SET_MATCH_TEAM (state, { matchId, which, teamId }) {
@@ -284,27 +284,27 @@ export const store = new Vuex.Store({
       state.tournaments.push(tournament)
     },
     SET_TOURNAMENT (state, tournament) {
-      let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
+      const idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
       state.tournaments.splice(idx, 1, tournament)
     },
     REMOVE_TOURNAMENT (state, tournament) {
-      let idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
+      const idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
       state.tournaments.splice(idx, 1)
     },
 
     ADD_TEAM_TO_TOURNAMENT (state, { tournamentId, teamId }) {
-      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let team = state.teams.find(({ id }) => id === teamId)
+      const tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      const team = state.teams.find(({ id }) => id === teamId)
       tournament.teams.push(team)
     },
     REMOVE_TEAM_FROM_TOURNAMENT (state, { tournamentId, teamId }) {
-      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let teamIndex = tournament.teams.findIndex(({ id }) => id === teamId)
+      const tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      const teamIndex = tournament.teams.findIndex(({ id }) => id === teamId)
       tournament.teams.splice(teamIndex, 1)
     },
     SET_TOURNAMENT_TEAM (state, { tournamentId, fromTeam, toTeam }) {
-      let tournament = state.tournaments.find(({ id }) => id === tournamentId)
-      let teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
+      const tournament = state.tournaments.find(({ id }) => id === tournamentId)
+      const teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
       Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
     },
     SET_TOURNAMENT_MATCH (state, { tournament, match }) {
@@ -320,7 +320,7 @@ export const store = new Vuex.Store({
   },
   actions: {
     async LOG_IN ({ commit, dispatch }, creds) {
-      let userWithToken = await api.getUserWithToken(creds)
+      const userWithToken = await api.getUserWithToken(creds)
       commit('SET_CURRENT_USER_AND_TOKEN', userWithToken)
       auth.logIn(userWithToken)
       router.push('/')
@@ -353,7 +353,7 @@ export const store = new Vuex.Store({
     },
 
     async GET_USERS ({ commit }) {
-      let users = await api.getUsers()
+      const users = await api.getUsers()
       commit('SET_USER_LIST', users)
     },
     async CREATE_USER ({ dispatch }, userParams) {
@@ -361,7 +361,7 @@ export const store = new Vuex.Store({
       dispatch('LOG_IN', { email: userParams.email, password: userParams.password })
     },
     async UPDATE_USER ({ commit, getters }, userParams) {
-      let user = await api.updateUser(userParams)
+      const user = await api.updateUser(userParams)
       commit('SET_USER', user)
       if(getters.currentUser && user.id === getters.currentUser.id) {
         commit('SET_CURRENT_USER', user)
@@ -369,7 +369,7 @@ export const store = new Vuex.Store({
     },
 
     async GET_GAMES ({ commit }) {
-      let games = await api.getGames()
+      const games = await api.getGames()
       commit('SET_GAME_LIST', games)
     },
     async CREATE_GAME ({ commit }, game) {
@@ -386,7 +386,7 @@ export const store = new Vuex.Store({
     },
 
     async GET_TEAMS ({ commit }) {
-      let teams = await api.getTeams()
+      const teams = await api.getTeams()
       commit('SET_TEAM_LIST', teams)
     },
     async CREATE_TEAM ({ commit }, team) {
@@ -400,7 +400,7 @@ export const store = new Vuex.Store({
     },
 
     async GET_MATCHES ({ commit }) {
-      let teams = await api.getMatches()
+      const teams = await api.getMatches()
       commit('SET_MATCH_LIST', teams)
     },
     async CREATE_MATCH ({ commit, getters, dispatch }, match) {
@@ -469,7 +469,7 @@ export const store = new Vuex.Store({
     },
 
     async GET_TOURNAMENTS ({ commit }) {
-      let tournaments = await api.getTournaments()
+      const tournaments = await api.getTournaments()
       commit('SET_TOURNAMENT_LIST', tournaments)
     },
     async CREATE_TOURNAMENT ({ commit }, tournament) {

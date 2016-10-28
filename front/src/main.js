@@ -20,10 +20,10 @@ new Vue({
   store,
   render: h => h(App),
   beforeMount () {
-    let token = auth.getToken()
+    const token = auth.getToken()
     if(token) {
       api.logIn(token)
-      let currentUser = auth.getCurrentUser()
+      const currentUser = auth.getCurrentUser()
       this.$store.commit('SET_CURRENT_USER_AND_TOKEN', { user: currentUser, token: token })
       this.$store.dispatch('GET_EVERYTHING')
     } else {
