@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import TeamMemberList from './TeamMemberList'
 import TeamForm from './TeamForm'
