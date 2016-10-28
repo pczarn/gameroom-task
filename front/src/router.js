@@ -6,6 +6,8 @@ import auth from 'src/auth'
 
 import GameList from './components/GameList'
 import Game from './components/Game'
+import GameEdit from './components/GameEdit'
+import GameRemove from './components/GameRemove'
 import TeamList from './components/TeamList'
 import MatchList from './components/MatchList'
 import TournamentList from './components/TournamentList'
@@ -65,6 +67,16 @@ const routes = [
         path: 'matches',
         name: 'game matches',
         component: MatchList,
+      },
+      {
+        path: 'edit',
+        name: 'game edit',
+        component: GameEdit,
+      },
+      {
+        path: 'remove',
+        name: 'game remove',
+        component: GameRemove,
       },
     ],
   },

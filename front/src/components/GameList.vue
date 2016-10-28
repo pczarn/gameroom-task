@@ -10,7 +10,7 @@
   <h2>Active games</h2>
   <ul>
     <li v-for="game in activeGames">
-      <game-overview v-bind="game" :editable="isAdmin" @remove="destroy(game)">
+      <game-overview v-bind="game" :editable="isAdmin">
       </game-overview>
       <button v-if="isAdmin" @click="archivize(game)">Archivize</button>
     </li>
@@ -19,7 +19,7 @@
   <h2>Archivized games</h2>
   <ul>
     <li v-for="game in archivizedGames">
-      <game-overview v-bind="game" :editable="isAdmin" @remove="destroy(game)">
+      <game-overview v-bind="game" :editable="isAdmin">
       </game-overview>
       <button v-if="isAdmin" v-on:click="activate(game)">Activate</button>
     </li>
@@ -51,9 +51,6 @@ export default {
       await this.$store.dispatch('CREATE_GAME', game)
       this.newGame = {}
     },
-    destroy (game) {
-      this.$store.dispatch('DESTROY_GAME', game)
-    },
     archivize (game) {
       this.setArchivized(game, true)
     },
@@ -61,7 +58,10 @@ export default {
       this.setArchivized(game, false)
     },
     setArchivized (game, archivized) {
-      this.$store.dispatch('UPDATE_GAME', { state_archivized: archivized })
+      this.$store.dispatch('UPDATE_GAME', {
+        id: game.id,
+        state_archivized: archivized,
+      })
     },
   },
 }
