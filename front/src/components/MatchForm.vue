@@ -52,7 +52,9 @@
                      label="name"
                      key="name"
                      placeholder="Pick a member"
-                     @select="selectMemberOfTeamOne">
+                     @select="selectMemberOfTeamOne"
+                     :reset-after="true"
+        >
         </multiselect>
       </div>
       <span class="middle-col"></span>
@@ -68,7 +70,9 @@
                      label="name"
                      key="name"
                      placeholder="Pick a member"
-                     @select="selectMemberOfTeamTwo">
+                     @select="selectMemberOfTeamTwo"
+                     :reset-after="true"
+        >
         </multiselect>
       </div>
     </fieldset>
