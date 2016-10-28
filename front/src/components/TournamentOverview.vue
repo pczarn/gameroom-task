@@ -88,8 +88,7 @@ export default {
       let lastRound = this.rounds[this.rounds.length - 1]
       if(lastRound) {
         let lastMatch = lastRound[0]
-        let winner = [lastMatch.teamOne, lastMatch.teamTwo][lastMatch.winner]
-        return winner
+        return lastMatch.winner
       } else {
         return { name: '(unknown)' }
       }
