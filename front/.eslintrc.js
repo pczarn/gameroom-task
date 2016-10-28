@@ -25,5 +25,8 @@ module.exports = {
       exports: 'ignore',
       functions: 'ignore',
     }],
-  }
+  },
+  env: {
+    browser: true
+  },
 }
