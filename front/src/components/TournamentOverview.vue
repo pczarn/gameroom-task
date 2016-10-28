@@ -5,22 +5,24 @@
     Ready to start. Waiting for teams.
   </span>
   <span v-else>
-    <span v-if="startedAt">
-      <span v-if="futureStartDate">Will start on</span>
-      <span v-else>Started</span>
-
-      <timeago v-if="!futureStartDate" :since="startedAt"></timeago>
-      <span v-if="futureStartDate">{{ futureStartDate }}</span>
+    <span v-if="futureStartDate">
+      Will start on {{ futureStartDate }}
     </span>
-    <span v-else>
-      Without start date
-    </span>
+    <template v-else>
+      <template v-if="startedAt">
+        Started
+        <timeago :since="startedAt"></timeago>
+      </template>
+      <span v-else>
+        Without start date
+      </span>
+    </template>
   </span>
 
   <br>
 
-  <TournamentStatus v-if="isOpen" :status="teamsInfo" label="Teams"></TournamentStatus>
-  <TournamentStatus v-if="isStarted" :status="roundsInfo" label="Rounds"></TournamentStatus>
+  <tournament-status v-if="isOpen" :status="teamsInfo" label="Teams"></tournament-status>
+  <tournament-status v-if="isStarted" :status="roundsInfo" label="Rounds"></tournament-status>
   <span v-if="isEnded">Team {{ winningTeam && winningTeam.name }} won</span>
 
   <router-link :to="{ name: 'tournament', params: { id } }">See more</router-link>
@@ -65,7 +67,7 @@ export default {
       return new Date(this.startedAt) < new Date()
     },
     futureStartDate () {
-      if(new Date(this.startedAt) > new Date()) {
+      if(this.startedAt && new Date(this.startedAt) > new Date()) {
         return moment(this.startedAt).format('YYYY-MM-DD HH:MM')
       }
     },
