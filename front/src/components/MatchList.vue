@@ -34,7 +34,7 @@ export default {
     filteredMatches () {
       let matchList = this.matchList
       if(this.user) {
-        let userId = this.user.id
+        const userId = this.user.id
         matchList = matchList.filter(match => {
           return match.owner.id === userId ||
             match.teamOne && match.teamOne.members.some(m => m.id === userId) ||

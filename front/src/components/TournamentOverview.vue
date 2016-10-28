@@ -81,15 +81,15 @@ export default {
       return {
         size: this.rounds.length,
         slots: this.rounds.map((round, idx) => {
-          let numberOfMatches = Math.pow(2, this.rounds.length - 1 - idx)
+          const numberOfMatches = Math.pow(2, this.rounds.length - 1 - idx)
           return [round.length, numberOfMatches]
         }),
       }
     },
     winningTeam () {
-      let lastRound = this.rounds[this.rounds.length - 1]
+      const lastRound = this.rounds[this.rounds.length - 1]
       if(lastRound) {
-        let lastMatch = lastRound[0]
+        const lastMatch = lastRound[0]
         return lastMatch.winner
       } else {
         return { name: '(unknown)' }
