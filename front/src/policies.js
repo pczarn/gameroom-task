@@ -40,4 +40,13 @@ export default {
     const leave = team.members.map(m => m.id).includes(userId)
     return { join, leave, addMember: notFull }
   },
+  tournamentMatchPolicy (tournament, match) {
+    const userId = store.getters.currentUser && store.getters.currentUser.id
+    const canEditTournament = this.tournamentPolicy(tournament).update
+    const isMember = match.teamOne.members.some(m => m.id === userId) ||
+        match.teamTwo.members.some(m => m.id === userId)
+    const scoreNotSet = typeof match.teamOneScore !== 'number' || typeof match.teamTwoScore !== 'number'
+    const update = scoreNotSet && (isMember || canEditTournament)
+    return { update }
+  },
 }

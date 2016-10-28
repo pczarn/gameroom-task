@@ -35,7 +35,8 @@
 
   <div v-show="showRounds">
     <h3>Rounds</h3>
-    <round v-for="(round, index) in tournament.rounds" :matches="round" :number="index"></round>
+    <round v-for="(round, index) in tournament.rounds" :matches="round" :number="index" :tournament="tournament">
+    </round>
   </div>
 
   <div v-show="showEdit" v-if="canEdit">
