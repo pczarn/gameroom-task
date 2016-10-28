@@ -107,7 +107,7 @@ export default {
   computed: {
     potentialPlayers () {
       if(this.match.teamOne.members && this.match.teamTwo.members) {
-        let selected = (this.match.teamOne.members.concat(this.match.teamTwo.members)).map(m => m.id)
+        const selected = (this.match.teamOne.members.concat(this.match.teamTwo.members)).map(m => m.id)
         return this.userList.filter(user => !selected.includes(user.id))
       } else {
         return this.userList
@@ -117,8 +117,8 @@ export default {
   },
   methods: {
     remove (whichTeam, member) {
-      let newTeam = this.match[whichTeam]
-      let memberIdx = newTeam.members.findIndex(m => m.id === member.id)
+      const newTeam = this.match[whichTeam]
+      const memberIdx = newTeam.members.findIndex(m => m.id === member.id)
       newTeam.members.splice(memberIdx, 1)
       this.match[whichTeam] = newTeam
     },

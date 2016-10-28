@@ -20,7 +20,7 @@ export default {
         if(!limit) {
           return { class: 'full', text: number }
         } else {
-          let defaultText = `${number}/${limit}`
+          const defaultText = `${number}/${limit}`
           return {
             class: number == limit ? 'full' : 'present',
             text: defaultText,
@@ -29,7 +29,7 @@ export default {
       })
     },
     slots () {
-      let rest = Array(this.status.size - this.present.length).fill({ class: '', text: '' })
+      const rest = Array(this.status.size - this.present.length).fill({ class: '', text: '' })
       return this.present.concat(rest)
     },
   },
