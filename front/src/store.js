@@ -18,6 +18,7 @@ function enrichMatch(match) {
     teamOne: store.getters.teamMap.get(match.team_one_id),
     teamTwo: store.getters.teamMap.get(match.team_two_id),
     game: store.getters.gameMap.get(match.game_id),
+    winner: match.winner_id !== undefined && store.getters.teamMap.get(match.winner_id),
   }
 }
 
