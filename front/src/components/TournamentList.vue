@@ -9,7 +9,8 @@
 
   <h2>Add a tournament</h2>
   <tournament-form button-text="Add a tournament"
-                   @submit="add()">
+                   @submit="add"
+                   :clear-on-submit="true">
   </tournament-form>
 </div>
 </template>
@@ -51,9 +52,8 @@ export default {
     ...mapGetters(['tournamentList']),
   },
   methods: {
-    async add () {
-      await this.$store.dispatch('CREATE_TOURNAMENT', this.newTournament)
-      this.newTournament = { teams: [] }
+    async add (newTournament) {
+      await this.$store.dispatch('CREATE_TOURNAMENT', newTournament)
     },
   },
 }
