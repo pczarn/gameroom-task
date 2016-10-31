@@ -66,6 +66,7 @@ export default {
       },
     },
     buttonText: String,
+    clearOnSubmit: Boolean,
   },
   components: {
     Multiselect,
@@ -122,6 +123,9 @@ export default {
     },
     submit () {
       this.$emit('submit', this.tournament)
+      if(this.clearOnSubmit) {
+        this.tournament = { teams: [], game: {} }
+      }
     },
   },
 }
