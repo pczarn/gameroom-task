@@ -1,3 +1,7 @@
+import api from 'src/api'
+import auth from 'src/auth'
+import router from 'src/router'
+
 import {
   SET_CURRENT_USER_AND_TOKEN,
   SET_CURRENT_USER,
@@ -37,5 +41,19 @@ const mutations = {
   },
 }
 
-export default { state, getters, mutations }
+const actions = {
+  async LOG_IN ({ commit, dispatch }, creds) {
+    const userWithToken = await api.getUserWithToken(creds)
+    commit('SET_CURRENT_USER_AND_TOKEN', userWithToken)
+    auth.logIn(userWithToken)
+    router.push('/')
+    dispatch('GET_EVERYTHING')
+  },
+  LOG_OUT ({ commit }) {
+    auth.logOut()
+    commit('RESET_CURRENT_USER_AND_TOKEN')
+  },
+}
+
+export default { state, getters, mutations, actions }
 export { mutations }
