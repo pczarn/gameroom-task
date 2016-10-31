@@ -1,3 +1,6 @@
+import api from 'src/api'
+import _ from 'lodash'
+
 import {
   SET_USER_LIST,
   SET_USER,
@@ -28,5 +31,23 @@ const mutations = {
   },
 }
 
-export default { state, getters, mutations }
+const actions = {
+  async GET_USERS ({ commit }) {
+    const users = await api.getUsers()
+    commit('SET_USER_LIST', users)
+  },
+  async CREATE_USER ({ dispatch }, userParams) {
+    await api.createUser(userParams)
+    dispatch('LOG_IN', { email: userParams.email, password: userParams.password })
+  },
+  async UPDATE_USER ({ commit, getters }, userParams) {
+    const user = await api.updateUser(userParams)
+    commit('SET_USER', user)
+    if(getters.currentUser && user.id === getters.currentUser.id) {
+      commit('SET_CURRENT_USER', user)
+    }
+  },
+}
+
+export default { state, getters, mutations, actions }
 export { mutations }
