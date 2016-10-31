@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueTimeago from 'vue-timeago'
 
-import App from './App'
+import App from 'src/App'
 import api from 'src/api'
 import auth from 'src/auth'
 import store from 'src/store'
