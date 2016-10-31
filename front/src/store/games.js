@@ -1,3 +1,4 @@
+import api from 'src/api'
 import {
   SET_GAME_LIST,
   ADD_GAME,
@@ -47,5 +48,27 @@ const mutations = {
   },
 }
 
-export default { state, getters, mutations }
+const actions = {
+  async GET_GAMES ({ commit }) {
+    const games = await api.getGames()
+    commit('SET_GAME_LIST', games)
+  },
+
+  async CREATE_GAME ({ commit }, game) {
+    game = await api.createGame(game)
+    commit('ADD_GAME', game)
+  },
+
+  async UPDATE_GAME ({ commit }, game) {
+    game = await api.updateGame(game)
+    commit('SET_GAME', game)
+  },
+
+  async DESTROY_GAME ({ commit }, { id }) {
+    await api.destroyGame(id)
+    commit('REMOVE_GAME', { id: id })
+  },
+}
+
+export default { state, getters, mutations, actions }
 export { mutations }

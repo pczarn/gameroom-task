@@ -18,5 +18,11 @@ const mutations = {
   },
 }
 
-export default { state, getters, mutations }
+const actions = {
+  SET_ERROR ({ commit }, alert) {
+    commit('SET_ERROR', alert)
+  },
+}
+
+export default { state, getters, mutations, actions }
 export { mutations }

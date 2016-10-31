@@ -1,9 +1,11 @@
+import api from 'src/api'
+
 import {
   SET_TEAM_LIST,
   ADD_TEAM,
   SET_TEAM,
 } from './mutation_types'
-import { enrichTeam } from 'src/store/mapping'
+import { enrichTeam, rawTeam } from 'src/store/mapping'
 
 const state = {
   teams: [],
@@ -42,5 +44,21 @@ const mutations = {
   },
 }
 
-export default { state, getters, mutations }
+const actions = {
+  async GET_TEAMS ({ commit }) {
+    const teams = await api.getTeams()
+    commit('SET_TEAM_LIST', teams)
+  },
+  async CREATE_TEAM ({ commit }, team) {
+    team = await api.createTeam(rawTeam(team))
+    commit('ADD_TEAM', team)
+    return team
+  },
+  async UPDATE_TEAM ({ commit }, team) {
+    team = await api.updateTeam(rawTeam(team))
+    commit('SET_TEAM', team)
+  },
+}
+
+export default { state, getters, mutations, actions }
 export { mutations }
