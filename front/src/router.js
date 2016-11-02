@@ -16,12 +16,18 @@ import Dashboard from 'components/Dashboard'
 import Team from 'components/Team'
 import Account from 'components/Account'
 
-import TournamentList from 'components/tournament/List'
-import TournamentShow from 'components/tournament/Show'
-import RoundList from 'components/tournament/RoundList'
-import TournamentTeamList from 'components/tournament/TeamList'
-import TournamentEdit from 'components/tournament/Edit'
-import TournamentDelete from 'components/tournament/Delete'
+const TournamentList =
+  r => require.ensure([], _ => r(require('components/tournament/List')), 'tournaments')
+const TournamentShow =
+  r => require.ensure([], _ => r(require('components/tournament/Show')), 'tournaments')
+const RoundList =
+  r => require.ensure([], _ => r(require('components/tournament/RoundList')), 'tournaments')
+const TournamentTeamList =
+  r => require.ensure([], _ => r(require('components/tournament/TeamList')), 'tournaments')
+const TournamentEdit =
+  r => require.ensure([], _ => r(require('components/tournament/Edit')), 'tournaments')
+const TournamentDelete =
+  r => require.ensure([], _ => r(require('components/tournament/Delete')), 'tournaments')
 
 Vue.use(VueRouter)
 
@@ -96,7 +102,6 @@ const routes = [
   {
     path: '/tournaments',
     component: TournamentList,
-    // component: resolve => require(['./components/TournamentList', './components/Tournament'], resolve)
   },
   {
     path: '/tournaments/:id',
