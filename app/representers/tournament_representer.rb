@@ -20,14 +20,15 @@ class TournamentRepresenter < BaseRepresenter
 
   def with_teams_and_rounds
     basic.merge(
-      rounds: RoundsRepresenter.new(tournament.rounds).basic,
+      rounds: RoundsRepresenter.new(tournament.rounds.sort_by(&:number)).basic,
       teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).basic,
     )
   end
 
   def with_permissions(current_user)
     basic.merge(
-      rounds: RoundsRepresenter.new(tournament.rounds).with_permissions(current_user),
+      rounds: RoundsRepresenter.new(tournament.rounds.sort_by(&:number))
+              .with_permissions(current_user),
       editable: TournamentPolicy.new(current_user, tournament).update?,
     )
   end

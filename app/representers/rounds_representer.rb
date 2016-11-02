@@ -6,7 +6,7 @@ class RoundsRepresenter < BaseRepresenter
   end
 
   def basic
-    rounds.sort_by(&:number).map { |round| RoundRepresenter.new(round).basic }
+    rounds.map { |round| RoundRepresenter.new(round).basic }
   end
 
   def with_permissions(current_user)
