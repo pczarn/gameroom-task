@@ -10,17 +10,18 @@ import GameEdit from 'components/GameEdit'
 import GameRemove from 'components/GameRemove'
 import TeamList from 'components/TeamList'
 import MatchList from 'components/MatchList'
-import TournamentList from 'components/TournamentList'
-import Tournament from 'components/Tournament'
 import Match from 'components/Match'
 import Login from 'components/Login'
 import Dashboard from 'components/Dashboard'
 import Team from 'components/Team'
 import Account from 'components/Account'
-import RoundList from 'components/RoundList'
-import TournamentTeamList from 'components/TournamentTeamList'
-import TournamentEdit from 'components/TournamentEdit'
-import TournamentDelete from 'components/TournamentDelete'
+
+import TournamentList from 'components/tournament/List'
+import TournamentShow from 'components/tournament/Show'
+import RoundList from 'components/tournament/RoundList'
+import TournamentTeamList from 'components/tournament/TeamList'
+import TournamentEdit from 'components/tournament/Edit'
+import TournamentDelete from 'components/tournament/Delete'
 
 Vue.use(VueRouter)
 
@@ -100,7 +101,7 @@ const routes = [
   {
     path: '/tournaments/:id',
     name: 'tournament',
-    component: Tournament,
+    component: TournamentShow,
     redirect: '/tournaments/:id/rounds',
     children: [
       {

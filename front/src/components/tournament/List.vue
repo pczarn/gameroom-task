@@ -1,4 +1,4 @@
-<template>
+j<template>
 <div class="tournaments">
   <h1>Tournaments</h1>
   <ul>
@@ -15,8 +15,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TournamentOverview from './TournamentOverview'
-import TournamentCreate from './TournamentCreate'
+import TournamentOverview from './Overview'
+import TournamentCreate from './Create'
 
 export default {
   name: 'TournamentList',
