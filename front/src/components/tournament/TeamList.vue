@@ -11,7 +11,7 @@
 
 <script>
 import policies from 'src/policies'
-import TournamentTeamOverview from './TournamentTeamOverview'
+import TournamentTeamOverview from './TeamOverview'
 
 export default {
   components: {

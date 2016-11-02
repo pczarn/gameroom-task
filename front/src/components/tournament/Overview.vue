@@ -31,7 +31,7 @@
 
 <script>
 import moment from 'moment'
-import TournamentStatus from './TournamentStatus'
+import TournamentStatus from './Status'
 
 export default {
   name: 'TournamentOverview',

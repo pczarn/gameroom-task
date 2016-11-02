@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { mapActions } from 'vuex'
-import TournamentForm from './TournamentForm'
+import TournamentForm from './Form'
 
 export default {
   mixins: [TournamentForm],
