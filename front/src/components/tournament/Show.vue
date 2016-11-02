@@ -44,12 +44,10 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import axios from 'axios'
 import { mapGetters } from 'vuex'
 import policies from 'src/policies'
-import TournamentTeamList from './TournamentTeamList'
-import TournamentForm from './TournamentForm'
+import TournamentTeamList from './TeamList'
+import TournamentForm from './Form'
 import Round from './Round'
 
 export default {

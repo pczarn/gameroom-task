@@ -43,7 +43,7 @@
 <script>
 import moment from 'moment'
 import policies from 'src/policies'
-import Team from './Team'
+// import Team from '../Team'
 import { score } from 'src/util'
 
 export default {
@@ -57,7 +57,7 @@ export default {
     tournament: Object,
   },
   components: {
-    Team,
+    // Team,
   },
   data () {
     const playedAtLocal = moment(this.playedAt).toISOString().replace('Z', '')
