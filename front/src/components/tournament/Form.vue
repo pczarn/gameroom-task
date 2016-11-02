@@ -51,6 +51,7 @@ import Multiselect from 'vue-multiselect'
 import SelectTeam from './SelectTeam'
 
 export default {
+  name: 'TournamentForm',
   props: {
     tournament: {
       type: Object,
