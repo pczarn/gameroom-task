@@ -13,8 +13,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TeamOverview from './TeamOverview'
-import TeamForm from './TeamForm'
+import TeamOverview from './Overview'
+import TeamForm from './Form'
 
 export default {
   name: 'TeamList',

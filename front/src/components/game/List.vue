@@ -29,8 +29,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import GameOverview from './GameOverview'
-import GameForm from './GameForm'
+import GameOverview from './Overview'
+import GameForm from './Form'
 
 export default {
   name: 'GameList',

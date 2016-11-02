@@ -4,17 +4,20 @@ import VueRouter from 'vue-router'
 import store from 'src/store'
 import auth from 'src/auth'
 
-import GameList from 'components/GameList'
-import Game from 'components/Game'
-import GameEdit from 'components/GameEdit'
-import GameRemove from 'components/GameRemove'
-import TeamList from 'components/TeamList'
-import MatchList from 'components/MatchList'
-import Match from 'components/Match'
+import GameList from 'components/game/List'
+import Game from 'components/game/Show'
+import GameEdit from 'components/game/Edit'
+import GameRemove from 'components/game/Remove'
+
+import TeamList from 'components/team/List'
+import Team from 'components/team/Show'
+
+import MatchList from 'components/match/List'
+import Match from 'components/match/Show'
+
 import Login from 'components/Login'
 import Dashboard from 'components/Dashboard'
-import Team from 'components/Team'
-import Account from 'components/Account'
+import AccountEdit from 'components/account/Edit'
 
 const TournamentList =
   r => require.ensure([], _ => r(require('components/tournament/List')), 'tournaments')
@@ -57,7 +60,7 @@ const routes = [
   },
   {
     path: '/account',
-    component: Account,
+    component: AccountEdit,
   },
   {
     path: '/games',

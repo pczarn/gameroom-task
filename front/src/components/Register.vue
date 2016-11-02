@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import AccountForm from './AccountForm'
+import AccountForm from 'src/components/account/Form'
 
 export default {
   components: {

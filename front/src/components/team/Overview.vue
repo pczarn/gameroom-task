@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import TeamMemberList from './TeamMemberList'
+import TeamMemberList from './MemberList'
 
 export default {
   name: 'TeamOverview',
