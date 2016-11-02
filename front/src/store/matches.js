@@ -67,7 +67,6 @@ const actions = {
     const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
     const currentTeamOne = getters.teamMap.get(match.teamOne.id)
     const currentTeamTwo = getters.teamMap.get(match.teamTwo.id)
-    // console.log(teamOneMemberIds, currentTeamOne)
     if(!currentTeamOne || !_.isEqual(teamOneMemberIds, currentTeamOne.members.map(m => m.id).sort())) {
       const reusedTeam = getters.teamByMemberIdsMap.get(teamOneMemberIds.toString())
       if(reusedTeam) {
