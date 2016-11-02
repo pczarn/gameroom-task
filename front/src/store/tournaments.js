@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios'
 import api from 'src/api'
 import _ from 'lodash'
 
@@ -12,7 +13,7 @@ import {
   SET_TOURNAMENT_TEAM,
   SET_TOURNAMENT_MATCH,
 } from './mutation_types'
-import { enrichTournament } from 'src/store/mapping'
+import { enrichTournament, rawTournamentParams, rawTeam, rawTournament, rawMatch } from 'src/store/mapping'
 
 const state = {
   tournaments: [],
@@ -139,5 +140,5 @@ const actions = {
   },
 }
 
-export default { state, getters, mutations }
+export default { state, getters, mutations, actions }
 export { mutations }
