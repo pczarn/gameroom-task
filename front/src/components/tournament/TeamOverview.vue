@@ -23,8 +23,8 @@
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
 import policies from 'src/policies'
-import TeamMemberList from '../TeamMemberList'
 import Multiselect from 'vue-multiselect'
+import TeamMemberList from 'src/components/team/MemberList'
 
 export default {
   name: 'TournamentTeamOverview',

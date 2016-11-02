@@ -45,13 +45,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import TeamMemberList from './TeamMemberList'
-import MatchForm from './MatchForm'
 import policies from 'src/policies'
 import { score } from 'src/util'
+import TeamMemberList from 'src/components/team/MemberList'
+import MatchForm from './Form'
 
 export default {
   name: 'Match',
