@@ -17,8 +17,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TeamMemberList from './TeamMemberList'
-import TeamForm from './TeamForm'
+import TeamMemberList from './MemberList'
+import TeamForm from './Form'
 import policies from 'src/policies'
 
 export default {

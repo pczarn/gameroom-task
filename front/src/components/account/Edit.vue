@@ -9,10 +9,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import AccountForm from './AccountForm'
+import AccountForm from './Form'
 
 export default {
-  name: 'Account',
+  name: 'AccountEdit',
   components: {
     AccountForm,
   },

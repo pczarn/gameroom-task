@@ -17,8 +17,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import MatchOverview from './MatchOverview'
-import MatchForm from './MatchForm'
+import MatchOverview from './Overview'
+import MatchForm from './Form'
 
 export default {
   name: 'MatchList',
