@@ -37,16 +37,8 @@
       </li>
     </ul>
 
-    Add a team
-    <multiselect :options="potentialTeams"
-                 :searchable="true"
-                 label="name"
-                 track-by="name"
-                 placeholder="Pick a team"
-                 @input="selectTeam"
-                 :reset-after="true"
-    >
-    </multiselect>
+    <select-team :tournament="tournamentClone" @input="addTeam">
+    </select-team>
   </fieldset>
   <button type="submit">{{ buttonText }}</button>
 </form>
@@ -56,6 +48,7 @@
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
+import SelectTeam from './SelectTeam'
 
 export default {
   props: {
@@ -68,6 +61,7 @@ export default {
   },
   components: {
     Multiselect,
+    SelectTeam,
   },
   data () {
     return {
@@ -90,11 +84,7 @@ export default {
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
     },
-    potentialTeams () {
-      const memberNotInTournament = member => !this.playerIds.has(member.id)
-      return this.teamList.filter(team => team.members.every(memberNotInTournament))
-    },
-    ...mapGetters(['tournamentMap', 'teamList', 'userList', 'gameList', 'currentUser', 'isAdmin']),
+    ...mapGetters(['userList', 'gameList']),
   },
   methods: {
     selectMemberInTeam (team, member) {
@@ -102,7 +92,7 @@ export default {
         team.members.push(member)
       }
     },
-    selectTeam (team) {
+    addTeam (team) {
       if(team) {
         this.tournamentClone.teams.push(team)
       }
