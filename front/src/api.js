@@ -135,7 +135,11 @@ export default {
   },
 
   async createTournamentLineup (tournament, team) {
-    return (await axios.post(`tournaments/${tournament.id}/lineups`, { team: team })).data
+    if(team.id) {
+      return (await axios.post(`tournaments/${tournament.id}/lineups`, { team_id: team.id })).data
+    } else {
+      return (await axios.post(`tournaments/${tournament.id}/lineups`, { team: team })).data
+    }
   },
   async updateTournamentLineup (tournament, team) {
     const id = team.id
