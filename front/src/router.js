@@ -17,6 +17,10 @@ import Login from 'components/Login'
 import Dashboard from 'components/Dashboard'
 import Team from 'components/Team'
 import Account from 'components/Account'
+import RoundList from 'components/RoundList'
+import TournamentTeamList from 'components/TournamentTeamList'
+import TournamentEdit from 'components/TournamentEdit'
+import TournamentDelete from 'components/TournamentDelete'
 
 Vue.use(VueRouter)
 
@@ -97,22 +101,27 @@ const routes = [
     path: '/tournaments/:id',
     name: 'tournament',
     component: Tournament,
+    redirect: '/tournaments/:id/rounds',
     children: [
       {
         path: 'rounds',
         name: 'tournament rounds',
+        component: RoundList,
       },
       {
         path: 'teams',
         name: 'tournament teams',
+        component: TournamentTeamList,
       },
       {
         path: 'update',
         name: 'tournament update',
+        component: TournamentEdit,
       },
       {
         path: 'delete',
         name: 'tournament delete',
+        component: TournamentDelete,
       },
     ],
   },
