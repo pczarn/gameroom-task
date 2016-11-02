@@ -1,6 +1,7 @@
 <template>
-<div>
+<div v-show="alert">
   {{ alert }}
+  <a href="#" @click.prevent="clear">X</a>
 </div>
 </template>
 
@@ -9,6 +10,11 @@ import { mapGetters } from 'vuex'
 
 export default {
   computed: mapGetters(['alert']),
+  methods: {
+    clear () {
+      this.$store.commit('SET_ERROR', null)
+    },
+  },
 }
 </script>
 
