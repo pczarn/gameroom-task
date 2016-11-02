@@ -1,8 +1,11 @@
+<script>
+import Vue from 'vue'
 import axios from 'axios'
 import { mapActions } from 'vuex'
 import TournamentForm from './Form'
 
 export default {
+  name: 'TournamentEdit',
   mixins: [TournamentForm],
   data () {
     return {
@@ -24,3 +27,4 @@ export default {
     }),
   },
 }
+</script>
