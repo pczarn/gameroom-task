@@ -26,7 +26,7 @@
 
 <script>
 import moment from 'moment'
-import Team from './Team'
+import Team from 'src/components/team/Show'
 import { score } from 'src/util'
 
 export default {

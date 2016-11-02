@@ -1,5 +1,4 @@
 <script>
-import Vue from 'vue'
 import TournamentForm from './Form'
 
 export default {

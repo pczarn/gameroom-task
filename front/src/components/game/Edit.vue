@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import GameForm from './GameForm'
+import GameForm from './Form'
 
 export default {
   name: 'Game',
