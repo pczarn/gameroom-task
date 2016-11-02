@@ -9,6 +9,7 @@ class TournamentRepresenter < BaseRepresenter
     {
       id: tournament.id,
       title: tournament.title,
+      description: tournament.description,
       started_at: tournament.started_at,
       status: tournament.status,
       image_url: tournament.image.url,
