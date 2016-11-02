@@ -3,7 +3,7 @@
     <ul>
       <li v-for="member in members">
         {{ member.name }}
-        <button v-if="editable" @click.prevent="$emit('remove', member)">X</button>
+        <button v-if="editable" @click.prevent="remove(member)">X</button>
       </li>
     </ul>
   </div>
@@ -17,6 +17,11 @@ export default {
     editable: {
       type: Boolean,
       default: false,
+    },
+  },
+  methods: {
+    remove (member) {
+      this.$emit('remove', member)
     },
   },
 }
