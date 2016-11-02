@@ -9,7 +9,12 @@
 </template>
 
 <script>
+import Round from './Round'
+
 export default {
+  components: {
+    Round,
+  },
   props: {
     tournament: Object,
   },
