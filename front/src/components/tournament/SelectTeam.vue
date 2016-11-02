@@ -18,6 +18,7 @@ import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 
 export default {
+  name: 'TournamentSelectTeam',
   components: {
     Multiselect,
   },
