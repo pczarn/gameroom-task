@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import TournamentMatch from './TournamentMatch'
+import TournamentMatch from './Match'
 
 export default {
   props: {
