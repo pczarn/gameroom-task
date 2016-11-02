@@ -71,7 +71,7 @@ export default {
         { attrs: { name: 'description', type: 'textarea' }, label: 'Description' },
         { attrs: { name: 'image', type: 'file', accept: "image/*" }, label: 'Image' },
         { attrs: { name: 'numberOfTeams', type: 'number' }, label: 'Number of teams' },
-        { attrs: { name: 'number_of_members_per_team', type: 'num' }, label: 'Number of members per team' },
+        { attrs: { name: 'numberOfMembersPerTeam', type: 'num' }, label: 'Number of members per team' },
         { attrs: { name: 'startedAt', type: 'datetime-local' }, label: 'Starts at' },
       ],
       tournamentClone: _.cloneDeep(this.tournament),
