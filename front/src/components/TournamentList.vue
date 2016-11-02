@@ -8,17 +8,15 @@
   </ul>
 
   <h2>Add a tournament</h2>
-  <tournament-form button-text="Add a tournament"
-                   @submit="add"
-                   :clear-on-submit="true">
-  </tournament-form>
+  <tournament-create>
+  </tournament-create>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import TournamentOverview from './TournamentOverview'
-import TournamentForm from './TournamentForm'
+import TournamentCreate from './TournamentCreate'
 
 export default {
   name: 'TournamentList',
@@ -28,7 +26,7 @@ export default {
   },
   components: {
     TournamentOverview,
-    TournamentForm,
+    TournamentCreate,
   },
   data () {
     return {
@@ -50,11 +48,6 @@ export default {
       return list
     },
     ...mapGetters(['tournamentList']),
-  },
-  methods: {
-    async add (newTournament) {
-      await this.$store.dispatch('CREATE_TOURNAMENT', newTournament)
-    },
   },
 }
 </script>
