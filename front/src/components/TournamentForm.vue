@@ -110,11 +110,8 @@ export default {
       }
     },
     removeTeam (team) {
-      console.log(this.tournament, this.tournament.teams.length)
       const teamIdx = this.tournament.teams.findIndex(t => t.id === team.id)
-      console.log(teamIdx)
       this.tournament.teams.splice(teamIdx, 1)
-      console.log(this.tournament.teams.length)
       this.tournament = this.tournament
     },
     removeMember (team, member) {
