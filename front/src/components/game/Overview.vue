@@ -16,9 +16,5 @@ export default {
     image_url: String,
     image_thumb_url: String,
   },
-  data () {
-    return {
-    }
-  },
 }
 </script>

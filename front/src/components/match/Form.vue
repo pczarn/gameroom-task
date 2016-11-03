@@ -93,13 +93,9 @@ export default {
     Multiselect,
   },
   data () {
-    const blankMatch = { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} }
-    const match = _.cloneDeep(this.currentMatch || blankMatch)
-    const playedAtLocal = moment(match.playedAt).toISOString().replace('Z', '')
     return {
-      blankMatch,
-      match,
-      playedAtLocal,
+      match: { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} },
+      playedAtLocal: null,
       teamOneName: '',
       teamTwoName: '',
     }

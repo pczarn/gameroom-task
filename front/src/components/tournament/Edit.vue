@@ -1,5 +1,5 @@
 <script>
-import Vue from 'vue'
+import _ from 'lodash'
 import axios from 'axios'
 import { mapActions } from 'vuex'
 import TournamentForm from './Form'
@@ -11,6 +11,9 @@ export default {
     return {
       buttonText: 'Update the tournament',
     }
+  },
+  created () {
+    this.tournament = _.cloneDeep(this.currentTournament)
   },
   methods: {
     async submit () {
