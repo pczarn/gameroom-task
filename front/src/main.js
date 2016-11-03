@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueTimeago from 'vue-timeago'
+import { sync } from 'vuex-router-sync'
 
 import App from 'src/App'
 import api from 'src/api'
@@ -14,6 +15,8 @@ Vue.use(VueTimeago, {
     'en-US': require('vue-timeago/locales/en-US.json')
   },
 })
+
+sync(store, router)
 
 new Vue({
   router,
