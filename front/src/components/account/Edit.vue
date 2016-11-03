@@ -1,27 +1,25 @@
-<template>
-<div>
-  <account-form button-text="Update account"
-                :value="currentUser"
-                @submit="update">
-  </account-form>
-</div>
-</template>
-
 <script>
+import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import AccountForm from './Form'
 
 export default {
   name: 'AccountEdit',
-  components: {
-    AccountForm,
+  mixins: [AccountForm],
+  data () {
+    return {
+      buttonText: 'Update account',
+    }
+  },
+  created () {
+    this.user = _.cloneDeep(this.currentUser)
   },
   computed: {
     ...mapGetters(['currentUser']),
   },
   methods: {
-    update (user) {
-      this.$store.dispatch('UPDATE_USER', user)
+    submit () {
+      this.$store.dispatch('UPDATE_USER', this.user)
     },
   },
 }
