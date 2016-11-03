@@ -1,6 +1,5 @@
 <script>
 import _ from 'lodash'
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'TeamForm',
@@ -8,11 +7,8 @@ export default {
     const blankTeam = { name: '', members: [] }
     return {
       blankTeam,
-      team: _.cloneDeep(this.currentTeam || blankTeam),
+      team: _.cloneDeep(this.$store.getters.currentTeam || blankTeam),
     }
-  },
-  computed: {
-    ...mapGetters(['currentTeam']),
   },
 }
 </script>
