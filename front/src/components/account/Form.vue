@@ -22,20 +22,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
-
 export default {
-  props: {
-    value: Object,
-    buttonText: String,
-  },
   data () {
-    return { user: Vue.util.extend({}, this.value) }
-  },
-  methods: {
-    submit (event) {
-      this.$emit('submit', this.user)
-    },
+    return {
+      user: {},
+    }
   },
 }
 </script>
