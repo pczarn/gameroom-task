@@ -65,8 +65,8 @@ export function rawMatch(match) {
 }
 
 export function rawFriendlyMatch(match) {
-  match = rawMatch(match)
-  return Object.assign(match, {
+  const basicParams = rawMatch(match)
+  return Object.assign(basicParams, {
     team_one_id: match.teamOne.id,
     team_two_id: match.teamTwo.id,
     game_id: match.game.id,
