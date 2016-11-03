@@ -14,7 +14,7 @@ import alert from 'src/store/alert'
 
 Vue.use(Vuex)
 
-function getIdIfMatched(route, routeName, map) {
+function getIdIfMatched(route, routeName) {
   const id = parseInt(route.params.id)
   if(id && route.name.startsWith(routeName)) {
     return id
