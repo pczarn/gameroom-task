@@ -51,7 +51,7 @@ export default {
   methods: {
     async submit () {
       await this.$store.dispatch('CREATE_TEAM', this.team)
-      this.team = _.cloneDeep(this.blankTeam)
+      this.team = this.$options.data().team
     },
     selectMember (member) {
       this.team.members.push(member)

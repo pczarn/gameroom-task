@@ -1,4 +1,6 @@
 <script>
+import _ from 'lodash'
+import moment from 'moment'
 import MatchForm from './Form'
 
 export default {
@@ -8,6 +10,10 @@ export default {
     return {
       buttonText: 'Update match',
     }
+  },
+  created () {
+    this.match = _.cloneDeep(this.currentMatch)
+    this.playedAtLocal = moment(this.match.playedAt).toISOString().replace('Z', '')
   },
   methods: {
     submit () {
