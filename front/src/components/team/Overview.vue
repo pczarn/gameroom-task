@@ -19,12 +19,5 @@ export default {
   components: {
     TeamMemberList,
   },
-  data () {
-    return {
-      editable: false,
-    }
-  },
-  computed: {
-  },
 }
 </script>
