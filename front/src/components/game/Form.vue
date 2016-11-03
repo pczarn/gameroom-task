@@ -12,31 +12,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import _ from 'lodash'
-
 export default {
-  props: {
-    game: {
-      type: Object,
-      default () {
-        return {}
-      },
-    },
-  },
   data () {
-    const blankGame = {}
     return {
       schema: [
         { name: 'name', label: 'Name', type: 'text' },
         { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
       ],
-      blankGame,
-      game: _.cloneDeep(this.currentGame || blankGame),
+      game: {},
     }
-  },
-  computed: {
-    ...mapGetters(['currentGame']),
   },
 }
 </script>
