@@ -4,23 +4,20 @@
     <team-overview v-bind="team"></team-overview>
   </div>
 
-  <team-form button-text="Create team"
-             :create="true"
-             @submit="add">
-  </team-form>
+  <team-create></team-create>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import TeamOverview from './Overview'
-import TeamForm from './Form'
+import TeamCreate from './Create'
 
 export default {
   name: 'TeamList',
   components: {
     TeamOverview,
-    TeamForm,
+    TeamCreate,
   },
   props: {
     user: Object,
@@ -34,11 +31,6 @@ export default {
       return list
     },
     ...mapGetters(['teamList']),
-  },
-  methods: {
-    add (team) {
-      this.$store.dispatch('CREATE_TEAM', team)
-    },
   },
 }
 </script>

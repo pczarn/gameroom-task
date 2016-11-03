@@ -5,10 +5,7 @@
 
   <div v-if="editable">
     Update
-    <team-form button-text="Update team"
-               :value="team"
-               @submit="update">
-    </team-form>
+    <team-edit></team-edit>
   </div>
 
   <a href="#" @click.prevent="$router.go(-1)">Go back</a>
@@ -18,31 +15,22 @@
 <script>
 import { mapGetters } from 'vuex'
 import TeamMemberList from './MemberList'
-import TeamForm from './Form'
+import TeamEdit from './Edit'
 import policies from 'src/policies'
 
 export default {
   name: 'Team',
   components: {
     TeamMemberList,
-    TeamForm,
+    TeamEdit,
   },
   computed: {
-    id () {
-      return parseInt(this.$route.params.id)
-    },
-    team () {
-      return this.teamMap.get(this.id)
-    },
     editable () {
       return policies.teamPolicy(this.team).update
     },
-    ...mapGetters(['teamMap']),
-  },
-  methods: {
-    update (newTeam) {
-      this.$store.dispatch('UPDATE_TEAM', newTeam)
-    },
+    ...mapGetters({
+      team: 'currentTeam',
+    }),
   },
 }
 </script>
