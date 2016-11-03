@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import _ from 'lodash'
 import Multiselect from 'vue-multiselect'
 import { mapGetters } from 'vuex'
 
@@ -39,22 +39,11 @@ export default {
   components: {
     Multiselect,
   },
-  props: {
-    value: {
-      type: Object,
-      default () {
-        return {
-          name: '',
-          members: [],
-        }
-      },
-    },
-    buttonText: String,
-    create: Boolean,
-  },
   data () {
+    const blankTeam = { name: '', members: [] }
     return {
-      team: Vue.util.extend({}, this.value),
+      blankTeam,
+      team: _.cloneDeep(this.currentTeam || blankTeam),
     }
   },
   computed: {
@@ -62,7 +51,7 @@ export default {
       const selected = this.team.members.map(m => m.id)
       return this.userList.filter(user => !selected.includes(user.id))
     },
-    ...mapGetters(['userList']),
+    ...mapGetters(['currentTeam', 'userList']),
   },
   methods: {
     selectMember (member) {
@@ -71,12 +60,6 @@ export default {
     remove (member) {
       const idx = this.team.members.findIndex(m => m.id === member.id)
       this.team.members.splice(idx, 1)
-    },
-    submit () {
-      this.$emit('submit', this.team)
-      if(this.create) {
-        this.team = Vue.util.extend({}, this.value)
-      }
     },
   },
 }
