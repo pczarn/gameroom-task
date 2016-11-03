@@ -1,4 +1,5 @@
 <script>
+import _ from 'lodash'
 import MatchForm from './Form'
 
 export default {
@@ -12,7 +13,7 @@ export default {
   methods: {
     submit () {
       this.$store.dispatch('CREATE_MATCH', this.match)
-      this.match = this.$options.props.value.default()
+      this.match = _.cloneDeep(this.blankMatch)
     },
   },
 }

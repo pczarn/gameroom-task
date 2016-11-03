@@ -49,7 +49,7 @@ import TeamMemberList from 'src/components/team/MemberList'
 import MatchEdit from './Edit'
 
 export default {
-  name: 'Match',
+  name: 'MatchShow',
   components: {
     TeamMemberList,
     MatchEdit,
@@ -60,12 +60,6 @@ export default {
     },
     scoreTwo () {
       return score(this.match.teamTwoScore)
-    },
-    id () {
-      return parseInt(this.$route.params.id)
-    },
-    match () {
-      return this.matchMap.get(this.id)
     },
     playedAtFormatted () {
       return moment(this.match.playedAt).format('YYYY-MM-DD HH:MM')
@@ -81,6 +75,9 @@ export default {
       return policies.friendlyMatchPolicy(this.match).destroy
     },
     ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
+    ...mapGetters({
+      match: 'currentMatch',
+    }),
   },
   methods: {
     goBack () {

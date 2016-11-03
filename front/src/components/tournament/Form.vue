@@ -5,20 +5,20 @@
     <template v-for="field in schema">
       <label :for="field.attrs.name">{{ field.label }}</label>
       <br>
-      <input v-bind="field.attrs" v-model="tournamentClone[field.attrs.name]">
+      <input v-bind="field.attrs" v-model="tournament[field.attrs.name]">
       <br>
     </template>
   </fieldset>
-  <fieldset v-if="tournamentClone.game">
+  <fieldset v-if="tournament.game">
     <legend>Choose game</legend>
-    <select v-model="tournamentClone.game.id">
+    <select v-model="tournament.game.id">
       <option v-for="game in gameList" :value="game.id">{{ game.name }}</option>
     </select>
   </fieldset>
   <fieldset>
     <legend>Choose teams</legend>
     <ul>
-      <li v-for="team in tournamentClone.teams">
+      <li v-for="team in tournament.teams">
         Team {{ team.name }}
         <button @click.prevent="removeTeam(team)">Remove team</button>
         <div v-for="member in team.members">
@@ -37,7 +37,7 @@
       </li>
     </ul>
 
-    <select-team :tournament="tournamentClone" @input="addTeam">
+    <select-team :tournament="tournament" @input="addTeam">
     </select-team>
   </fieldset>
   <button type="submit">{{ buttonText }}</button>
@@ -52,19 +52,12 @@ import SelectTeam from './SelectTeam'
 
 export default {
   name: 'TournamentForm',
-  props: {
-    tournament: {
-      type: Object,
-      default () {
-        return { teams: [], game: {} }
-      },
-    },
-  },
   components: {
     Multiselect,
     SelectTeam,
   },
   data () {
+    const blankTournament = { teams: [], game: {} }
     return {
       schema: [
         { attrs: { name: 'title', type: 'text' }, label: 'Title' },
@@ -74,18 +67,19 @@ export default {
         { attrs: { name: 'numberOfMembersPerTeam', type: 'num' }, label: 'Number of members per team' },
         { attrs: { name: 'startedAt', type: 'datetime-local' }, label: 'Starts at' },
       ],
-      tournamentClone: _.cloneDeep(this.tournament),
+      blankTournament,
+      tournament: _.cloneDeep(this.currentTournament || blankTournament),
     }
   },
   computed: {
     playerIds () {
-      const teamMemberIds = this.tournamentClone.teams.map(t => t.members.map(m => m.id))
+      const teamMemberIds = this.tournament.teams.map(t => t.members.map(m => m.id))
       return new Set([].concat.apply([], teamMemberIds))
     },
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
     },
-    ...mapGetters(['userList', 'gameList']),
+    ...mapGetters(['userList', 'gameList', 'currentTournament']),
   },
   methods: {
     selectMemberInTeam (team, member) {
@@ -95,12 +89,12 @@ export default {
     },
     addTeam (team) {
       if(team) {
-        this.tournamentClone.teams.push(team)
+        this.tournament.teams.push(team)
       }
     },
     removeTeam (team) {
-      const teamIdx = this.tournamentClone.teams.findIndex(t => t.id === team.id)
-      this.tournamentClone.teams.splice(teamIdx, 1)
+      const teamIdx = this.tournament.teams.findIndex(t => t.id === team.id)
+      this.tournament.teams.splice(teamIdx, 1)
     },
     removeMember (team, member) {
       const memberIdx = team.members.findIndex(m => m.id === member.id)
