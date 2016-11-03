@@ -3,22 +3,19 @@
   <h1>Matches</h1>
   <ul class="matches">
     <li v-for="match in filteredMatches">
-      <match-overview v-bind="match" @remove="remove(match)"></match-overview>
+      <match-overview v-bind="match"></match-overview>
     </li>
   </ul>
 
   <h2>Add a match</h2>
-  <match-form button-text="Add the match"
-              clear-on-submit
-              @submit="add">
-  </match-form>
+  <match-create></match-create>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import MatchOverview from './Overview'
-import MatchForm from './Form'
+import MatchCreate from './Create'
 
 export default {
   name: 'MatchList',
@@ -28,7 +25,7 @@ export default {
   },
   components: {
     MatchOverview,
-    MatchForm,
+    MatchCreate,
   },
   computed: {
     filteredMatches () {
@@ -47,14 +44,6 @@ export default {
       return matchList
     },
     ...mapGetters(['matchList']),
-  },
-  methods: {
-    remove (match) {
-      this.$store.dispatch('REMOVE_MATCH', match)
-    },
-    add (newMatch) {
-      this.$store.dispatch('CREATE_MATCH', newMatch)
-    },
   },
 }
 </script>
