@@ -11,17 +11,17 @@
     <div class="alert">{{ error }}</div>
   </form>
   Register
-  <register></register>
+  <account-create></account-create>
 </div>
 </template>
 
 <script>
-import Register from './Register'
+import AccountCreate from 'src/components/account/Create'
 
 export default {
   name: 'Login',
   components: {
-    Register,
+    AccountCreate,
   },
   data: function () {
     return {
