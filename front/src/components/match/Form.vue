@@ -1,6 +1,6 @@
 <template>
 <div>
-  <form @submit.prevent="submit" v-if="match && match.teamOne && match.teamTwo">
+  <form @submit.prevent="prepareAndSubmit" v-if="match && match.teamOne && match.teamTwo">
     <fieldset class="row">
       <legend>Choose game</legend>
       <select v-model="match.game.id">
@@ -90,8 +90,6 @@ import _ from 'lodash'
 
 export default {
   props: {
-    buttonText: String,
-    clearOnSubmit: Boolean,
     value: {
       type: Object,
       default () {
@@ -132,23 +130,18 @@ export default {
       this.match.teamTwo.members.push(member)
     },
     setTeamOne (event) {
-      const id = parseInt(event.target.value)
-      // this.match.teamOne.id = id
-      const team = _.cloneDeep(this.teamMap.get(id))
+      const teamId = parseInt(event.target.value)
+      const team = _.cloneDeep(this.teamMap.get(teamId))
       this.match.teamOne = team
     },
     setTeamTwo (event) {
-      const id = parseInt(event.target.value)
-      // this.match.teamTwo.id = id
-      const team = _.cloneDeep(this.teamMap.get(id))
+      const teamId = parseInt(event.target.value)
+      const team = _.cloneDeep(this.teamMap.get(teamId))
       this.match.teamTwo = team
     },
-    submit () {
+    prepareAndSubmit () {
       this.match.playedAt = moment(this.playedAtLocal).toISOString()
-      this.$emit('submit', this.match)
-      if(this.clearOnSubmit) {
-        this.match = {}
-      }
+      this.submit()
     },
   },
 }
