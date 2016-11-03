@@ -3,9 +3,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  props: {
-    game: Object,
+  computed: {
+    ...mapGetters({
+      game: 'currentGame',
+    }),
   },
   methods: {
     async destroy () {

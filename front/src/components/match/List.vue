@@ -21,7 +21,6 @@ export default {
   name: 'MatchList',
   props: {
     user: Object,
-    game: Object,
   },
   components: {
     MatchOverview,
@@ -43,7 +42,10 @@ export default {
       }
       return matchList
     },
-    ...mapGetters(['matchList']),
+    ...mapGetters({
+      matchList: 'matchList',
+      game: 'currentGame',
+    }),
   },
 }
 </script>

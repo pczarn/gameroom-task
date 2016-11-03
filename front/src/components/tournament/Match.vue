@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import policies from 'src/policies'
 // import Team from '../Team'
@@ -54,7 +55,6 @@ export default {
     teamTwo: Object,
     teamOneScore: Number,
     teamTwoScore: Number,
-    tournament: Object,
   },
   components: {
     // Team,
@@ -83,6 +83,9 @@ export default {
     playedAtFormatted () {
       return moment(this.playedAt).format('YYYY-MM-DD HH:MM')
     },
+    ...mapGetters({
+      tournament: 'currentTournament',
+    }),
   },
   methods: {
     update () {

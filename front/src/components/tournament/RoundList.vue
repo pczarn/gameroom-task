@@ -2,21 +2,23 @@
 <div>
   <round v-for="(round, index) in tournament.rounds"
          :matches="round"
-         :number="index"
-         :tournament="tournament">
+         :number="index">
   </round>
 </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Round from './Round'
 
 export default {
   components: {
     Round,
   },
-  props: {
-    tournament: Object,
+  computed: {
+    ...mapGetters({
+      tournament: 'currentTournament',
+    }),
   },
   created () {
     this.ensureRoundsPresent()

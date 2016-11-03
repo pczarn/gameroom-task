@@ -89,21 +89,20 @@ import moment from 'moment'
 import _ from 'lodash'
 
 export default {
-  props: {
-    value: {
-      type: Object,
-      default () {
-        return { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} }
-      },
-    },
-  },
   components: {
     Multiselect,
   },
   data () {
-    const match = _.cloneDeep(this.value)
+    const blankMatch = { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} }
+    const match = _.cloneDeep(this.currentMatch || blankMatch)
     const playedAtLocal = moment(match.playedAt).toISOString().replace('Z', '')
-    return { match, playedAtLocal, teamOneName: '', teamTwoName: '' }
+    return {
+      blankMatch,
+      match,
+      playedAtLocal,
+      teamOneName: '',
+      teamTwoName: '',
+    }
   },
   computed: {
     potentialPlayers () {
@@ -114,7 +113,7 @@ export default {
         return this.userList
       }
     },
-    ...mapGetters(['teamList', 'teamMap', 'gameList', 'userList']),
+    ...mapGetters(['currentMatch', 'teamList', 'teamMap', 'gameList', 'userList']),
   },
   methods: {
     remove (whichTeam, member) {

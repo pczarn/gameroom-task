@@ -22,7 +22,6 @@ export default {
   name: 'TournamentList',
   props: {
     user: Object,
-    game: Object,
   },
   components: {
     TournamentOverview,
@@ -47,7 +46,10 @@ export default {
       }
       return list
     },
-    ...mapGetters(['tournamentList']),
+    ...mapGetters({
+      tournamentList: 'tournamentList',
+      game: 'currentGame',
+    }),
   },
 }
 </script>

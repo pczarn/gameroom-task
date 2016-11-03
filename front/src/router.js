@@ -68,7 +68,7 @@ const routes = [
   },
   {
     path: '/games/:id',
-    name: 'games',
+    name: 'game',
     component: Game,
     redirect: '/games/:id/tournaments',
     children: [
