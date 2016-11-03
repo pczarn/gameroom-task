@@ -31,11 +31,7 @@
       </team-member-list>
     </div>
 
-    <match-form button-text="Update the match"
-                :value="match"
-                @submit="update"
-                v-if="canEdit">
-    </match-form>
+    <match-edit :value="match" v-if="canEdit"></match-edit>
   </div>
 
   <button v-if="canDestroy" @click="remove()">Remove</button>
@@ -50,13 +46,13 @@ import moment from 'moment'
 import policies from 'src/policies'
 import { score } from 'src/util'
 import TeamMemberList from 'src/components/team/MemberList'
-import MatchForm from './Form'
+import MatchEdit from './Edit'
 
 export default {
   name: 'Match',
   components: {
     TeamMemberList,
-    MatchForm,
+    MatchEdit,
   },
   computed: {
     scoreOne () {
@@ -89,9 +85,6 @@ export default {
   methods: {
     goBack () {
       this.$router.go(-1)
-    },
-    update (newMatch) {
-      this.$store.dispatch('UPDATE_MATCH', newMatch)
     },
     async remove () {
       await this.$store.dispatch('DESTROY_MATCH', this.match)
