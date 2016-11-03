@@ -1,4 +1,5 @@
 <script>
+import _ from 'lodash'
 import TournamentForm from './Form'
 
 export default {
@@ -11,8 +12,8 @@ export default {
   },
   methods: {
     async submit () {
-      await this.$store.dispatch('CREATE_TOURNAMENT', this.tournamentClone)
-      this.tournamentClone = { teams: [], game: {} }
+      await this.$store.dispatch('CREATE_TOURNAMENT', this.tournament)
+      this.tournament = _.cloneDeep(this.blankTournament)
     },
   },
 }

@@ -14,6 +14,13 @@ import alert from 'src/store/alert'
 
 Vue.use(Vuex)
 
+function getIdIfMatched(route, routeName, map) {
+  const id = parseInt(route.params.id)
+  if(id && route.name.startsWith(routeName)) {
+    return id
+  }
+}
+
 export const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
@@ -24,6 +31,32 @@ export const store = new Vuex.Store({
     tournaments,
     users,
     alert,
+  },
+  getters: {
+    currentMatch (state, getters) {
+      const id = getIdIfMatched(state.route, 'match')
+      if(id) {
+        return getters.matchMap.get(id)
+      }
+    },
+    currentGame (state, getters) {
+      const id = getIdIfMatched(state.route, 'game')
+      if(id) {
+        return getters.gameMap.get(id)
+      }
+    },
+    currentTournament (state, getters) {
+      const id = getIdIfMatched(state.route, 'tournament')
+      if(id) {
+        return getters.tournamentMap.get(id)
+      }
+    },
+    currentTeam (state, getters) {
+      const id = getIdIfMatched(state.route, 'team')
+      if(id) {
+        return getters.teamMap.get(id)
+      }
+    },
   },
   mutations: {
     SET_EVERYTHING (state, lists) {
