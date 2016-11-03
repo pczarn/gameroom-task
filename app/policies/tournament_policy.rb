@@ -26,15 +26,15 @@ class TournamentPolicy < ApplicationPolicy
     tournament.owner == user
   end
 
-  def add_team?
+  def join?
+    tournament.open? && !tournament.members.exists?(user.id)
+  end
+
+  def create_team?
     update_open? && !tournament.full?
   end
 
-  def remove_team?
+  def destroy_team?
     update_open?
-  end
-
-  def join?
-    tournament.open? && !tournament.members.exists?(user.id)
   end
 end

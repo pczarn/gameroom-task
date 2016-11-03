@@ -5,6 +5,8 @@ class Match < ApplicationRecord
   belongs_to :round
   belongs_to :owner, class_name: User, inverse_of: :owned_matches
 
+  delegate :tournament, to: :round
+
   scope :friendly, -> { where(round: nil) }
 
   scope :involving, -> (user_id) do
@@ -20,25 +22,15 @@ class Match < ApplicationRecord
   validate :no_repeated_members_across_teams, :played_after_tournament_start
 
   def winning_team
-    @winning_team ||= teams_in_order[0]
+    teams_ordered_by_score[0]
   end
 
   def defeated_team
-    @defeated_team ||= teams_in_order[1]
+    teams_ordered_by_score[1]
   end
 
-  def teams_in_order
-    @teams_in_order ||= begin
-      return teams unless team_one_score && team_two_score
-      team_one_score < team_two_score ? teams.reverse : teams
-    end
-  end
-
-  def teams
-    @teams ||= [
-      TeamInMatch.new(team_one.id, team_one.name, team_one_score),
-      TeamInMatch.new(team_two.id, team_two.name, team_two_score),
-    ]
+  def teams_ordered_by_score
+    @teams_ordered_by_score ||= teams.sort
   end
 
   def scores
@@ -57,10 +49,15 @@ class Match < ApplicationRecord
   end
 
   def played_after_tournament_start
-    if played_at && round && played_at < round.tournament.started_at
+    if played_at && round && played_at < tournament.started_at
       errors.add(:played_at, "Can't be played before the tournament starts")
     end
   end
-end
 
-TeamInMatch = Struct.new(:id, :name, :score)
+  def teams
+    @teams ||= [
+      TeamInMatchDecorator.new(team_one, score: team_one_score),
+      TeamInMatchDecorator.new(team_two, score: team_two_score),
+    ]
+  end
+end

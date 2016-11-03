@@ -5,6 +5,8 @@ class Tournament < ApplicationRecord
   belongs_to :owner, class_name: User, inverse_of: :owned_tournaments
   has_many :team_tournaments, dependent: :destroy
   has_many :teams, through: :team_tournaments
+  has_many :members, through: :teams, class_name: User
+  has_many :related_teams, through: :members, source: :teams, class_name: Team
   has_many :rounds
   has_many :matches, through: :rounds
 
@@ -29,6 +31,10 @@ class Tournament < ApplicationRecord
            :team_sizes_within_limit,
            :number_of_teams_within_limit
 
+  def can_be_started?
+    full? && team_tournaments.all?(&:full?)
+  end
+
   def full?
     teams.length == number_of_teams
   end
@@ -37,33 +43,8 @@ class Tournament < ApplicationRecord
     User.where.not(id: members.pluck(:id))
   end
 
-  def members
-    User.joins(:user_teams).where(user_teams: { team_id: teams.pluck(:id) })
-  end
-
   def potential_teams
     Team.where.not(id: related_teams.pluck(:id))
-  end
-
-  def related_teams
-    Team.related_to(members.pluck(:id))
-  end
-
-  def owned_by?(user)
-    owner.id == user.id
-  end
-
-  def can_be_started?
-    full? && team_tournaments.all?(&:full?)
-  end
-
-  def build_initial_rounds
-    number_of_rounds.times do |round_number|
-      rounds.build(number: round_number)
-    end
-    teams.each_slice(2) do |first_team, second_team|
-      rounds.first.matches.build(game: game, team_one: first_team, team_two: second_team)
-    end
   end
 
   private
@@ -96,9 +77,5 @@ class Tournament < ApplicationRecord
     if teams.length > number_of_teams
       errors.add(:number_of_teams, "Can't be lower than the current number of teams")
     end
-  end
-
-  def number_of_rounds
-    Math.log2(teams.length).to_i
   end
 end

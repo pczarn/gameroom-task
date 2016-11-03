@@ -1,7 +1,7 @@
 class TournamentsController < ApplicationController
   before_action :authenticate!
-  before_action :load_tournament, only: [:edit, :update, :destroy, :add_team, :remove_team]
-  after_action :verify_authorized, only: [:edit, :update, :destroy, :add_team, :remove_team]
+  before_action :load_tournament, only: [:edit, :update, :destroy]
+  after_action :verify_authorized, only: [:edit, :update, :destroy]
 
   def index
     @tournament = Tournament.new(started_at: Time.zone.now)
@@ -37,24 +37,10 @@ class TournamentsController < ApplicationController
     redirect_to tournaments_path
   end
 
-  def add_team
-    team_params = build_team
-    @tournament.team_tournaments.build(team_params) if team_params
-    unless @tournament.save
-      flash.alert = @tournament.errors.full_messages.to_sentence
-    end
-    redirect_back fallback_location: edit_tournament_path(@tournament)
-  end
-
-  def remove_team
-    @tournament.team_tournaments.find_by(team_id: params[:team_id]).destroy!
-    redirect_back fallback_location: edit_tournament_path(@tournament)
-  end
-
   private
 
   def load_tournament
-    @tournament = Tournament.find(params[:tournament_id] || params[:id])
+    @tournament = Tournament.find(params[:id])
     authorize @tournament
   end
 
@@ -68,34 +54,5 @@ class TournamentsController < ApplicationController
             :number_of_teams,
             :number_of_members_per_team,
           )
-  end
-
-  def build_team
-    if team_id = params[:team_id]
-      { team_id: team_id }
-    elsif added_or_reused_team.valid?
-      { team: added_or_reused_team }
-    else
-      flash.alert = added_or_reused_team.errors.full_messages.to_sentence
-      nil
-    end
-  end
-
-  def added_or_reused_team
-    @added_or_reused_team ||= add_or_reuse_team
-  end
-
-  def add_or_reuse_team
-    team = Team.new(add_team_params)
-    if reused = Team.related_to(team.member_ids).find { |elem| elem.member_ids == team.member_ids }
-      flash.notice = "Found a team with these exact members."
-      reused
-    else
-      team
-    end
-  end
-
-  def add_team_params
-    params.require(:team).permit(:name, member_ids: [])
   end
 end

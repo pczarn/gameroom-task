@@ -90,38 +90,34 @@ RSpec.describe Match, type: :model do
     end
   end
 
-  describe "#teams" do
+  describe "#teams_ordered_by_score" do
+    subject { match.teams_ordered_by_score }
+
+    let(:team_ids) { [match.team_one.id, match.team_two.id] }
+    let(:ordered_team_ids) { match.teams_ordered_by_score.map(&:id) }
+    let(:scores) { match.teams_ordered_by_score.map(&:scores) }
+
     it "returns two items" do
-      expect(match.teams.length).to eq(2)
+      expect(match.teams_ordered_by_score.length).to eq(2)
     end
 
     it "returns teams" do
-      expect(match.teams).to all(be_a(TeamInMatch))
-    end
-  end
-
-  describe "#teams_in_order" do
-    it "returns two items" do
-      expect(match.teams.length).to eq(2)
-    end
-
-    it "returns teams" do
-      expect(match.teams).to all(be_a(TeamInMatch))
+      is_expected.to all(be_a(TeamInMatchDecorator))
     end
 
     context "when a match has no scores" do
       let(:match) { build(:match, :ongoing) }
 
       it "maintans the same order" do
-        expect(match.teams_in_order).to eq(match.teams)
+        expect(ordered_team_ids).to eq(team_ids)
       end
     end
 
     context "when a match has only one score" do
-      let(:match) { build(:match, team_one_score: nil) }
+      let(:match) { build(:match, team_one_score: nil, team_two_score: 2) }
 
-      it "maintans the same order" do
-        expect(match.teams_in_order).to eq(match.teams)
+      it "puts the team with score on the first place" do
+        expect(ordered_team_ids).to eq(team_ids.reverse)
       end
     end
 
@@ -130,14 +126,15 @@ RSpec.describe Match, type: :model do
         let(:match) { build(:match, team_one_score: 7, team_two_score: 5) }
 
         it "has the same order" do
-          expect(match.teams_in_order).to eq(match.teams)
+          expect(ordered_team_ids).to eq(team_ids)
         end
       end
+
       context "when the first score is smaller" do
         let(:match) { build(:match, team_one_score: 5, team_two_score: 7) }
 
         it "has reverse order" do
-          expect(match.teams_in_order).to eq(match.teams.reverse)
+          expect(ordered_team_ids).to eq(team_ids.reverse)
         end
       end
     end
@@ -145,13 +142,13 @@ RSpec.describe Match, type: :model do
 
   describe "#winning_team" do
     it "is the first team in order" do
-      expect(match.winning_team).to eq(match.teams_in_order[0])
+      expect(match.winning_team).to equal(match.teams_ordered_by_score[0])
     end
   end
 
   describe "#defeated_team" do
     it "is the second team in order" do
-      expect(match.defeated_team).to eq(match.teams_in_order[1])
+      expect(match.defeated_team).to equal(match.teams_ordered_by_score[1])
     end
   end
 end

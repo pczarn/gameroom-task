@@ -17,8 +17,6 @@ end
 class FinishMatch
   include TournamentRoundAccess
 
-  attr_reader :alert
-
   def initialize(match, params: {})
     @match = match
     @params = params
@@ -27,44 +25,41 @@ class FinishMatch
   end
 
   def perform
-    build_tasks
-
-    Match.transaction do
-      begin
-        @tasks.save_all
-      rescue ActiveModel::ValidationError => error
-        @alert = error.model.errors.full_messages.to_sentence
-        raise ActiveRecord::Rollback
-      end
+    if match_scores.all? && @tournament && next_round && next_match
+      return false, "Another match depends on the result of the one you tried to edit."
     end
-
-    @tasks.finish_all unless @alert
+    Match.transaction { tasks.save }
+    tasks.finish
+    [true, nil]
+  rescue ActiveModel::ValidationError => error
+    [false, error.model.errors.full_messages.to_sentence]
   end
 
   private
 
-  def build_tasks
-    @tasks = TaskList.new
-    build_update_task
-    build_tasks_for_tournament if @tournament
+  def tasks
+    if @tasks.nil?
+      @tasks = TaskList.new
+      @tasks << task_for_match_update
+      @tasks.push(*tasks_for_tournament) if @tournament
+    end
+    @tasks
   end
 
-  def build_update_task
-    @tasks << UpdateMatch.new(match: @match, params: @params)
+  def task_for_match_update
+    UpdateMatch.new(match: @match, params: @params)
   end
 
-  def build_tasks_for_tournament
-    if match_scores.all?
-      if next_round
-        if next_match
-          @alert = "Another match depends on the result of the one you tried to edit."
-          @tasks.clear
-        elsif other_match_in_pair.scores.all?
-          @tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
-        end
+  def tasks_for_tournament
+    return [] unless match_scores.all?
+    if next_round
+      if other_match_in_pair.scores.all?
+        [CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)]
       else
-        @tasks << EndTournament.new(tournament: @tournament, match: @match)
+        []
       end
+    else
+      [EndTournament.new(tournament: @tournament, match: @match)]
     end
   end
 
@@ -82,11 +77,11 @@ class FinishMatch
 end
 
 class TaskList < Array
-  def save_all
+  def save
     each(&:save)
   end
 
-  def finish_all
+  def finish
     each(&:finish)
   end
 end

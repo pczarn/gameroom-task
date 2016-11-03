@@ -115,7 +115,6 @@ RSpec.describe MatchesController, type: :controller do
     it "calls a service to finish the match" do
       service = instance_double(FinishMatch)
       allow(FinishMatch).to receive(:new).and_return(service)
-      allow(service).to receive(:alert)
       expect(service).to receive(:perform)
       action
     end

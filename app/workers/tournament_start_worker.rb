@@ -7,6 +7,8 @@ class TournamentStartWorker
     try_start(tournament, performed_at) if tournament.started_at == performed_at
   end
 
+  private
+
   def try_start(tournament, performed_at)
     if tournament.can_be_started?
       start(tournament)
@@ -18,7 +20,7 @@ class TournamentStartWorker
   def start(tournament)
     tournament.with_lock do
       return unless tournament.open?
-      tournament.build_initial_rounds
+      BuildTournamentRounds.new(tournament).perform
       tournament.started!
       tournament.save!
     end

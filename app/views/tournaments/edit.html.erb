@@ -2,14 +2,14 @@
 
 <%= render partial: "tournaments/display", locals: { tournament: @tournament } %>
 
-<% if policy(@tournament).add_team? %>
+<% if policy(@tournament).create_team? %>
   <h3>Add a team with members</h3>
-  <%= form_for @team, url: tournament_add_team_path(tournament), method: :post do |f| %>
+  <%= form_for @team, url: team_tournament_participation_path(tournament_id: tournament.id), method: :post do |f| %>
     <%= render "teams/form", f: f, potential_members: tournament.potential_members %>
   <% end %>
 
   <h3>Add an existing team</h3>
-  <%= form_tag tournament_add_team_path(tournament) do %>
+  <%= form_tag team_tournament_participation_path(tournament_id: tournament) do %>
     <fieldset>
       <legend>Add an existing team</legend>
       <%= select_tag "team_id", potential_teams_for_select(tournament) %>

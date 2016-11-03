@@ -1,7 +1,5 @@
 class MatchesController < ApplicationController
   before_action :authenticate!
-  before_action :load_friendly_match, only: [:edit, :destroy]
-  before_action :load_match, only: :update
   after_action :verify_authorized, only: [:edit, :update, :destroy]
 
   def create
@@ -22,39 +20,38 @@ class MatchesController < ApplicationController
   end
 
   def edit
+    friendly_match
   end
 
   def update
-    match_params = @match.round.present? ? match_in_tournament_params : friendly_match_params
-    service = FinishMatch.new(@match, params: match_params)
-    service.perform
+    match_params = match.round.present? ? match_in_tournament_params : friendly_match_params
+    service = FinishMatch.new(match, params: match_params)
+    _, alert = service.perform
 
     if Rails.application.routes.recognize_path(request.referer)[:controller] == "matches"
-      flash.now.alert = service.alert
+      flash.now.alert = alert
       render "edit"
     else
       # go back to the source of the update, which can be tournaments/edit, not matches/edit
-      flash.alert = service.alert
+      flash.alert = alert
       redirect_back fallback_location: edit_match_path(@match)
     end
   end
 
   def destroy
-    @match.destroy
+    friendly_match.destroy
     flash.notice = "Match deleted"
     redirect_to action: :index
   end
 
   private
 
-  def load_friendly_match
-    @match = Match.friendly.find(params[:id])
-    authorize @match
+  def friendly_match
+    @match ||= authorize Match.friendly.find(params[:id])
   end
 
-  def load_match
-    @match = Match.find(params[:id])
-    authorize @match
+  def match
+    @match ||= authorize Match.find(params[:id])
   end
 
   def match_in_tournament_params
@@ -74,13 +71,5 @@ class MatchesController < ApplicationController
       :team_one_score,
       :team_two_score,
     )
-  end
-
-  def owner?(user)
-    @match.owner && @match.owner.id == user.id || @match.round && editable?(@match, user)
-  end
-
-  def member?(user)
-    @match.team_one.member_ids.include?(user.id) || @match.team_two.member_ids.include?(user.id)
   end
 end

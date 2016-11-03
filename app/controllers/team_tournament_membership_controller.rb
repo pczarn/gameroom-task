@@ -1,27 +1,27 @@
 class TeamTournamentMembershipController < ApplicationController
   include TournamentsHelper
 
+  delegate :tournament, to: :team_tournament
+
   after_action :verify_authorized
 
   def create
     authorize tournament, :join?
     service = change_membership_service(current_user)
-    service.join_team
-    flash.alert = service.alert
-    flash.notice = service.notice
+    valid, alert = service.join_team
+    flash.alert = alert unless valid
     redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
   def destroy
-    if user = params[:user_id] && User.find(params[:user_id])
+    if user
       authorize team_tournament, :remove_user?
     else
       authorize team_tournament, :leave?
     end
     service = change_membership_service(user || current_user)
-    service.leave_team
-    flash.alert = service.alert
-    flash.notice = service.notice
+    valid, alert = service.leave_team
+    flash.alert = alert unless valid
     redirect_back fallback_location: edit_tournament_path(tournament)
   end
 
@@ -35,7 +35,7 @@ class TeamTournamentMembershipController < ApplicationController
     @team_tournament ||= TeamTournament.find(params[:id])
   end
 
-  def tournament
-    team_tournament.tournament
+  def user
+    @user ||= params[:user_id] && User.find(params[:user_id])
   end
 end
