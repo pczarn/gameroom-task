@@ -88,7 +88,7 @@ export default {
     },
     winningTeam () {
       const lastRound = this.rounds[this.rounds.length - 1]
-      if(lastRound) {
+      if(lastRound && lastRound.length === 1) {
         const lastMatch = lastRound[0]
         return lastMatch.winner
       } else {
