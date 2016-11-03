@@ -1,4 +1,6 @@
 <script>
+import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import GameForm from './Form'
 
 export default {
@@ -8,6 +10,12 @@ export default {
     return {
       buttonText: 'Update the game',
     }
+  },
+  created () {
+    this.game = _.cloneDeep(this.currentGame)
+  },
+  computed: {
+    ...mapGetters(['currentGame']),
   },
   methods: {
     submit () {

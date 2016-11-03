@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 import SelectTeam from './SelectTeam'
@@ -57,7 +56,6 @@ export default {
     SelectTeam,
   },
   data () {
-    const blankTournament = { teams: [], game: {} }
     return {
       schema: [
         { attrs: { name: 'title', type: 'text' }, label: 'Title' },
@@ -67,8 +65,7 @@ export default {
         { attrs: { name: 'numberOfMembersPerTeam', type: 'num' }, label: 'Number of members per team' },
         { attrs: { name: 'startedAt', type: 'datetime-local' }, label: 'Starts at' },
       ],
-      blankTournament,
-      tournament: _.cloneDeep(this.currentTournament || blankTournament),
+      tournament: { teams: [], game: {} },
     }
   },
   computed: {

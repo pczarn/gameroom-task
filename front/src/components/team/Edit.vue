@@ -12,15 +12,23 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import { mapGetters } from 'vuex'
 import TeamForm from './Form'
 
 export default {
   name: 'TeamEdit',
   mixins: [TeamForm],
+  computed: {
+    ...mapGetters(['currentTeam']),
+  },
   methods: {
     submit () {
       this.$store.dispatch('UPDATE_TEAM', this.team)
     },
+  },
+  created () {
+    this.team = _.cloneDeep(this.currentTeam)
   },
 }
 </script>
