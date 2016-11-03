@@ -4,7 +4,6 @@
   <multiselect :options="potentialTeams"
                :searchable="true"
                label="name"
-               track-by="name"
                placeholder="Pick a team"
                @input="select"
                :reset-after="true"
