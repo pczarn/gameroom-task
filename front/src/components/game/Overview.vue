@@ -1,7 +1,7 @@
 <template>
 <div class="game">
   <img :src="image_thumb_url">
-  <router-link :to="{ name: 'games', params: { id: id } }">
+  <router-link :to="{ name: 'game', params: { id: id } }">
     <strong>{{ name }}</strong>
   </router-link>
 </div>
