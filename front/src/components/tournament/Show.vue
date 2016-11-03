@@ -19,54 +19,39 @@
   <br>
 
   <router-link v-if="hasRounds && !showRounds"
-               :to="{ name: 'tournament rounds', params: { id } }">
+               :to="{ name: 'tournament rounds', params: { id: tournament.id } }">
     Rounds
   </router-link>
   <span v-else :class="{ bold: showRounds }">Rounds</span>
 
   <router-link v-if="!showTeams"
-               :to="{ name: 'tournament teams', params: { id } }">
+               :to="{ name: 'tournament teams', params: { id: tournament.id } }">
     Teams
   </router-link>
   <span v-else :class="{ bold: showTeams }">Teams</span>
 
   <router-link v-if="canEdit && !showEdit"
-               :to="{ name: 'tournament update', params: { id } }">
+               :to="{ name: 'tournament update', params: { id: tournament.id } }">
     Edit
   </router-link>
   <span v-else :class="{ bold: showEdit }">Edit</span>
 
   <router-link v-if="canDestroy && !showDelete"
-               :to="{ name: 'tournament delete', params: { id } }">
+               :to="{ name: 'tournament delete', params: { id: tournament.id } }">
     Delete
   </router-link>
   <span v-else :class="{ bold: showDelete }">Delete</span>
 
-  <router-view :tournament="tournament"></router-view>
+  <router-view></router-view>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import policies from 'src/policies'
-import TournamentTeamList from './TeamList'
-import TournamentForm from './Form'
-import Round from './Round'
 
 export default {
   name: 'Tournament',
-  components: {
-    TournamentTeamList,
-    TournamentForm,
-    Round,
-  },
-  data () {
-    return {
-      newTournament: {
-        teams: [],
-      },
-    }
-  },
   computed: {
     canEdit () {
       return policies.tournamentPolicy(this.tournament).update
@@ -74,15 +59,9 @@ export default {
     canDestroy () {
       return policies.tournamentPolicy(this.tournament).destroy
     },
-    id () {
-      return parseInt(this.$route.params.id)
-    },
     playerIds () {
       const teamMemberIds = this.tournament.teams.map(t => t.members.map(m => m.id))
       return new Set([].concat.apply([], teamMemberIds))
-    },
-    tournament () {
-      return this.tournamentMap.get(this.id)
     },
     showRounds () {
       return this.$route.name === 'tournament rounds' || (
@@ -103,7 +82,9 @@ export default {
     hasRounds () {
       return this.tournament.rounds.length > 0
     },
-    ...mapGetters(['tournamentMap', 'currentUser', 'isAdmin', 'userList']),
+    ...mapGetters({
+      tournament: 'currentTournament',
+    }),
   },
 }
 </script>

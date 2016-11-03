@@ -6,17 +6,17 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import policies from 'src/policies'
 
 export default {
-  props: {
-    tournament: Object,
-  },
   computed: {
     canDestroy () {
       return policies.tournamentPolicy(this.tournament).destroy
     },
+    ...mapGetters({
+      tournament: 'currentTournament',
+    }),
   },
   methods: {
     destroy () {

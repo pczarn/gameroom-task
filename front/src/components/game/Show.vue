@@ -18,7 +18,7 @@
   Statistics
 
   <div>
-    <router-view :game="game"></router-view>
+    <router-view></router-view>
   </div>
 </div>
 </template>
@@ -30,16 +30,12 @@ import policies from 'src/policies'
 export default {
   name: 'Game',
   computed: {
-    id () {
-      return parseInt(this.$route.params.id)
-    },
-    game () {
-      return this.gameMap.get(this.id)
-    },
     editable () {
       return policies.gamePolicy(this.game).update
     },
-    ...mapGetters(['gameMap']),
+    ...mapGetters({
+      game: 'currentGame',
+    }),
   },
   methods: {
     async remove () {

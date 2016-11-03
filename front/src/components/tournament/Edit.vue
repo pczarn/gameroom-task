@@ -14,13 +14,13 @@ export default {
   },
   methods: {
     async submit () {
-      const newTeams = this.tournamentClone.teams.filter(team => team.id === undefined)
+      const newTeams = this.tournament.teams.filter(team => team.id === undefined)
       const promises = newTeams.map(team => this.$store.dispatch('CREATE_TEAM'))
       const createdTeams = await axios.all(promises)
       for(const team of createdTeams) {
-        this.tournamentClone.teams.push(team)
+        this.tournament.teams.push(team)
       }
-      this.updateTournament(this.tournamentClone)
+      this.updateTournament(this.tournament)
     },
     ...mapActions({
       updateTournament: 'UPDATE_TOURNAMENT',

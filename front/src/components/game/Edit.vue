@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('UPDATE_GAME', this.gameClone)
+      this.$store.dispatch('UPDATE_GAME', this.game)
     },
   },
 }
