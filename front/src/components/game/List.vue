@@ -4,7 +4,7 @@
 
   <template v-if="isAdmin">
     <h2>Add a game</h2>
-    <game-form :value="newGame" @submit="create"></game-form>
+    <game-create></game-create>
   </template>
 
   <h2>Active games</h2>
@@ -30,27 +30,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import GameOverview from './Overview'
-import GameForm from './Form'
+import GameCreate from './Create'
 
 export default {
   name: 'GameList',
   components: {
     GameOverview,
-    GameForm,
-  },
-  data () {
-    return {
-      newGame: {},
-    }
+    GameCreate,
   },
   computed: {
     ...mapGetters(['isAdmin', 'activeGames', 'archivizedGames']),
   },
   methods: {
-    async create (game) {
-      await this.$store.dispatch('CREATE_GAME', game)
-      this.newGame = {}
-    },
     archivize (game) {
       this.setArchivized(game, true)
     },

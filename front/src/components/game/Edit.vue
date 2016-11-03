@@ -1,29 +1,17 @@
-<template>
-<div class="game-edit" v-if="game">
-  <game-form :value="game"></game-form>
-</div>
-</template>
-
 <script>
 import GameForm from './Form'
 
 export default {
-  name: 'Game',
-  components: {
-    GameForm,
-  },
-  props: {
-    game: Object,
-  },
-  computed: {
-    editable () {
-      return true
-    },
+  name: 'GameEdit',
+  mixins: [GameForm],
+  data () {
+    return {
+      buttonText: 'Update the game',
+    }
   },
   methods: {
-    async remove () {
-      await this.$store.dispatch('DESTROY_GAME', this.game)
-      this.$router.go(-1)
+    submit () {
+      this.$store.dispatch('UPDATE_GAME', this.gameClone)
     },
   },
 }
