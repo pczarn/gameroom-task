@@ -20,15 +20,11 @@ PEOPLE ||= %w(
   Bartosz
 ).freeze
 
-PASS ||= "password".freeze
-PASS_HASHED ||= Argon2::Password.create(PASS)
-
 FactoryGirl.define do
   factory :user do
     sequence(:name) { |n| "#{Faker::Name.prefix} #{PEOPLE.sample} #{n}" }
     email { Faker::Internet.email }
-    password PASS
-    password_confirmation PASS
-    password_hashed PASS_HASHED
+    password "password"
+    password_confirmation "password"
   end
 end
