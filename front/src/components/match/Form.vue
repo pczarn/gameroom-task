@@ -142,28 +142,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.left-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: right;
-}
-
-.right-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: left;
-}
-
-.middle-col {
-  padding: 0 5px;
-}
+<style lang="scss" scoped>
+@import "./table";
 
 .scores input {
   width: 60px;
