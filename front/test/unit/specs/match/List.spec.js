@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import MatchList from 'src/components/MatchList'
+import MatchList from 'src/components/match/List'
 import { store } from 'src/store'
 
-describe('MatchList.vue', () => {
+describe('List.vue', () => {
   it('should render correct contents', () => {
     const vm = new Vue({
       data () {
