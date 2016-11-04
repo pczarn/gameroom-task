@@ -1,13 +1,11 @@
 module ControllerHelpers
-  def sign_in(user = build(:user))
-    @user = user
-    allow(controller).to receive(:authenticate!)
-    allow(controller).to receive(:current_user).and_return(user)
+  def sign_in(user = create(:user))
+    token = Knock::AuthToken.new(payload: { sub: user.id }).token
+    request.env["HTTP_AUTHORIZATION"] = "Bearer #{token}"
   end
 
-  def sign_in_admin(user = build(:user))
-    allow(user).to receive(:admin?).and_return(true)
-    allow(controller).to receive(:authenticate!)
-    allow(controller).to receive(:current_user).and_return(user)
+  def sign_in_admin(user = create(:user))
+    user.update!(role: :admin)
+    sign_in(user)
   end
 end

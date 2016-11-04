@@ -5,7 +5,7 @@ RSpec.describe TournamentPolicy do
   let(:user) { build(:user) }
   let(:tournament) { build(:tournament) }
 
-  permissions :edit? do
+  permissions :show? do
     it { is_expected.to permit(user, tournament) }
   end
 

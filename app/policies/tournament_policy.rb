@@ -14,7 +14,11 @@ class TournamentPolicy < ApplicationPolicy
     tournament.started? && tournament.owner == user
   end
 
-  def edit?
+  def create?
+    true
+  end
+
+  def show?
     true
   end
 
@@ -23,7 +27,7 @@ class TournamentPolicy < ApplicationPolicy
   end
 
   def destroy?
-    tournament.owner == user
+    tournament.owner == user && tournament.open?
   end
 
   def join?
