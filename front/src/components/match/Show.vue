@@ -92,31 +92,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "./table";
+
 .match {
- /* display: flex;*/
  flex-direction: column;
-}
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  /*flex: 2 2 auto;*/
-}
-
-.left-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: right;
-}
-
-.right-col {
-  width: 50%;
-  flex: 0 1 auto;
-  text-align: left;
-}
-
-.middle-col {
-  padding: 0 5px;
 }
 </style>

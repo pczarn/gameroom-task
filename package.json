@@ -18,6 +18,8 @@
     "express-http-proxy": "^0.10.0",
     "lodash": "^4.16.4",
     "moment": "^2.15.1",
+    "node-sass": "^3.11.1",
+    "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "vue": "^2.0.1",
     "vue-datetime-picker": "^0.2.1",
