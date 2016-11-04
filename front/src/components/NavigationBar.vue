@@ -21,12 +21,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as action from 'src/store/action_types'
 
 export default {
   computed: mapGetters(['currentUser', 'isLoggedIn']),
   methods: {
     logOut () {
-      this.$store.dispatch('LOG_OUT')
+      this.$store.dispatch(action.LOG_OUT)
       this.$router.push('/login')
     },
   },

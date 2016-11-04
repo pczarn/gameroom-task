@@ -1,6 +1,5 @@
-import {
-  SET_ERROR,
-} from './mutation_types'
+import * as mutation from './mutation_types'
+import * as action from './action_types'
 
 const state = {
   text: '',
@@ -13,14 +12,14 @@ const getters = {
 }
 
 const mutations = {
-  [SET_ERROR] (state, alert) {
+  [mutation.SET_ERROR] (state, alert) {
     state.text = alert
   },
 }
 
 const actions = {
-  SET_ERROR ({ commit }, alert) {
-    commit('SET_ERROR', alert)
+  [action.SET_ERROR] ({ commit }, alert) {
+    commit(mutation.SET_ERROR, alert)
   },
 }
 

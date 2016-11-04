@@ -22,9 +22,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import _ from 'lodash'
-import policies from 'src/policies'
 import Multiselect from 'vue-multiselect'
 import TeamMemberList from 'src/components/team/MemberList'
+import policies from 'src/policies'
+import * as action from 'src/store/action_types'
 
 export default {
   name: 'TournamentTeamOverview',
@@ -70,24 +71,24 @@ export default {
     join () {
       const team = this.cloneTeam()
       team.members.push(this.currentUser)
-      this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
+      this.$store.dispatch(action.UPDATE_TOURNAMENT_LINEUP, [this.tournament, team])
     },
     leave () {
       const team = this.cloneTeam()
       const idx = team.members.findIndex(m => m.id === this.currentUser.id)
       team.members.splice(idx, 1)
-      this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
+      this.$store.dispatch(action.UPDATE_TOURNAMENT_LINEUP, [this.tournament, team])
     },
     selectMember (member) {
       const team = this.cloneTeam()
       team.members.push(member)
-      this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
+      this.$store.dispatch(action.UPDATE_TOURNAMENT_LINEUP, [this.tournament, team])
     },
     removeMember (member) {
       const team = this.cloneTeam()
       const idx = team.members.findIndex(m => m.id === member.id)
       team.members.splice(idx, 1)
-      this.$store.dispatch('UPDATE_TOURNAMENT_LINEUP', [this.tournament, team])
+      this.$store.dispatch(action.UPDATE_TOURNAMENT_LINEUP, [this.tournament, team])
     },
   },
 }
