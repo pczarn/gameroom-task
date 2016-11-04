@@ -1,10 +1,7 @@
 import api from 'src/api'
 
-import {
-  SET_TEAM_LIST,
-  ADD_TEAM,
-  SET_TEAM,
-} from './mutation_types'
+import * as mutation from './mutation_types'
+import * as action from './action_types'
 import { enrichTeam, rawTeam } from 'src/store/mapping'
 
 const state = {
@@ -30,33 +27,33 @@ const getters = {
 }
 
 const mutations = {
-  [SET_TEAM_LIST] (state, teams) {
+  [mutation.SET_TEAM_LIST] (state, teams) {
     state.teams = teams
   },
 
-  [ADD_TEAM] (state, team) {
+  [mutation.ADD_TEAM] (state, team) {
     state.teams.push(team)
   },
 
-  [SET_TEAM] (state, team) {
+  [mutation.SET_TEAM] (state, team) {
     const idx = state.teams.findIndex(({ id }) => id === team.id)
     state.teams.splice(idx, 1, team)
   },
 }
 
 const actions = {
-  async GET_TEAMS ({ commit }) {
+  async [action.GET_TEAMS] ({ commit }) {
     const teams = await api.getTeams()
-    commit('SET_TEAM_LIST', teams)
+    commit(mutation.SET_TEAM_LIST, teams)
   },
-  async CREATE_TEAM ({ commit }, team) {
+  async [action.CREATE_TEAM] ({ commit }, team) {
     team = await api.createTeam(rawTeam(team))
-    commit('ADD_TEAM', team)
+    commit(mutation.ADD_TEAM, team)
     return team
   },
-  async UPDATE_TEAM ({ commit }, team) {
+  async [action.UPDATE_TEAM] ({ commit }, team) {
     team = await api.updateTeam(rawTeam(team))
-    commit('SET_TEAM', team)
+    commit(mutation.SET_TEAM, team)
   },
 }
 

@@ -1,10 +1,7 @@
 import api from 'src/api'
-import {
-  SET_GAME_LIST,
-  ADD_GAME,
-  SET_GAME,
-  REMOVE_GAME,
-} from './mutation_types'
+
+import * as mutation from './mutation_types'
+import * as action from './action_types'
 
 const state = {
   games: [],
@@ -29,44 +26,44 @@ const getters = {
 }
 
 const mutations = {
-  [SET_GAME_LIST] (state, games) {
+  [mutation.SET_GAME_LIST] (state, games) {
     state.games = games
   },
 
-  [ADD_GAME] (state, game) {
+  [mutation.ADD_GAME] (state, game) {
     state.games.push(game)
   },
 
-  [SET_GAME] (state, game) {
+  [mutation.SET_GAME] (state, game) {
     const idx = state.games.findIndex(({ id }) => id === game.id)
     state.games.splice(idx, 1, game)
   },
 
-  [REMOVE_GAME] (state, game) {
+  [mutation.REMOVE_GAME] (state, game) {
     const idx = state.games.findIndex(({ id }) => id === game.id)
     state.games.splice(idx, 1)
   },
 }
 
 const actions = {
-  async GET_GAMES ({ commit }) {
+  async [action.GET_GAMES] ({ commit }) {
     const games = await api.getGames()
-    commit('SET_GAME_LIST', games)
+    commit(mutation.SET_GAME_LIST, games)
   },
 
-  async CREATE_GAME ({ commit }, game) {
+  async [action.CREATE_GAME] ({ commit }, game) {
     game = await api.createGame(game)
-    commit('ADD_GAME', game)
+    commit(mutation.ADD_GAME, game)
   },
 
-  async UPDATE_GAME ({ commit }, game) {
+  async [action.UPDATE_GAME] ({ commit }, game) {
     game = await api.updateGame(game)
-    commit('SET_GAME', game)
+    commit(mutation.SET_GAME, game)
   },
 
-  async DESTROY_GAME ({ commit }, { id }) {
+  async [action.DESTROY_GAME] ({ commit }, { id }) {
     await api.destroyGame(id)
-    commit('REMOVE_GAME', { id: id })
+    commit(mutation.REMOVE_GAME, { id: id })
   },
 }
 

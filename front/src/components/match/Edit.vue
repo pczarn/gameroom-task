@@ -1,6 +1,7 @@
 <script>
 import _ from 'lodash'
 import moment from 'moment'
+import * as action from 'src/store/action_types'
 import MatchForm from './Form'
 
 export default {
@@ -17,7 +18,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('UPDATE_MATCH', this.match)
+      this.$store.dispatch(action.UPDATE_MATCH, this.match)
     },
   },
 }

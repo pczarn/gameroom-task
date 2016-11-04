@@ -26,6 +26,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import policies from 'src/policies'
+import * as action from 'src/store/action_types'
 
 export default {
   name: 'Game',
@@ -39,7 +40,7 @@ export default {
   },
   methods: {
     async remove () {
-      await this.$store.dispatch('DESTROY_GAME', this.game)
+      await this.$store.dispatch(action.DESTROY_GAME, this.game)
       this.$router.go(-1)
     },
   },

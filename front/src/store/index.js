@@ -12,6 +12,9 @@ import tournaments from 'src/store/tournaments'
 import users from 'src/store/users'
 import alert from 'src/store/alert'
 
+import * as mutation from './mutation_types'
+import * as action from './action_types'
+
 Vue.use(Vuex)
 
 function getIdIfMatched(route, routeName) {
@@ -59,7 +62,7 @@ export const store = new Vuex.Store({
     },
   },
   mutations: {
-    SET_EVERYTHING (state, lists) {
+    [mutation.SET_EVERYTHING] (state, lists) {
       state.games.games = lists.games
       state.teams.teams = lists.teams
       state.matches.matches = lists.matches
@@ -68,7 +71,7 @@ export const store = new Vuex.Store({
     },
   },
   actions: {
-    async GET_EVERYTHING ({ commit }) {
+    async [action.GET_EVERYTHING] ({ commit }) {
       const lists = await axios.all([
         api.getGames(),
         api.getTeams(),
@@ -76,7 +79,7 @@ export const store = new Vuex.Store({
         api.getTournaments(),
         api.getUsers(),
       ])
-      commit('SET_EVERYTHING', {
+      commit(mutation.SET_EVERYTHING, {
         games: lists[0],
         teams: lists[1],
         matches: lists[2],

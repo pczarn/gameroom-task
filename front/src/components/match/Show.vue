@@ -45,6 +45,7 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import policies from 'src/policies'
 import { score } from 'src/util'
+import * as action from 'src/store/action_types'
 import TeamMemberList from 'src/components/team/MemberList'
 import MatchEdit from './Edit'
 
@@ -84,7 +85,7 @@ export default {
       this.$router.go(-1)
     },
     async remove () {
-      await this.$store.dispatch('DESTROY_MATCH', this.match)
+      await this.$store.dispatch(action.DESTROY_MATCH, this.match)
       this.$router.push('/matches')
     },
   },
