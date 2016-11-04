@@ -46,6 +46,7 @@ import moment from 'moment'
 import policies from 'src/policies'
 // import Team from '../Team'
 import { score } from 'src/util'
+import * as action from 'src/store/action_types'
 
 export default {
   props: {
@@ -91,7 +92,7 @@ export default {
     update () {
       this.form.playedAt = moment(this.form.playedAtLocal).toISOString()
       this.form.id = this.id
-      this.$store.dispatch('UPDATE_TOURNAMENT_MATCH', [this.tournament, this.form])
+      this.$store.dispatch(action.UPDATE_TOURNAMENT_MATCH, [this.tournament, this.form])
     },
   },
 }

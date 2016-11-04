@@ -2,11 +2,8 @@ import api from 'src/api'
 import auth from 'src/auth'
 import router from 'src/router'
 
-import {
-  SET_CURRENT_USER_AND_TOKEN,
-  SET_CURRENT_USER,
-  RESET_CURRENT_USER_AND_TOKEN,
-} from './mutation_types'
+import * as mutation from './mutation_types'
+import * as action from './action_types'
 
 const state = {
   currentUser: null,
@@ -26,32 +23,32 @@ const getters = {
 }
 
 const mutations = {
-  [SET_CURRENT_USER_AND_TOKEN] (state, { user, token }) {
+  [mutation.SET_CURRENT_USER_AND_TOKEN] (state, { user, token }) {
     state.currentUser = user
     state.sessionToken = token
   },
 
-  [SET_CURRENT_USER] (state, user) {
+  [mutation.SET_CURRENT_USER] (state, user) {
     state.currentUser = user
   },
 
-  [RESET_CURRENT_USER_AND_TOKEN] (state) {
+  [mutation.RESET_CURRENT_USER_AND_TOKEN] (state) {
     state.currentUser = null
     state.sessionToken = null
   },
 }
 
 const actions = {
-  async LOG_IN ({ commit, dispatch }, creds) {
+  async [action.LOG_IN] ({ commit, dispatch }, creds) {
     const userWithToken = await api.getUserWithToken(creds)
-    commit('SET_CURRENT_USER_AND_TOKEN', userWithToken)
+    commit(mutation.SET_CURRENT_USER_AND_TOKEN, userWithToken)
     auth.logIn(userWithToken)
     router.push('/')
-    dispatch('GET_EVERYTHING')
+    dispatch(action.GET_EVERYTHING)
   },
-  LOG_OUT ({ commit }) {
+  [action.LOG_OUT] ({ commit }) {
     auth.logOut()
-    commit('RESET_CURRENT_USER_AND_TOKEN')
+    commit(mutation.RESET_CURRENT_USER_AND_TOKEN)
   },
 }
 

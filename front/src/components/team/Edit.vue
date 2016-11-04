@@ -14,6 +14,7 @@
 <script>
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
+import * as action from 'src/store/action_types'
 import TeamForm from './Form'
 
 export default {
@@ -24,7 +25,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('UPDATE_TEAM', this.team)
+      this.$store.dispatch(action.UPDATE_TEAM, this.team)
     },
   },
   created () {

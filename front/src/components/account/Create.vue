@@ -1,4 +1,5 @@
 <script>
+import * as action from 'src/store/action_types'
 import AccountForm from './Form'
 
 export default {
@@ -11,7 +12,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('CREATE_USER', this.user)
+      this.$store.dispatch(action.CREATE_USER, this.user)
     },
   },
 }

@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import * as action from 'src/store/action_types'
 import AccountCreate from 'src/components/account/Create'
 
 export default {
@@ -33,7 +34,7 @@ export default {
   methods: {
     logIn () {
       try {
-        this.$store.dispatch('LOG_IN', { email: this.email, password: this.password })
+        this.$store.dispatch(action.LOG_IN, { email: this.email, password: this.password })
       } catch(err) {
         this.error = err
       }
