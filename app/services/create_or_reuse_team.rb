@@ -6,7 +6,7 @@ class CreateOrReuseTeam
   def perform
     team = Team.new(@params)
     member_ids = team.member_ids.sort
-    reused = Team.related_to(member_ids).find { |elem| elem.member_ids.sort == member_ids }
+    reused = Team.joins(:users).group(:id).having("array_agg(users.id) = ARRAY[?]", member_ids)[0]
     reused || team
   end
 end
