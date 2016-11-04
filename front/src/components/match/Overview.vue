@@ -18,9 +18,11 @@
     <span class="middle-col">:</span>
     <span class="right-col">{{ scoreTwo }}</span>
   </div>
-  <div class="row">
-    <router-link :to="{ name: 'match', params: { id } }">See more</router-link>
-  </div>
+  <slot>
+    <div class="row">
+      <router-link :to="{ name: 'match', params: { id } }">See more</router-link>
+    </div>
+  </slot>
 </div>
 </template>
 
@@ -40,11 +42,6 @@ export default {
   },
   components: {
     Team,
-  },
-  data () {
-    return {
-      editable: false,
-    }
   },
   computed: {
     scoreOne () {
