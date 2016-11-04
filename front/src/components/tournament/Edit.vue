@@ -2,6 +2,7 @@
 import _ from 'lodash'
 import axios from 'axios'
 import { mapActions } from 'vuex'
+import * as action from 'src/store/action_types'
 import TournamentForm from './Form'
 
 export default {
@@ -18,7 +19,7 @@ export default {
   methods: {
     async submit () {
       const newTeams = this.tournament.teams.filter(team => team.id === undefined)
-      const promises = newTeams.map(team => this.$store.dispatch('CREATE_TEAM'))
+      const promises = newTeams.map(team => this.$store.dispatch(action.CREATE_TEAM))
       const createdTeams = await axios.all(promises)
       for(const team of createdTeams) {
         this.tournament.teams.push(team)

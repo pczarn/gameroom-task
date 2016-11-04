@@ -1,6 +1,7 @@
 <script>
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
+import * as action from 'src/store/action_types'
 import GameForm from './Form'
 
 export default {
@@ -19,7 +20,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('UPDATE_GAME', this.game)
+      this.$store.dispatch(action.UPDATE_GAME, this.game)
     },
   },
 }

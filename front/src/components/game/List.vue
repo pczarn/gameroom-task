@@ -29,6 +29,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as action from 'src/store/action_types'
 import GameOverview from './Overview'
 import GameCreate from './Create'
 
@@ -49,7 +50,7 @@ export default {
       this.setArchivized(game, false)
     },
     setArchivized (game, archivized) {
-      this.$store.dispatch('UPDATE_GAME', {
+      this.$store.dispatch(action.UPDATE_GAME, {
         id: game.id,
         state_archivized: archivized,
       })

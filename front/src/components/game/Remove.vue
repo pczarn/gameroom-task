@@ -4,6 +4,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import * as action from 'src/store/action_types'
 
 export default {
   computed: {
@@ -13,7 +14,7 @@ export default {
   },
   methods: {
     async destroy () {
-      await this.$store.dispatch('DESTROY_GAME', this.game)
+      await this.$store.dispatch(action.DESTROY_GAME, this.game)
       this.$router.go('/games')
     },
   },

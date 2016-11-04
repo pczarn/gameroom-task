@@ -1,5 +1,6 @@
 <script>
 import _ from 'lodash'
+import * as action from 'src/store/action_types'
 import GameForm from './Form'
 
 export default {
@@ -12,7 +13,7 @@ export default {
   },
   methods: {
     async submit () {
-      await this.$store.dispatch('CREATE_GAME', this.game)
+      await this.$store.dispatch(action.CREATE_GAME, this.game)
       this.game = _.cloneDeep(this.blankGame)
     },
   },

@@ -1,5 +1,6 @@
 <script>
 import _ from 'lodash'
+import * as action from 'src/store/action_types'
 import MatchForm from './Form'
 
 export default {
@@ -12,7 +13,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch('CREATE_MATCH', this.match)
+      this.$store.dispatch(action.CREATE_MATCH, this.match)
       this.match = _.cloneDeep(this.blankMatch)
     },
   },

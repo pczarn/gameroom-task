@@ -18,6 +18,7 @@ import { mapGetters } from 'vuex'
 import policies from 'src/policies'
 import TournamentTeamOverview from './TeamOverview'
 import SelectTeam from './SelectTeam'
+import * as action from 'src/store/action_types'
 
 export default {
   components: {
@@ -44,7 +45,7 @@ export default {
   methods: {
     addTeam (team) {
       this.tournament.teams.push(team)
-      this.$store.dispatch('UPDATE_TOURNAMENT', this.tournament)
+      this.$store.dispatch(action.UPDATE_TOURNAMENT, this.tournament)
     },
   },
 }

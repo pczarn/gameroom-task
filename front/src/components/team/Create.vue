@@ -33,6 +33,7 @@
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
+import * as action from 'src/store/action_types'
 import TeamForm from './Form'
 
 export default {
@@ -50,7 +51,7 @@ export default {
   },
   methods: {
     async submit () {
-      await this.$store.dispatch('CREATE_TEAM', this.team)
+      await this.$store.dispatch(action.CREATE_TEAM, this.team)
       this.team = this.$options.data().team
     },
     selectMember (member) {
