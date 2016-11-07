@@ -30,12 +30,6 @@ guard :rspec, cmd: "bin/rspec" do
   dsl.watch_spec_files_for(rails.app_files)
   dsl.watch_spec_files_for(rails.views)
 
-  watch(%r{^app/controllers/api/v1/(.+)_controller\.rb$}) do |m|
-    [
-      rspec.spec.call("controllers/#{m[1]}_controller"),
-    ]
-  end
-
   watch(rails.controllers) do |m|
     [
       rspec.spec.call("controllers/#{m[1]}_controller"),
