@@ -1,5 +1,5 @@
 class UsersRepository
-  def users
-    User.all.select(:id, :name, :email, :role)
+  def fetch
+    User.all
   end
 end

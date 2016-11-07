@@ -11,7 +11,7 @@ module Api
       end
 
       def index
-        users = UsersRepository.new.users
+        users = UsersRepository.new.fetch
         render json: UsersRepresenter.new(users)
       end
 

@@ -10,7 +10,7 @@ module Api
       end
 
       def index
-        teams = TeamsRepository.new.teams
+        teams = TeamsRepository.new.fetch
         render json: TeamsRepresenter.new(teams)
       end
 

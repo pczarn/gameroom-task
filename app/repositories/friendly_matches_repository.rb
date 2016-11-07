@@ -1,5 +1,5 @@
 class FriendlyMatchesRepository
-  def friendly_matches
-    Match.friendly.order(played_at: :desc)
+  def fetch
+    Match.friendly
   end
 end

@@ -11,7 +11,7 @@ module Api
       end
 
       def index
-        matches = FriendlyMatchesRepository.new.friendly_matches
+        matches = FriendlyMatchesRepository.new.fetch
         render json: MatchesRepresenter.new(matches).basic
       end
 
