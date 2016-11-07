@@ -1,5 +1,5 @@
 class TournamentsRepository
-  def tournaments
+  def fetch
     Tournament.all.includes(
       :team_tournaments,
       rounds: :matches,
