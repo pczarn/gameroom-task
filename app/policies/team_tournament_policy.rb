@@ -22,6 +22,10 @@ class TeamTournamentPolicy < ApplicationPolicy
     !tournament.ended?
   end
 
+  def join?
+    !tournament.ended?
+  end
+
   private
 
   def tournament

@@ -35,6 +35,8 @@ module Api
       def authorize_update(model)
         if leaving?
           authorize model, :leave?
+        elsif joining?
+          authorize model, :join?
         else
           authorize model, :update?
         end
@@ -51,7 +53,13 @@ module Api
       def leaving?
         team.members.size == team_params[:member_ids].size + 1 &&
           team.members.include?(current_user) &&
-          team_params[:member_ids].include?(current_user.id)
+          !team_params[:member_ids].map(&:to_i).include?(current_user.id)
+      end
+
+      def joining?
+        team.members.size == team_params[:member_ids].size - 1 &&
+          !team.members.include?(current_user) &&
+          team_params[:member_ids].map(&:to_i).include?(current_user.id)
       end
 
       def add_team_params
