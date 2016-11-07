@@ -62,8 +62,8 @@ const actions = {
   },
 
   async [action.DESTROY_GAME] ({ commit }, { id }) {
-    await api.destroyGame(id)
-    commit(mutation.REMOVE_GAME, { id: id })
+    await api.destroyGame({ id })
+    commit(mutation.REMOVE_GAME, { id })
   },
 }
 

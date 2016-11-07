@@ -1,4 +1,5 @@
 import axios from 'axios'
+import _ from 'lodash'
 import auth from 'src/auth'
 import store from 'src/store'
 import * as action from 'src/store/action_types'
@@ -40,72 +41,70 @@ export default {
   async createUser (user) {
     return (await axios.post('/users', { user })).data
   },
-  async updateUser (user) {
+  async updateUser (userParams) {
     const id = user.id
-    const params = {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      password_confirmation: user.password_confirmation,
-    }
-    return (await axios.patch(`/users/${id}`, { user: params })).data
+    const user = _.pick(userParams, [
+      'name',
+      'email',
+      'password',
+      'password_confirmation',
+    ])
+    return (await axios.patch(`/users/${id}`, { user })).data
   },
 
   async getGames () {
     return (await axios.get('/games')).data
   },
-  async createGame (params) {
-    return (await axios.post('/games', { game: params })).data
+  async createGame (game) {
+    return (await axios.post('/games', { game })).data
   },
-  async updateGame (params) {
-    const id = params.id
-    return (await axios.patch(`/games/${id}`, { game: params })).data
+  async updateGame (game) {
+    const id = game.id
+    return (await axios.patch(`/games/${id}`, { game })).data
   },
-  destroyGame (id) {
+  destroyGame ({ id }) {
     return axios.delete(`/games/${id}`)
   },
 
   async getTeams () {
     return (await axios.get('/teams')).data
   },
-  async createTeam (params) {
-    return (await axios.post('/teams', { team: params })).data
+  async createTeam (team) {
+    return (await axios.post('/teams', { team })).data
   },
-  async updateTeam (params) {
-    const id = params.id
-    return (await axios.patch(`/teams/${id}`, { team: params })).data
+  async updateTeam (teamParams) {
+    const id = teamParams.id
+    const team = { name: teamParams.name }
+    return (await axios.patch(`/teams/${id}`, { team })).data
   },
-  destroyTeam (id) {
+  destroyTeam ({ id }) {
     return axios.delete(`/teams/${id}`)
   },
 
   async getMatches () {
     return (await axios.get('/friendly_matches')).data
   },
-  async createMatch (params) {
-    return (await axios.post('/friendly_matches', { match: params })).data
+  async createMatch (match) {
+    return (await axios.post('/friendly_matches', { match })).data
   },
-  async updateMatch (params) {
-    const id = params.id
-    params = {
-      team_one_id: params.team_one_id,
-      team_two_id: params.team_two_id,
-      team_one_score: params.team_one_score,
-      team_two_score: params.team_two_score,
-      game_id: params.game_id,
-      played_at: params.played_at,
-    }
-    return (await axios.patch(`/friendly_matches/${id}`, { match: params })).data
+  async updateMatch (matchParams) {
+    const id = matchParams.id
+    const match = _.pick(matchParams, [
+      'team_one_id',
+      'team_two_id',
+      'team_one_score',
+      'team_two_score',
+      'game_id',
+      'played_at',
+    ])
+    return (await axios.patch(`/friendly_matches/${id}`, { match })).data
   },
-  async updateMatchLineup (match, team) {
-    const matchId = match.id
-    const lineupId = team.id
-    const teamParams = {
-      team: { member_ids: team.member_ids },
-    }
-    return (await axios.patch(`/friendly_matches/${matchId}/lineups/${lineupId}`, teamParams)).data
+  async updateMatchLineup (match, teamParams) {
+    const id = teamParams.id
+    const team = { member_ids: teamParams.member_ids }
+    return (await axios.patch(`/friendly_matches/${match.id}/lineups/${id}`, { team })).data
   },
-  destroyMatch (id) {
+  destroyMatch ({ id }) {
     return axios.delete(`/friendly_matches/${id}`)
   },
 
@@ -119,35 +118,33 @@ export default {
   async createTournament (params) {
     return (await axios.post('/tournaments', { tournament: params })).data
   },
-  async updateTournament (params) {
-    const id = params.id
-    params = {
-      title: params.title,
-      description: params.description,
-      game_id: params.game_id,
-      started_at: params.started_at,
-      number_of_teams: params.number_of_teams,
-      number_of_members_per_team: params.number_of_members_per_team,
-    }
-    return (await axios.patch(`/tournaments/${id}`, { tournament: params })).data
+  async updateTournament (tournamentParams) {
+    const id = tournamentParams.id
+    const tournament = _.pick(tournamentParams, [
+      'title',
+      'description',
+      'game_id',
+      'started_at',
+      'number_of_teams',
+      'number_of_members_per_team',
+    ])
+    return (await axios.patch(`/tournaments/${id}`, { tournament })).data
   },
-  destroyTournament (id) {
+  destroyTournament ({ id }) {
     return axios.delete(`/tournaments/${id}`)
   },
 
   async createTournamentLineup (tournament, team) {
-    if(team.id) {
+    if(team.id !== undefined) {
       return (await axios.post(`tournaments/${tournament.id}/lineups`, { team_id: team.id })).data
     } else {
-      return (await axios.post(`tournaments/${tournament.id}/lineups`, { team: team })).data
+      return (await axios.post(`tournaments/${tournament.id}/lineups`, { team })).data
     }
   },
-  async updateTournamentLineup (tournament, team) {
-    const id = team.id
-    team = {
-      member_ids: team.member_ids,
-    }
-    return (await axios.patch(`/tournaments/${tournament.id}/lineups/${id}`, { team: team })).data
+  async updateTournamentLineup (tournament, teamParams) {
+    const id = teamParams.id
+    const team = { member_ids: teamParams.member_ids }
+    return (await axios.patch(`/tournaments/${tournament.id}/lineups/${id}`, { team })).data
   },
   destroyTournamentLineup (tournament, team) {
     const id = team.id
@@ -155,13 +152,6 @@ export default {
   },
   async updateTournamentMatch (tournament, match) {
     const id = match.id
-    return (await axios.patch(`/matches/${id}`, { match: match })).data
-  },
-
-  createTournamentTeamParticipation (id, team) {
-    return axios.post(`/tournaments/${id}/add_team`, { team: team })
-  },
-  destroyTournamentTeamParticipation (id, team) {
-    return axios.post(`/tournaments/${id}/remove_team`, { team: team })
+    return (await axios.patch(`/matches/${id}`, { match })).data
   },
 }
