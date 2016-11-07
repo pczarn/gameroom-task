@@ -117,8 +117,8 @@ const actions = {
     })
   },
   async [action.DESTROY_MATCH] ({ commit }, { id }) {
-    await api.destroyMatch(id)
-    commit(mutation.REMOVE_MATCH, { id: id })
+    await api.destroyMatch({ id })
+    commit(mutation.REMOVE_MATCH, { id })
   },
 }
 

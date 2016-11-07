@@ -112,8 +112,8 @@ const actions = {
     commit(mutation.SET_TOURNAMENT, rawTournament(tournament))
   },
   async [action.DESTROY_TOURNAMENT] ({ commit }, { id }) {
-    await api.destroyTournament(id)
-    commit(mutation.REMOVE_TOURNAMENT, { id: id })
+    await api.destroyTournament({ id })
+    commit(mutation.REMOVE_TOURNAMENT, { id })
   },
   async [action.UPDATE_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
     const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
