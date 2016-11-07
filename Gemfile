@@ -64,5 +64,5 @@ gem "knock", "~> 1.5"
 # Allowing CORS for API
 gem "rack-cors", "~> 0.4", require: "rack/cors"
 
-# For controllers
+# For accessing models inside controllers
 gem "decent_exposure", "~>3.0"
