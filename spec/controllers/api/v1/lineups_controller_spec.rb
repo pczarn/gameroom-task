@@ -61,4 +61,211 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
       it { is_expected.to be_forbidden }
     end
   end
+
+  describe "#update" do
+    subject(:updating) { patch :update, params: params }
+    let(:team) { create(:team, members_count: 5) }
+    let(:set_member_ids) { team.member_ids[0, 3] }
+
+    let(:params) do
+      {
+        tournament_id: tournament.id,
+        id: team.id,
+        team: { member_ids: set_member_ids },
+      }
+    end
+
+    let(:tournament) do
+      create(:tournament, teams: [team], owner: tournament_owner)
+    end
+
+    let(:tournament_owner) { current_user }
+
+    let(:service) { instance_double(UpdateLineup) }
+
+    context "when the tournament is open" do
+      context "when the current user owns the tournament" do
+        it "uses a service to update the team" do
+          allow(UpdateLineup).to receive(:new).and_return(service)
+          expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+          updating
+        end
+
+        context "when a team with such members does not exist yet" do
+          it { is_expected.to be_success }
+
+          it "updates the team" do
+            expect { updating }
+              .to change { tournament.reload.teams.first.member_ids.sort }
+              .to eq(set_member_ids.sort)
+          end
+        end
+
+        context "when a team with such members already exists" do
+          before { create(:team, name: "bar", member_ids: set_member_ids) }
+
+          it { is_expected.to be_success }
+
+          it "uses a service to update the team" do
+            allow(UpdateLineup).to receive(:new).and_return(service)
+            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            updating
+          end
+
+          it "adds a reused the team" do
+            expect { updating }
+              .to change { tournament.reload.teams.pluck(:name) }
+              .to include("bar")
+          end
+        end
+      end
+
+      context "when the current user does not own the tournament" do
+        let(:tournament_owner) { build(:user) }
+
+        context "when joining a team" do
+          let(:set_member_ids) { team.member_ids + [current_user.id] }
+
+          it { is_expected.to be_success }
+
+          it "uses a service to update the team" do
+            allow(UpdateLineup).to receive(:new).and_return(service)
+            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            updating
+          end
+
+          it "adds the current user to the team" do
+            expect { updating }
+              .to change { tournament.reload.teams.first.member_ids }
+              .to include(current_user.id)
+          end
+        end
+
+        context "when leaving a team" do
+          let(:another_user) { create(:user) }
+          let(:team) { create(:team, members: [current_user, another_user]) }
+          let(:set_member_ids) { [another_user.id] }
+
+          it { is_expected.to be_success }
+
+          it "uses a service to update the team" do
+            allow(UpdateLineup).to receive(:new).and_return(service)
+            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            updating
+          end
+
+          it "removes the current user from the team" do
+            expect { updating }
+              .to change { tournament.reload.teams.first.member_ids }
+              .to eq(set_member_ids)
+          end
+        end
+
+        context "when the current user is a member of the tournament" do
+          before { team.members << current_user }
+
+          context "when adding or removing other users" do
+            it { is_expected.to be_forbidden }
+          end
+        end
+
+        context "when the current user is not a member of the tournament" do
+          context "when adding or removing other users" do
+            it { is_expected.to be_forbidden }
+          end
+
+          context "when not adding or removing any users" do
+            let(:set_member_ids) { team.member_ids }
+
+            it { is_expected.to be_forbidden }
+          end
+        end
+      end
+    end
+
+    context "when the tournament is ended" do
+      before { tournament.ended! }
+
+      it { is_expected.to be_forbidden }
+    end
+
+    context "when in a friendly match" do
+      let(:match) { create(:match, team_one: team, owner: match_owner) }
+      let(:match_owner) { current_user }
+
+      let(:params) do
+        {
+          friendly_match_id: match.id,
+          id: team.id,
+          team: { member_ids: set_member_ids },
+        }
+      end
+
+      context "when the current user owns the match" do
+        it { is_expected.to be_success }
+
+        it "uses a service to update the team" do
+          allow(UpdateLineup).to receive(:new).and_return(service)
+          expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+          updating
+        end
+      end
+
+      context "when the current user does not own the match" do
+        let(:match_owner) { build(:user) }
+
+        context "when joining a team" do
+          let(:set_member_ids) { team.member_ids + [current_user.id] }
+
+          it { is_expected.to be_success }
+
+          it "uses a service to update the team" do
+            allow(UpdateLineup).to receive(:new).and_return(service)
+            expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+            updating
+          end
+        end
+
+        context "when leaving a team" do
+          let(:another_user) { create(:user) }
+          let(:team) { create(:team, members: [current_user, another_user]) }
+          let(:set_member_ids) { [another_user.id] }
+
+          it { is_expected.to be_success }
+
+          it "uses a service to update the team" do
+            allow(UpdateLineup).to receive(:new).and_return(service)
+            expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+            updating
+          end
+
+          it "removes the current user from the team" do
+            expect { updating }
+              .to change { match.reload.team_one.member_ids }
+              .to eq(set_member_ids)
+          end
+        end
+
+        context "when the current user is a member of the tournament" do
+          before { team.members << current_user }
+
+          context "when adding or removing other users" do
+            it { is_expected.to be_success }
+          end
+        end
+
+        context "when the current user does not participate in the match" do
+          context "when adding or removing other users" do
+            it { is_expected.to be_forbidden }
+          end
+
+          context "when not adding or removing any users" do
+            let(:set_member_ids) { team.member_ids }
+
+            it { is_expected.to be_forbidden }
+          end
+        end
+      end
+    end
+  end
 end
