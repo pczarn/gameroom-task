@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$store.dispatch(action.UPDATE_MATCH, this.match)
+      this.$store.dispatch(action.UPDATE_FRIENDLY_MATCH, this.match)
     },
   },
 }

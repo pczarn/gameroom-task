@@ -6,7 +6,7 @@ import api from 'src/api'
 
 import session from 'src/store/session'
 import teams from 'src/store/teams'
-import matches from 'src/store/matches'
+import friendlyMatches from 'src/store/friendly_matches'
 import games from 'src/store/games'
 import tournaments from 'src/store/tournaments'
 import users from 'src/store/users'
@@ -30,7 +30,7 @@ export const store = new Vuex.Store({
     session,
     games,
     teams,
-    matches,
+    friendlyMatches,
     tournaments,
     users,
     alert,
@@ -75,7 +75,7 @@ export const store = new Vuex.Store({
       const lists = await axios.all([
         api.getGames(),
         api.getTeams(),
-        api.getMatches(),
+        api.getFriendlyMatches(),
         api.getTournaments(),
         api.getUsers(),
       ])

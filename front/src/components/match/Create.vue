@@ -14,7 +14,7 @@ export default {
 
   methods: {
     submit () {
-      this.$store.dispatch(action.CREATE_MATCH, this.match)
+      this.$store.dispatch(action.CREATE_FRIENDLY_MATCH, this.match)
       this.match = this.$options.data().match
     },
   },
