@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe FinishMatch do
+RSpec.describe UpdateMatch do
   describe "#perform" do
     subject(:run_service) do
       service.perform
@@ -8,10 +8,10 @@ RSpec.describe FinishMatch do
 
     let(:service) { described_class.new(match, params: params) }
     let(:params) { { team_one_score: 0, team_two_score: 0 } }
-    let(:update_match) { instance_double("UpdateMatch") }
+    let(:update_match) { instance_double("UpdateMatchAttributes") }
 
     before do
-      allow(UpdateMatch).to receive(:new).and_return(update_match)
+      allow(UpdateMatchAttributes).to receive(:new).and_return(update_match)
       allow(update_match).to receive_messages(save: true, finish: nil)
     end
 
@@ -72,7 +72,7 @@ RSpec.describe FinishMatch do
   end
 end
 
-RSpec.describe UpdateMatch do
+RSpec.describe UpdateMatchAttributes do
   subject(:update_match) { described_class.new(match: match, params: params) }
   let(:match) { create(:match) }
   let(:params) { { team_one_score: 0, team_two_score: 0 } }

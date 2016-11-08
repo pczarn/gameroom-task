@@ -34,9 +34,9 @@ RSpec.describe Api::V1::MatchesController, type: :controller do
       expect { action }.to change { match.reload.team_one_score }.to eq(2)
     end
 
-    it "calls a service to finish the match" do
-      service = instance_double(FinishMatch)
-      allow(FinishMatch).to receive(:new).and_return(service)
+    it "calls a service to update the match" do
+      service = instance_double(UpdateMatch)
+      allow(UpdateMatch).to receive(:new).and_return(service)
       expect(service).to receive(:perform)
       action
     end

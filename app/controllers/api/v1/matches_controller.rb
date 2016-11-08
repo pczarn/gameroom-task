@@ -6,7 +6,7 @@ module Api
       expose :match, with: :authorize
 
       def update
-        service = FinishMatch.new(match, params: match_params)
+        service = UpdateMatch.new(match, params: match_params)
         service.perform
         render json: MatchRepresenter.new(match).basic
       end

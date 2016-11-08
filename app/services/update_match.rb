@@ -14,7 +14,7 @@ module TournamentRoundAccess
   end
 end
 
-class FinishMatch
+class UpdateMatch
   include TournamentRoundAccess
 
   def initialize(match, params: {})
@@ -44,7 +44,7 @@ class FinishMatch
   end
 
   def task_for_match_update
-    UpdateMatch.new(match: @match, params: @params)
+    UpdateMatchAttributes.new(match: @match, params: @params)
   end
 
   def tasks_for_tournament
@@ -83,7 +83,7 @@ class TaskList < Array
   end
 end
 
-class UpdateMatch
+class UpdateMatchAttributes
   def initialize(match:, params:)
     @match = match
     @params = params
