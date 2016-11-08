@@ -30,6 +30,7 @@ import * as action from 'src/store/action_types'
 
 export default {
   name: 'Game',
+
   computed: {
     editable () {
       return policies.gamePolicy(this.game).update
@@ -38,6 +39,7 @@ export default {
       game: 'currentGame',
     }),
   },
+
   methods: {
     async remove () {
       await this.$store.dispatch(action.DESTROY_GAME, this.game)

@@ -19,12 +19,13 @@ import MatchCreate from './Create'
 
 export default {
   name: 'MatchList',
-  props: {
-    user: Object,
-  },
   components: {
     MatchOverview,
     MatchCreate,
+  },
+
+  props: {
+    user: Object,
   },
   computed: {
     filteredMatches () {

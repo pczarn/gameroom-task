@@ -19,6 +19,7 @@ export default {
     TeamOverview,
     TeamCreate,
   },
+
   props: {
     user: Object,
   },

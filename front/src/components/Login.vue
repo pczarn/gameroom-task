@@ -24,13 +24,15 @@ export default {
   components: {
     AccountCreate,
   },
-  data: function () {
+
+  data () {
     return {
       email: 'p@monterail.com',
       password: 'hunter2',
       error: '',
     }
   },
+
   methods: {
     logIn () {
       try {

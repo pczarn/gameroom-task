@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 import * as action from 'src/store/action_types'
@@ -42,6 +41,7 @@ export default {
   components: {
     Multiselect,
   },
+
   computed: {
     potentialPlayers () {
       const selected = this.team.members.map(m => m.id)
@@ -49,6 +49,7 @@ export default {
     },
     ...mapGetters(['userList']),
   },
+
   methods: {
     async submit () {
       await this.$store.dispatch(action.CREATE_TEAM, this.team)

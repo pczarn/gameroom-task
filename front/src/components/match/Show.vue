@@ -55,6 +55,7 @@ export default {
     TeamMemberList,
     MatchEdit,
   },
+
   computed: {
     scoreOne () {
       return score(this.match.teamOneScore)
@@ -80,6 +81,7 @@ export default {
       match: 'currentMatch',
     }),
   },
+
   methods: {
     goBack () {
       this.$router.go(-1)

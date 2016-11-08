@@ -12,6 +12,7 @@
 <script>
 export default {
   name: 'TeamMemberList',
+
   props: {
     members: Array,
     editable: {
@@ -19,6 +20,7 @@ export default {
       default: false,
     },
   },
+
   methods: {
     remove (member) {
       this.$emit('remove', member)

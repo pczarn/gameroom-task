@@ -11,13 +11,14 @@ import TeamMemberList from './MemberList'
 
 export default {
   name: 'TeamOverview',
+  components: {
+    TeamMemberList,
+  },
+
   props: {
     id: Number,
     name: String,
     members: Array,
-  },
-  components: {
-    TeamMemberList,
   },
 }
 </script>
