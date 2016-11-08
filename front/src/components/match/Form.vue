@@ -83,10 +83,10 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
 import Datepicker from 'vue-datepicker'
-import _ from 'lodash'
 import { pickerOption } from 'src/util'
 
 export default {
@@ -94,6 +94,7 @@ export default {
     Multiselect,
     Datepicker,
   },
+
   data () {
     return {
       match: { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} },
@@ -116,6 +117,7 @@ export default {
     },
     ...mapGetters(['currentMatch', 'teamList', 'teamMap', 'gameList', 'userList']),
   },
+
   methods: {
     remove (whichTeam, member) {
       const newTeam = this.match[whichTeam]

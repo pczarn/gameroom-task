@@ -7,16 +7,18 @@ import GameForm from './Form'
 export default {
   name: 'GameEdit',
   mixins: [GameForm],
+
   data () {
     return {
       buttonText: 'Update the game',
     }
   },
-  created () {
-    this.game = _.cloneDeep(this.currentGame)
-  },
   computed: {
     ...mapGetters(['currentGame']),
+  },
+
+  created () {
+    this.game = _.cloneDeep(this.currentGame)
   },
   methods: {
     submit () {

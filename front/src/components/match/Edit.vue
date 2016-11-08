@@ -6,11 +6,13 @@ import MatchForm from './Form'
 export default {
   name: 'MatchEdit',
   mixins: [MatchForm],
+
   data () {
     return {
       buttonText: 'Update match',
     }
   },
+
   created () {
     this.match = _.cloneDeep(this.currentMatch)
   },

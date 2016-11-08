@@ -39,9 +39,11 @@ export default {
     GameOverview,
     GameCreate,
   },
+
   computed: {
     ...mapGetters(['isAdmin', 'activeGames', 'archivizedGames']),
   },
+
   methods: {
     archivize (game) {
       this.setArchivized(game, true)

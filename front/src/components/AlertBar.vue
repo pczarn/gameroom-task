@@ -10,7 +10,10 @@ import { mapGetters } from 'vuex'
 import * as action from 'src/store/action_types'
 
 export default {
+  name: 'AlertBar',
+
   computed: mapGetters(['alert']),
+
   methods: {
     clear () {
       this.$store.dispatch(action.SET_ERROR, null)

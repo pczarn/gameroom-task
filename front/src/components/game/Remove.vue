@@ -12,6 +12,7 @@ export default {
       game: 'currentGame',
     }),
   },
+
   methods: {
     async destroy () {
       await this.$store.dispatch(action.DESTROY_GAME, this.game)

@@ -24,7 +24,9 @@ import { mapGetters } from 'vuex'
 import * as action from 'src/store/action_types'
 
 export default {
+  name: 'NavigationBar',
   computed: mapGetters(['currentUser', 'isLoggedIn']),
+
   methods: {
     logOut () {
       this.$store.dispatch(action.LOG_OUT)

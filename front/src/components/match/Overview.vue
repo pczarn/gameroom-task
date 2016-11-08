@@ -32,6 +32,10 @@ import Team from 'src/components/team/Show'
 import { score } from 'src/util'
 
 export default {
+  components: {
+    Team,
+  },
+
   props: {
     id: Number,
     playedAt: String,
@@ -39,9 +43,6 @@ export default {
     teamTwo: Object,
     teamOneScore: Number,
     teamTwoScore: Number,
-  },
-  components: {
-    Team,
   },
   computed: {
     scoreOne () {
