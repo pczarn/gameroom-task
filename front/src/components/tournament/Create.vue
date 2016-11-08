@@ -14,7 +14,7 @@ export default {
   methods: {
     async submit () {
       await this.$store.dispatch(action.CREATE_TOURNAMENT, this.tournament)
-      this.tournament = _.cloneDeep(this.blankTournament)
+      this.tournament = this.$options.data().tournament
     },
   },
 }

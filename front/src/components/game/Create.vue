@@ -14,7 +14,7 @@ export default {
   methods: {
     async submit () {
       await this.$store.dispatch(action.CREATE_GAME, this.game)
-      this.game = _.cloneDeep(this.blankGame)
+      this.game = this.$options.data().game
     },
   },
 }
