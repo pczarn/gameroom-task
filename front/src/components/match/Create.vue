@@ -14,7 +14,7 @@ export default {
   methods: {
     submit () {
       this.$store.dispatch(action.CREATE_MATCH, this.match)
-      this.match = _.cloneDeep(this.blankMatch)
+      this.match = this.$options.data().match
     },
   },
 }
