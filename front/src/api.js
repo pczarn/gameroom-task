@@ -81,13 +81,13 @@ export default {
     return axios.delete(`/teams/${id}`)
   },
 
-  async getMatches () {
+  async getFriendlyMatches () {
     return (await axios.get('/friendly_matches')).data
   },
-  async createMatch (match) {
+  async createFriendlyMatch (match) {
     return (await axios.post('/friendly_matches', { match })).data
   },
-  async updateMatch (matchParams) {
+  async updateFriendlyMatch (matchParams) {
     const id = matchParams.id
     const match = _.pick(matchParams, [
       'team_one_id',
@@ -99,12 +99,12 @@ export default {
     ])
     return (await axios.patch(`/friendly_matches/${id}`, { match })).data
   },
-  async updateMatchLineup (match, teamParams) {
+  async updateFriendlyMatchLineup (match, teamParams) {
     const id = teamParams.id
     const team = { member_ids: teamParams.member_ids }
     return (await axios.patch(`/friendly_matches/${match.id}/lineups/${id}`, { team })).data
   },
-  destroyMatch ({ id }) {
+  destroyFriendlyMatch ({ id }) {
     return axios.delete(`/friendly_matches/${id}`)
   },
 

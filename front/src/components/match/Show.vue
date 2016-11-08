@@ -87,7 +87,7 @@ export default {
       this.$router.go(-1)
     },
     async remove () {
-      await this.$store.dispatch(action.DESTROY_MATCH, this.match)
+      await this.$store.dispatch(action.DESTROY_FRIENDLY_MATCH, this.match)
       this.$router.push('/matches')
     },
   },
