@@ -1,6 +1,5 @@
 <script>
 import _ from 'lodash'
-import moment from 'moment'
 import * as action from 'src/store/action_types'
 import MatchForm from './Form'
 
@@ -14,7 +13,6 @@ export default {
   },
   created () {
     this.match = _.cloneDeep(this.currentMatch)
-    this.playedAtLocal = moment(this.match.playedAt).toISOString().replace('Z', '')
   },
   methods: {
     submit () {
