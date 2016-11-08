@@ -10,7 +10,7 @@
 
     <fieldset class="row">
       <label for="playedAt">Played at</label>
-      <input type="datetime-local" name="playedAt" v-model="playedAtLocal">
+      <datepicker :date="playedAtTime" :option="pickerOption" @change="setPlayedAt"></datepicker>
     </fieldset>
 
     <fieldset class="row">
@@ -85,19 +85,24 @@
 <script>
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
-import moment from 'moment'
+import Datepicker from 'vue-datepicker'
 import _ from 'lodash'
+import { pickerOption } from 'src/util'
 
 export default {
   components: {
     Multiselect,
+    Datepicker,
   },
   data () {
     return {
       match: { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} },
-      playedAtLocal: null,
       teamOneName: '',
       teamTwoName: '',
+      playedAtTime: {
+        time: '',
+      },
+      pickerOption,
     }
   },
   computed: {
@@ -135,8 +140,10 @@ export default {
       this.match.teamTwo = team
     },
     prepareAndSubmit () {
-      this.match.playedAt = moment(this.playedAtLocal).toISOString()
       this.submit()
+    },
+    setPlayedAt (datetime) {
+      this.match.playedAt = datetime
     },
   },
 }

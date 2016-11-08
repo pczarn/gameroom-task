@@ -8,6 +8,8 @@
       <input v-bind="field.attrs" v-model="tournament[field.attrs.name]">
       <br>
     </template>
+    <label :for="startedAt">Starts at</label>
+    <datepicker :date="startedAt" :option="pickerOption" @change="setStartedAt"></datepicker>
   </fieldset>
   <fieldset v-if="tournament.game">
     <legend>Choose game</legend>
@@ -47,12 +49,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import Multiselect from 'vue-multiselect'
+import Datepicker from 'vue-datepicker'
 import SelectTeam from './SelectTeam'
+import { pickerOption } from 'src/util'
 
 export default {
   name: 'TournamentForm',
   components: {
     Multiselect,
+    Datepicker,
     SelectTeam,
   },
   data () {
@@ -63,9 +68,9 @@ export default {
         { attrs: { name: 'image', type: 'file', accept: "image/*" }, label: 'Image' },
         { attrs: { name: 'numberOfTeams', type: 'number' }, label: 'Number of teams' },
         { attrs: { name: 'numberOfMembersPerTeam', type: 'num' }, label: 'Number of members per team' },
-        { attrs: { name: 'startedAt', type: 'datetime-local' }, label: 'Starts at' },
       ],
       tournament: { teams: [], game: {} },
+      pickerOption,
     }
   },
   computed: {
@@ -75,6 +80,9 @@ export default {
     },
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
+    },
+    startedAt () {
+      return { time: this.tournament.startedAt || '' }
     },
     ...mapGetters(['userList', 'gameList', 'currentTournament']),
   },
@@ -96,6 +104,9 @@ export default {
     removeMember (team, member) {
       const memberIdx = team.members.findIndex(m => m.id === member.id)
       team.members.splice(memberIdx, 1)
+    },
+    setStartedAt (datetime) {
+      this.tournament.startedAt = datetime
     },
   },
 }

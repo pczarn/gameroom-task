@@ -3,7 +3,7 @@
   <form v-if="editable" @submit.prevent="update">
     <fieldset class="row">
       <label for="playedAt">Played at</label>
-      <input type="datetime-local" name="playedAt" v-model="form.playedAtLocal">
+      <datepicker :date="playedAtTime" :option="pickerOption" @change="setPlayedAt"></datepicker>
     </fieldset>
 
     <fieldset class="row scores">
@@ -23,10 +23,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import moment from 'moment'
 import policies from 'src/policies'
 import MatchOverview from 'src/components/match/Overview'
+import Datepicker from 'vue-datepicker'
 import * as action from 'src/store/action_types'
+import { pickerOption } from 'src/util'
 
 export default {
   props: {
@@ -34,16 +35,20 @@ export default {
   },
   components: {
     MatchOverview,
+    Datepicker,
   },
   data () {
-    const playedAtLocal = moment(this.match.playedAt).toISOString().replace('Z', '')
     return {
       form: {
+        id: this.match.id,
         playedAt: null,
-        playedAtLocal,
         teamOneScore: this.match.teamOneScore,
         teamTwoScore: this.match.teamTwoScore,
       },
+      playedAtTime: {
+        time: this.match.playedAt,
+      },
+      pickerOption,
     }
   },
   computed: {
@@ -56,9 +61,10 @@ export default {
   },
   methods: {
     update () {
-      this.form.playedAt = moment(this.form.playedAtLocal).toISOString()
-      this.form.id = this.match.id
       this.$store.dispatch(action.UPDATE_TOURNAMENT_MATCH, [this.tournament, this.form])
+    },
+    setPlayedAt (datetime) {
+      this.form.playedAt = datetime
     },
   },
 }
