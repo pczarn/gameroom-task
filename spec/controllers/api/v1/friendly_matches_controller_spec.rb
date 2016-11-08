@@ -89,13 +89,6 @@ RSpec.describe Api::V1::FriendlyMatchesController, type: :controller do
       expect { action }.to change { match.reload.team_one_score }.to eq(2)
     end
 
-    it "calls a service to finish the match" do
-      service = instance_double(FinishMatch)
-      allow(FinishMatch).to receive(:new).and_return(service)
-      expect(service).to receive(:perform)
-      action
-    end
-
     context "when the user participates in the match" do
       before do
         match.team_one.members << current_user

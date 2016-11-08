@@ -20,8 +20,7 @@ module Api
       end
 
       def update
-        service = UpdateMatch.new(friendly_match, params: friendly_match_params)
-        service.perform
+        friendly_match.update!(friendly_match_params)
         render json: MatchRepresenter.new(friendly_match).basic
       end
 
