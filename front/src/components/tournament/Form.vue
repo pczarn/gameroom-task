@@ -30,7 +30,6 @@
         <multiselect :options="potentialPlayers"
                      :searchable="true"
                      label="name"
-                     track-by="name"
                      placeholder="Pick a member"
                      @input="selectMemberInTeam(team, $event)"
                      :reset-after="true"
