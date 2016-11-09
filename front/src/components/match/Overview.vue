@@ -32,6 +32,7 @@ import Team from 'src/components/team/Show'
 import { score } from 'src/util'
 
 export default {
+  name: 'MatchOverview',
   components: {
     Team,
   },

@@ -14,19 +14,19 @@
     </fieldset>
 
     <fieldset class="row">
-      <select :value="match.teamOne.id" @input="setTeamOne" class="left-col">
+      <select :value="teamOneId" @input="setTeamOne" class="left-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
       <span class="middle-col">vs</span>
-      <select :value="match.teamTwo.id" @input="setTeamTwo" class="right-col">
+      <select :value="teamTwoId" @input="setTeamTwo" class="right-col">
         <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
       </select>
     </fieldset>
 
     <fieldset class="row">
-      <input type="text" v-model="match.teamOne.name" class="left-col">
+      <input type="text" v-model="match.teamOne.name" :disabled="!!teamOneId" class="left-col">
       <span class="middle-col">vs</span>
-      <input type="text" v-model="match.teamTwo.name" class="right-col">
+      <input type="text" v-model="match.teamTwo.name" :disabled="!!teamTwoId" class="right-col">
     </fieldset>
 
     <fieldset class="row scores">
@@ -123,21 +123,36 @@ export default {
     playedAtTime () {
       return { time: this.match.playedAt }
     },
-    ...mapGetters(['currentMatch', 'teamList', 'teamMap', 'gameList', 'userList']),
+    teamOneId () {
+      const team = this.getTeamByMembers(this.match.teamOne.members)
+      if(team) {
+        return team.id
+      }
+    },
+    teamTwoId () {
+      const team = this.getTeamByMembers(this.match.teamTwo.members)
+      if(team) {
+        return team.id
+      }
+    },
+    ...mapGetters([
+      'currentMatch',
+      'teamList',
+      'teamMap',
+      'teamByMemberIdsMap',
+      'gameList',
+      'userList',
+    ]),
   },
 
   methods: {
     remove (whichTeam, member) {
+      const previousTeamMembers = _.clone(this.match[whichTeam].members)
       const newTeam = this.match[whichTeam]
       const memberIdx = newTeam.members.findIndex(m => m.id === member.id)
       newTeam.members.splice(memberIdx, 1)
       this.match[whichTeam] = newTeam
-    },
-    selectMemberOfTeamOne (member) {
-      this.match.teamOne.members.push(member)
-    },
-    selectMemberOfTeamTwo (member) {
-      this.match.teamTwo.members.push(member)
+      this.refreshTeam(previousTeamMembers, newTeam)
     },
     setTeamOne (event) {
       const teamId = parseInt(event.target.value)
@@ -149,11 +164,36 @@ export default {
       const team = _.cloneDeep(this.teamMap.get(teamId))
       this.match.teamTwo = team
     },
+    selectMemberOfTeamOne (member) {
+      const previousTeamMembers = _.clone(this.match.teamOne.members)
+      this.match.teamOne.members.push(member)
+      this.refreshTeam(previousTeamMembers, this.match.teamOne)
+    },
+    selectMemberOfTeamTwo (member) {
+      const previousTeamMembers = _.clone(this.match.teamTwo.members)
+      this.match.teamTwo.members.push(member)
+      this.refreshTeam(previousTeamMembers, this.match.teamTwo)
+    },
+    refreshTeam (previousTeamMembers, newTeam) {
+      const reusedTeam = this.getTeamByMembers(newTeam.members)
+      if(reusedTeam) {
+        newTeam.name = reusedTeam.name
+      } else {
+        const previousTeam = this.getTeamByMembers(previousTeamMembers)
+        if(previousTeam && newTeam.name === previousTeam.name) {
+          newTeam.name = ''
+        }
+      }
+    },
     prepareAndSubmit () {
       this.submit()
     },
     setPlayedAt (datetime) {
       this.match.playedAt = datetime
+    },
+    getTeamByMembers (members) {
+      const memberIds = members.map(m => m.id).sort().toString()
+      return this.teamByMemberIdsMap.get(memberIds)
     },
   },
 }

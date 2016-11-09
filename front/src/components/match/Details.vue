@@ -45,6 +45,10 @@ export default {
   },
   computed: {
     scoreOne () {
+      if(!this.match) {
+        console.log(this)
+        debugger;
+      }
       return score(this.match.teamOneScore)
     },
     scoreTwo () {
@@ -63,3 +67,7 @@ export default {
   },
 }
 </script>
+
+<style lang="scss" scoped>
+@import "./table";
+</style>

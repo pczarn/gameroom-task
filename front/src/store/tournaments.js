@@ -116,7 +116,15 @@ const actions = {
     commit(mutation.REMOVE_TOURNAMENT, { id })
   },
   async [action.UPDATE_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
+    // let newTeam
+    // if(team.id) {
+    //   newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
+    // } else {
+    //   newTeam = await api.createTeam(rawTeam(team))
+    //   await api.updateTournamentLineup(tournament, { id: team.id, member_ids: newTeam.member_ids })
+    // }
     const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
+
     if(!getters.teamMap.has(newTeam.id)) {
       commit(mutation.ADD_TEAM, newTeam)
     } else {

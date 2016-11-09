@@ -101,7 +101,7 @@ export default {
   },
   async updateFriendlyMatchLineup (match, teamParams) {
     const id = teamParams.id
-    const team = { member_ids: teamParams.member_ids }
+    const team = _.pick(teamParams, ['name', 'member_ids'])
     return (await axios.patch(`/friendly_matches/${match.id}/lineups/${id}`, { team })).data
   },
   destroyFriendlyMatch ({ id }) {

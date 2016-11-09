@@ -41,6 +41,10 @@ export default {
 
   computed: {
     scoreOne () {
+      if(!this.match) {
+        console.log(this)
+        debugger;
+      }
       return score(this.match.teamOneScore)
     },
     scoreTwo () {
@@ -79,7 +83,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./table";
+.match {
+ flex-direction: column;
+}
 
 span.disabled {
   color: gray;
@@ -88,9 +94,5 @@ span.disabled {
 span.bold {
   font-weight: bold;
   color: black !important;
-}
-
-.match {
- flex-direction: column;
 }
 </style>

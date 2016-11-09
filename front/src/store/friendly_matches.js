@@ -92,11 +92,14 @@ const actions = {
   async [action.UPDATE_FRIENDLY_MATCH] ({ commit, dispatch, getters }, match) {
     const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
     const teamTwoMemberIds = match.teamTwo.members.map(m => m.id).sort()
+    match = _.cloneDeep(match)
     const currentMatch = getters.matchMap.get(match.id)
     if(!_.isEqual(teamOneMemberIds, currentMatch.teamOne.members.map(m => m.id).sort())) {
+      match.teamOne.id = currentMatch.teamOne.id
       dispatch(action.UPDATE_FRIENDLY_MATCH_LINEUP, [match, match.teamOne])
     }
     if(!_.isEqual(teamTwoMemberIds, currentMatch.teamTwo.members.map(m => m.id).sort())) {
+      match.teamTwo.id = currentMatch.teamTwo.id
       dispatch(action.UPDATE_FRIENDLY_MATCH_LINEUP, [match, match.teamTwo])
     }
     const rawMatch = rawFriendlyMatch(match)

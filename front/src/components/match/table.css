@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.row ul {
+ list-style-type: none;
+}
+
 .left-col {
   width: 50%;
   flex: 0 1 auto;
