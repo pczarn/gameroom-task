@@ -52,7 +52,7 @@ RSpec.describe Api::V1::FriendlyMatchesController, type: :controller do
 
       it "shows both matches" do
         get_index
-        expect(response_match_ids).to include(my_match.id, other_match.id)
+        expect(response_match_ids).to match_array([my_match.id, other_match.id])
       end
     end
   end
