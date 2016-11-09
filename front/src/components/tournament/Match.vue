@@ -45,15 +45,15 @@ export default {
         teamOneScore: this.match.teamOneScore,
         teamTwoScore: this.match.teamTwoScore,
       },
-      playedAtTime: {
-        time: this.match.playedAt,
-      },
       pickerOption,
     }
   },
   computed: {
     editable () {
       return policies.tournamentMatchPolicy(this.tournament, this.match).update
+    },
+    playedAtTime () {
+      return { time: this.match.playedAt }
     },
     ...mapGetters({
       tournament: 'currentTournament',

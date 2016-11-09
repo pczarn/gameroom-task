@@ -97,7 +97,12 @@ export default {
 
   data () {
     return {
-      match: { teamOne: { members: [] }, teamTwo: { members: [] }, game: {} },
+      match: {
+        teamOne: { members: [] },
+        teamTwo: { members: [] },
+        game: {},
+        playedAt: '',
+      },
       teamOneName: '',
       teamTwoName: '',
       playedAtTime: {
@@ -114,6 +119,9 @@ export default {
       } else {
         return this.userList
       }
+    },
+    playedAtTime () {
+      return { time: this.match.playedAt }
     },
     ...mapGetters(['currentMatch', 'teamList', 'teamMap', 'gameList', 'userList']),
   },

@@ -8,8 +8,8 @@
       <input v-bind="field.attrs" v-model="tournament[field.attrs.name]">
       <br>
     </template>
-    <label :for="startedAt">Starts at</label>
-    <datepicker :date="startedAt" :option="pickerOption" @change="setStartedAt"></datepicker>
+    <label for="startedAt">Starts at</label>
+    <datepicker :date="startedAtTime" :option="pickerOption" @change="setStartedAt"></datepicker>
   </fieldset>
   <fieldset v-if="tournament.game">
     <legend>Choose game</legend>
@@ -68,7 +68,11 @@ export default {
         { attrs: { name: 'numberOfTeams', type: 'number' }, label: 'Number of teams' },
         { attrs: { name: 'numberOfMembersPerTeam', type: 'num' }, label: 'Number of members per team' },
       ],
-      tournament: { teams: [], game: {} },
+      tournament: {
+        teams: [],
+        game: {},
+        startedAt: '',
+      },
       pickerOption,
     }
   },
@@ -80,8 +84,8 @@ export default {
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
     },
-    startedAt () {
-      return { time: this.tournament.startedAt || '' }
+    startedAtTime () {
+      return { time: this.tournament.startedAt }
     },
     ...mapGetters(['userList', 'gameList', 'currentTournament']),
   },
