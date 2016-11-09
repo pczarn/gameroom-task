@@ -24,25 +24,25 @@ const getters = {
 }
 
 const mutations = {
-  [mutation.SET_MATCH_LIST] (state, matches) {
+  [mutation.SET_FRIENDLY_MATCH_LIST] (state, matches) {
     state.matches = matches
   },
 
-  [mutation.ADD_MATCH] (state, match) {
+  [mutation.ADD_FRIENDLY_MATCH] (state, match) {
     state.matches.push(match)
   },
 
-  [mutation.SET_MATCH] (state, match) {
+  [mutation.SET_FRIENDLY_MATCH] (state, match) {
     const idx = state.matches.findIndex(({ id }) => id === match.id)
     state.matches.splice(idx, 1, match)
   },
 
-  [mutation.REMOVE_MATCH] (state, match) {
+  [mutation.REMOVE_FRIENDLY_MATCH] (state, match) {
     const idx = state.matches.findIndex(({ id }) => id === match.id)
     state.matches.splice(idx, 1)
   },
 
-  [mutation.SET_MATCH_TEAM] (state, { matchId, which, teamId }) {
+  [mutation.SET_FRIENDLY_MATCH_TEAM] (state, { matchId, which, teamId }) {
     const match = state.matches.find(({ id }) => id === matchId)
     if(which === 0) {
       match.team_one_id = teamId
@@ -55,7 +55,7 @@ const mutations = {
 const actions = {
   async [action.GET_FRIENDLY_MATCHES] ({ commit }) {
     const teams = await api.getFriendlyMatches()
-    commit(mutation.SET_MATCH_LIST, teams)
+    commit(mutation.SET_FRIENDLY_MATCH_LIST, teams)
   },
   async [action.CREATE_FRIENDLY_MATCH] ({ commit, getters, dispatch }, match) {
     const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
@@ -87,7 +87,7 @@ const actions = {
       }
     }
     match = await api.createFriendlyMatch(rawFriendlyMatch(match))
-    commit(mutation.ADD_MATCH, match)
+    commit(mutation.ADD_FRIENDLY_MATCH, match)
   },
   async [action.UPDATE_FRIENDLY_MATCH] ({ commit, dispatch, getters }, match) {
     const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
@@ -103,14 +103,14 @@ const actions = {
     rawMatch.team_one_id = undefined
     rawMatch.team_two_id = undefined
     match = await api.updateFriendlyMatch(rawMatch)
-    commit(mutation.SET_MATCH, match)
+    commit(mutation.SET_FRIENDLY_MATCH, match)
   },
   async [action.UPDATE_FRIENDLY_MATCH_LINEUP] ({ commit, getters }, [match, team]) {
     const newTeam = await api.updateFriendlyMatchLineup(match, rawTeam(team))
     if(!getters.teamMap.has(newTeam.id)) {
       commit(mutation.ADD_TEAM, newTeam)
     }
-    commit(mutation.SET_MATCH_TEAM, {
+    commit(mutation.SET_FRIENDLY_MATCH_TEAM, {
       matchId: match.id,
       which: team.id === match.teamOne.id ? 0 : 1,
       teamId: newTeam.id,
@@ -118,7 +118,7 @@ const actions = {
   },
   async [action.DESTROY_FRIENDLY_MATCH] ({ commit }, { id }) {
     await api.destroyFriendlyMatch({ id })
-    commit(mutation.REMOVE_MATCH, { id })
+    commit(mutation.REMOVE_FRIENDLY_MATCH, { id })
   },
 }
 

@@ -65,7 +65,7 @@ export const store = new Vuex.Store({
     [mutation.SET_EVERYTHING] (state, lists) {
       state.games.games = lists.games
       state.teams.teams = lists.teams
-      state.matches.matches = lists.matches
+      state.friendlyMatches.matches = lists.friendlyMatches
       state.tournaments.tournaments = lists.tournaments
       state.users.users = lists.users
     },
@@ -82,7 +82,7 @@ export const store = new Vuex.Store({
       commit(mutation.SET_EVERYTHING, {
         games: lists[0],
         teams: lists[1],
-        matches: lists[2],
+        friendlyMatches: lists[2],
         tournaments: lists[3],
         users: lists[4],
       })
