@@ -3,7 +3,7 @@
     <ul>
       <li v-for="member in members">
         {{ member.name }}
-        <button v-if="editable" @click.prevent="remove(member)">X</button>
+        <button type="button" v-if="editable" @click.prevent="remove(member)">X</button>
       </li>
     </ul>
   </div>
@@ -31,7 +31,6 @@ export default {
 
 <style scoped>
 ul {
-  list-style-type: none;
   margin: 0;
   padding: 0;
 }

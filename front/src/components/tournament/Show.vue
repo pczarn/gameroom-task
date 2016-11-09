@@ -22,25 +22,25 @@
                :to="{ name: 'tournament rounds', params: { id: tournament.id } }">
     Rounds
   </router-link>
-  <span v-else :class="{ bold: showRounds }">Rounds</span>
+  <span v-else :class="{ bold: showRounds }" class="disabled">Rounds</span>
 
   <router-link v-if="!showTeams"
                :to="{ name: 'tournament teams', params: { id: tournament.id } }">
     Teams
   </router-link>
-  <span v-else :class="{ bold: showTeams }">Teams</span>
+  <span v-else :class="{ bold: showTeams }" class="disabled">Teams</span>
 
   <router-link v-if="canEdit && !showEdit"
                :to="{ name: 'tournament update', params: { id: tournament.id } }">
     Edit
   </router-link>
-  <span v-else :class="{ bold: showEdit }">Edit</span>
+  <span v-else :class="{ bold: showEdit }" class="disabled">Edit</span>
 
   <router-link v-if="canDestroy && !showDelete"
                :to="{ name: 'tournament delete', params: { id: tournament.id } }">
     Delete
   </router-link>
-  <span v-else :class="{ bold: showDelete }">Delete</span>
+  <span v-else :class="{ bold: showDelete }" class="disabled">Delete</span>
 
   <router-view></router-view>
 </div>
@@ -90,7 +90,12 @@ export default {
 </script>
 
 <style scoped>
+span.disabled {
+  color: gray;
+}
+
 span.bold {
   font-weight: bold;
+  color: black !important;
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
 <div v-if="tournament">
-  <div v-for="(team, idx) in teams">
-    size {{ team.numberOfSlots || 'no limit' }}
-    <tournament-team-overview v-bind="team"
-                              :tournament="tournament">
-    </tournament-team-overview>
-  </div>
+  <ul>
+    <li v-for="(team, idx) in teams">
+      size {{ team.numberOfSlots || 'no limit' }}
+      <tournament-team-overview v-bind="team"
+                                :tournament="tournament">
+      </tournament-team-overview>
+    </li>
+  </ul>
 
   <select-team :tournament="tournament" @input="addTeam">
   </select-team>

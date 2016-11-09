@@ -1,8 +1,10 @@
 <template>
 <div v-if="teamList">
-  <div v-for="team in filteredTeams">
-    <team-overview v-bind="team"></team-overview>
-  </div>
+  <ul>
+    <li v-for="team in filteredTeams">
+      <team-overview v-bind="team"></team-overview>
+    </li>
+  </ul>
 
   <team-create></team-create>
 </div>
