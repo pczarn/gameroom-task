@@ -1,40 +1,24 @@
 <template>
-<div class="match" v-if="match && teams">
-  <div>
-    Match owned by {{ match.owner.name }} <br>
-    Game {{ match.game.name }}
-    <div class="row">
-      <span v-if="match.playedAt">
-        Played at <time :datetime="match.playedAt">{{ playedAtFormatted }}</time>
-      </span>
-      <span v-else>
-        Played at an unknown time
-      </span>
-    </div>
-    <div class="row">
-      <strong class="left-col">{{ teams[0].name }}</strong>
-      <span class="middle-col">vs</span>
-      <strong class="right-col">{{ teams[1].name }}</strong>
-    </div>
-    <div class="row">
-      <span class="left-col">{{ scoreOne }}</span>
-      <span class="middle-col">:</span>
-      <span class="right-col">{{ scoreTwo }}</span>
-    </div>
-    <div class="row">
-      <team-member-list :members="teams[0].members"
-                        class="left-col">
-      </team-member-list>
-      <span class="middle-col"></span>
-      <team-member-list :members="teams[1].members"
-                        class="right-col">
-      </team-member-list>
-    </div>
+<div class="match" v-if="match">
+  <router-link v-if="!showDetails"
+               :to="{ name: 'match details', params: { id: match.id } }">
+    Details
+  </router-link>
+  <span v-else :class="{ bold: showDetails }" class="disabled">Details</span>
 
-    <match-edit :value="match" v-if="canEdit"></match-edit>
-  </div>
+  <router-link v-if="canEdit && !showEdit"
+               :to="{ name: 'match edit', params: { id: match.id } }">
+    Edit
+  </router-link>
+  <span v-else :class="{ bold: showEdit }" class="disabled">Edit</span>
 
-  <button v-if="canDestroy" @click="remove()">Remove</button>
+  <router-link v-if="canDestroy && !showDelete"
+               :to="{ name: 'match delete', params: { id: match.id } }">
+    Delete
+  </router-link>
+  <span v-else :class="{ bold: showDelete }" class="disabled">Delete</span>
+
+  <router-view></router-view>
 
   <a href="#" @click="goBack()">Go back</a>
 </div>
@@ -45,7 +29,6 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import policies from 'src/policies'
 import { score } from 'src/util'
-import * as action from 'src/store/action_types'
 import TeamMemberList from 'src/components/team/MemberList'
 import MatchEdit from './Edit'
 
@@ -66,15 +49,20 @@ export default {
     playedAtFormatted () {
       return moment(this.match.playedAt).format('YYYY-MM-DD HH:MM')
     },
-    teams () {
-      const { teamOne, teamTwo } = this.match
-      return teamOne && teamTwo ? [teamOne, teamTwo] : false
-    },
     canEdit () {
       return policies.friendlyMatchPolicy(this.match).update
     },
     canDestroy () {
       return policies.friendlyMatchPolicy(this.match).destroy
+    },
+    showDetails () {
+      return this.$route.name === 'match details'
+    },
+    showEdit () {
+      return this.$route.name === 'match edit'
+    },
+    showDelete () {
+      return this.$route.name === 'match delete'
     },
     ...mapGetters(['matchList', 'matchMap', 'teamList', 'gameList', 'currentUser']),
     ...mapGetters({
@@ -86,16 +74,21 @@ export default {
     goBack () {
       this.$router.go(-1)
     },
-    async remove () {
-      await this.$store.dispatch(action.DESTROY_FRIENDLY_MATCH, this.match)
-      this.$router.push('/matches')
-    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
 @import "./table";
+
+span.disabled {
+  color: gray;
+}
+
+span.bold {
+  font-weight: bold;
+  color: black !important;
+}
 
 .match {
  flex-direction: column;

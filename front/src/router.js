@@ -14,6 +14,9 @@ import Team from 'components/team/Show'
 
 import MatchList from 'components/match/List'
 import Match from 'components/match/Show'
+import MatchDetails from 'components/match/Details'
+import MatchEdit from 'components/match/Edit'
+import MatchDelete from 'components/match/Delete'
 
 import Login from 'components/Login'
 import Dashboard from 'components/Dashboard'
@@ -146,6 +149,24 @@ const routes = [
     path: '/matches/:id',
     name: 'match',
     component: Match,
+    redirect: { name: 'match details' },
+    children: [
+      {
+        path: '',
+        name: 'match details',
+        component: MatchDetails,
+      },
+      {
+        path: 'edit',
+        name: 'match edit',
+        component: MatchEdit,
+      },
+      {
+        path: 'delete',
+        name: 'match delete',
+        component: MatchDelete,
+      },
+    ],
   },
   {
     path: '/teams/:id',

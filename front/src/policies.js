@@ -18,7 +18,7 @@ export default {
         match.teamTwo.members.some(m => m.id === userId)
       return {
         update: isOwner || isMember || isAdmin,
-        destroy: isMember || isAdmin,
+        destroy: isOwner || isAdmin,
       }
     } else {
       return {}
