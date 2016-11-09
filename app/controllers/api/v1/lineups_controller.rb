@@ -8,8 +8,13 @@ module Api
       expose :tournament
 
       def create
-        authorize tournament.team_tournaments.build(team: create_team)
-        tournament.save!
+        if params[:id]
+          service = CreateTournamentLineup.new(tournament: tournament, team: team)
+        else
+          service = CreateTournamentLineup.new(tournament: tournament, params: add_team_params)
+        end
+        authorize service.team_tournament
+        service.perform
         render json: TournamentRepresenter.new(tournament)
       end
 
@@ -44,10 +49,6 @@ module Api
 
       def update_lineup_service
         UpdateLineup.new(team, member_ids: params[:team] && team_params[:member_ids])
-      end
-
-      def create_team
-        params[:id] ? team : CreateOrReuseTeam.new(add_team_params).perform
       end
 
       def leaving?
