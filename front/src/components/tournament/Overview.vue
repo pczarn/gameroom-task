@@ -21,9 +21,13 @@
 
   <br>
 
-  <tournament-status v-if="isOpen" :status="teamsInfo" label="Teams"></tournament-status>
-  <tournament-status v-if="isStarted" :status="roundsInfo" label="Rounds"></tournament-status>
-  <span v-if="isEnded">Team {{ winningTeam && winningTeam.name }} won</span>
+  <tournament-status v-if="isOpen || isStarted" :status="teamsInfo" label="Teams">
+  </tournament-status>
+  <tournament-status v-if="isStarted" :status="roundsInfo" label="Rounds">
+  </tournament-status>
+  <span v-if="isEnded">
+    Team {{ winningTeam && winningTeam.name }} won
+  </span>
 
   <router-link :to="{ name: 'tournament', params: { id } }">See more</router-link>
 </div>
