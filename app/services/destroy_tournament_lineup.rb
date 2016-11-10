@@ -1,8 +1,8 @@
 class DestroyTournamentLineup < ModifyLineup
   attr_reader :tournament
 
-  def initialize(tournament, current_team, member_ids:)
-    super(current_team, member_ids: member_ids)
+  def initialize(tournament, current_team)
+    super(current_team)
     @tournament = tournament
     @team_tournament = tournament.team_tournaments.find_by(team: current_team)
     if tournament.started?
