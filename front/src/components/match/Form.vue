@@ -15,11 +15,17 @@
 
     <fieldset class="row">
       <select :value="teamOneId" @input="setTeamOne" class="left-col">
-        <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
+        <option disabled :selected="!teamOneId" value> -- select a team -- </option>
+        <option v-for="team in teamList" :value="team.id" :selected="team.id === teamOneId">
+          {{ team.name }}
+        </option>
       </select>
       <span class="middle-col">vs</span>
       <select :value="teamTwoId" @input="setTeamTwo" class="right-col">
-        <option v-for="team in teamList" :value="team.id">{{ team.name }}</option>
+        <option disabled selected="!teamTwoId" value> -- select a team -- </option>
+        <option v-for="team in teamList" :value="team.id" :selected="team.id === teamTwoId">
+          {{ team.name }}
+        </option>
       </select>
     </fieldset>
 
@@ -125,15 +131,12 @@ export default {
     },
     teamOneId () {
       const team = this.getTeamByMembers(this.match.teamOne.members)
-      if(team) {
-        return team.id
-      }
+      if(team) return team.id
+
     },
     teamTwoId () {
       const team = this.getTeamByMembers(this.match.teamTwo.members)
-      if(team) {
-        return team.id
-      }
+      if(team) return team.id
     },
     ...mapGetters([
       'currentMatch',
