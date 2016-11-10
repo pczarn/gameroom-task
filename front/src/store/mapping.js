@@ -4,6 +4,7 @@ export function enrichMatch(match) {
   return {
     id: match.id,
     playedAt: match.played_at,
+    createdAt: match.created_at,
     teamOneScore: match.team_one_score,
     teamTwoScore: match.team_two_score,
     teamOne: store.getters.teamMap.get(match.team_one_id),
@@ -38,6 +39,7 @@ export function enrichTournament(tournament) {
     numberOfTeams: tournament.number_of_teams,
     numberOfMembersPerTeam: tournament.number_of_members_per_team,
     startedAt: tournament.started_at,
+    createdAt: tournament.created_at,
     status: tournament.status,
     imageUrl: tournament.image_url,
     owner: store.getters.userMap.get(tournament.owner_id),
@@ -52,6 +54,7 @@ export function enrichTeam(team) {
     id: team.id,
     name: team.name,
     members: team.member_ids.map(memberId => store.getters.userMap.get(memberId)),
+    createdAt: team.created_at,
   }
 }
 

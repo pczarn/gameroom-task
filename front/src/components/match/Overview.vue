@@ -40,6 +40,7 @@ export default {
   props: {
     id: Number,
     playedAt: String,
+    createdAt: String,
     teamOne: Object,
     teamTwo: Object,
     teamOneScore: Number,

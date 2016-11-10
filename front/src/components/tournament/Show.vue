@@ -7,6 +7,7 @@
   <p>{{ tournament.description }}</p>
 
   Owner {{ tournament.owner.name }}<br>
+  <time :datetime="tournament.createdAt">{{ tournament.createdAt }}</time>
   <span v-if="tournament.startedAt">
     Starts at <time :datetime="tournament.startedAt">{{ tournament.startedAt }}</time>
   </span>

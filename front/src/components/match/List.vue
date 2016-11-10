@@ -40,7 +40,7 @@ export default {
       if(this.game) {
         matchList = matchList.filter(match => match.game.id === this.game.id)
       }
-      return matchList
+      return matchList.sort((a, b) => a.createdAt - b.createdAt)
     },
     notFiltering () {
       return this.filterUser === undefined && this.game === undefined

@@ -35,7 +35,7 @@ export default {
         const userId = this.filterUser.id
         list = list.filter(team => team.members.some(m => m.id === userId))
       }
-      return list
+      return list.sort((a, b) => a.createdAt - b.createdAt)
     },
     notFiltering () {
       return this.filterUser === undefined

@@ -3,6 +3,9 @@
   Match owned by {{ match.owner.name }} <br>
   Game {{ match.game.name }}
   <div class="row">
+    Created at <time :datetime="match.createdAt">{{ createdAtFormatted }}</time>
+  </div>
+  <div class="row">
     <span v-if="match.playedAt">
       Played at <time :datetime="match.playedAt">{{ playedAtFormatted }}</time>
     </span>
@@ -56,6 +59,9 @@ export default {
     },
     playedAtFormatted () {
       return moment(this.match.playedAt).format('YYYY-MM-DD HH:MM')
+    },
+    createdAtFormatted () {
+      return moment(this.createdAt).format('YYYY-MM-DD HH:MM')
     },
     teams () {
       const { teamOne, teamTwo } = this.match
