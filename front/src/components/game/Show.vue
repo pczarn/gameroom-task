@@ -15,7 +15,9 @@
     Remove
   </router-link>
 
-  Statistics
+  <router-link :to="{ name: 'game stats', params: { id: game.id } }">
+    Stats
+  </router-link>
 
   <div>
     <router-view></router-view>

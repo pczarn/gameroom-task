@@ -17,7 +17,8 @@
     <router-link to="/dashboard/tournaments">Your tournaments</router-link>
     <router-link to="/dashboard/matches">Your matches</router-link>
     <router-link to="/dashboard/teams">Your teams</router-link>
-    Your stats
+    <router-link to="/dashboard/stats">Your stats</router-link>
+    |
     <router-link to="/teams">Team list</router-link>
     <router-link to="/tournaments">All tournament list</router-link>
     <router-link to="/matches">All match list</router-link>

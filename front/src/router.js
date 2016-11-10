@@ -8,6 +8,7 @@ import GameList from 'components/game/List'
 import Game from 'components/game/Show'
 import GameEdit from 'components/game/Edit'
 import GameRemove from 'components/game/Remove'
+import GameStats from 'components/game/Stats'
 
 import TeamList from 'components/team/List'
 import Team from 'components/team/Show'
@@ -21,6 +22,7 @@ import MatchDelete from 'components/match/Delete'
 import Login from 'components/Login'
 import Dashboard from 'components/Dashboard'
 import AccountEdit from 'components/account/Edit'
+import Stats from 'components/Stats'
 
 const TournamentList =
   r => require.ensure([], _ => r(require('components/tournament/List')), 'tournaments')
@@ -59,6 +61,10 @@ const routes = [
         path: 'teams',
         component: TeamList,
       },
+      {
+        path: 'stats',
+        component: Stats,
+      },
     ],
   },
   {
@@ -94,6 +100,11 @@ const routes = [
         path: 'remove',
         name: 'game remove',
         component: GameRemove,
+      },
+      {
+        path: 'stats',
+        name: 'game stats',
+        component: GameStats,
       },
     ],
   },

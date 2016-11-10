@@ -1,5 +1,6 @@
 import api from 'src/api'
 
+import { enrichGame } from './mapping'
 import * as mutation from './mutation_types'
 import * as action from './action_types'
 
@@ -9,7 +10,7 @@ const state = {
 
 const getters = {
   gameList (state, getters) {
-    return state.games
+    return state.games.map(enrichGame)
   },
 
   gameMap (state, getters) {

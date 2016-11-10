@@ -112,3 +112,19 @@ export function rawTeam(team) {
     member_ids: team.members.map(member => member.id),
   }
 }
+
+export function enrichGame(game) {
+  return {
+    id: game.id,
+    name: game.name,
+    archivized: game.archivized,
+    image_url: game.image_url,
+    image_thumb_url: game.image_thumb_url,
+    stats: game.stats.map(([userId, value]) => {
+      return {
+        user: store.getters.userMap.get(userId),
+        value,
+      }
+    }),
+  }
+}
