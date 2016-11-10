@@ -14,4 +14,12 @@ class GameRepresenter < BaseRepresenter
       image_thumb_url: game.image.thumb.url,
     }
   end
+
+  def with_stats
+    basic.merge(
+      stats: game.game_users.order(mean: :desc).map do |game_user|
+        GameUserRepresenter.new(game_user).basic
+      end,
+    )
+  end
 end

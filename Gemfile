@@ -67,3 +67,6 @@ gem "rack-cors", "~> 0.4", require: "rack/cors"
 
 # For accessing models inside controllers
 gem "decent_exposure", "~>3.0"
+
+# Statistics
+gem "trueskill", git: "https://github.com/saulabs/trueskill"

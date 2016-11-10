@@ -29,14 +29,13 @@ class UpdateMatch
 
   def tasks_for_tournament
     return [] unless match_scores.all?
+    tasks = [UpdateRatings.new(match: @match, scores: match_scores)]
     if next_round
       if other_team_in_next_match
-        [CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)]
-      else
-        []
+        tasks << CreateNextMatch.new(tournament: @tournament, round: @round, match: @match)
       end
     else
-      [EndTournament.new(tournament: @tournament, match: @match)]
+      tasks << EndTournament.new(tournament: @tournament, match: @match)
     end
   end
 
