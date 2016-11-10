@@ -10,6 +10,8 @@ import { mapGetters, mapActions } from 'vuex'
 import policies from 'src/policies'
 
 export default {
+  name: TournamentDelete,
+
   computed: {
     canDestroy () {
       return policies.tournamentPolicy(this.tournament).destroy
@@ -18,6 +20,7 @@ export default {
       tournament: 'currentTournament',
     }),
   },
+
   methods: {
     destroy () {
       this.destroyTournament(this.tournament)

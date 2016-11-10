@@ -10,6 +10,7 @@
 <script>
 export default {
   name: 'TournamentStatus',
+
   props: {
     status: Object,
     label: String,

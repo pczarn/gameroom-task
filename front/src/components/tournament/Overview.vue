@@ -39,6 +39,10 @@ import TournamentStatus from './Status'
 
 export default {
   name: 'TournamentOverview',
+  components: {
+    TournamentStatus,
+  },
+
   props: {
     id: Number,
     title: String,
@@ -47,9 +51,6 @@ export default {
     teams: Array,
     rounds: Array,
     numberOfTeams: Number,
-  },
-  components: {
-    TournamentStatus,
   },
   computed: {
     editable () {

@@ -8,11 +8,13 @@ import TournamentForm from './Form'
 export default {
   name: 'TournamentEdit',
   mixins: [TournamentForm],
+
   data () {
     return {
       buttonText: 'Update the tournament',
     }
   },
+
   created () {
     this.tournament = _.cloneDeep(this.currentTournament)
   },

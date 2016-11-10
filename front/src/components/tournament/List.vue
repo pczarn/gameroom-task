@@ -24,6 +24,7 @@ export default {
     TournamentOverview,
     TournamentCreate,
   },
+
   data () {
     return {
       admin: false,

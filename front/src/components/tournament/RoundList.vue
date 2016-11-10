@@ -12,19 +12,19 @@ import { mapGetters } from 'vuex'
 import Round from './Round'
 
 export default {
+  name: 'TournamentRoundList',
   components: {
     Round,
   },
+
   computed: {
     ...mapGetters({
       tournament: 'currentTournament',
     }),
   },
+
   created () {
     this.ensureRoundsPresent()
-  },
-  watch: {
-    tournament: 'ensureRoundsPresent',
   },
   methods: {
     ensureRoundsPresent () {
@@ -32,6 +32,9 @@ export default {
         this.$router.replace({ name: 'tournament teams', params: { id: this.$route.params.id } })
       }
     },
+  },
+  watch: {
+    tournament: 'ensureRoundsPresent',
   },
 }
 </script>

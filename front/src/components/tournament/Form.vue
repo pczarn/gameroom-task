@@ -59,6 +59,7 @@ export default {
     Datepicker,
     SelectTeam,
   },
+
   data () {
     return {
       schema: [
@@ -89,6 +90,7 @@ export default {
     },
     ...mapGetters(['userList', 'gameList', 'currentTournament']),
   },
+
   methods: {
     selectMemberInTeam (team, member) {
       if(member) {

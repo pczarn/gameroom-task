@@ -23,17 +23,16 @@ import SelectTeam from './SelectTeam'
 import * as action from 'src/store/action_types'
 
 export default {
+  name: 'TournamentTeamList',
   components: {
     TournamentTeamOverview,
     SelectTeam,
   },
+
   data () {
     return {
       tournament: null,
     }
-  },
-  created () {
-    this.tournament = _.cloneDeep(this.currentTournament)
   },
   computed: {
     canEdit () {
@@ -43,6 +42,10 @@ export default {
       return this.tournament.teams
     },
     ...mapGetters(['currentTournament']),
+  },
+
+  created () {
+    this.tournament = _.cloneDeep(this.currentTournament)
   },
   methods: {
     addTeam (team) {

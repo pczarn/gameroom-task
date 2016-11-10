@@ -51,7 +51,8 @@ import { mapGetters } from 'vuex'
 import policies from 'src/policies'
 
 export default {
-  name: 'Tournament',
+  name: 'TournamentShow',
+
   computed: {
     canEdit () {
       return policies.tournamentPolicy(this.tournament).update

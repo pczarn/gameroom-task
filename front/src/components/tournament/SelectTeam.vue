@@ -21,6 +21,7 @@ export default {
   components: {
     Multiselect,
   },
+
   props: {
     tournament: Object,
   },
@@ -38,6 +39,7 @@ export default {
     },
     ...mapGetters(['teamList', 'userList']),
   },
+
   methods: {
     select (team) {
       this.$emit('input', team)

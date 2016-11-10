@@ -29,6 +29,11 @@ import * as action from 'src/store/action_types'
 
 export default {
   name: 'TournamentTeamOverview',
+  components: {
+    TeamMemberList,
+    Multiselect,
+  },
+
   props: {
     id: Number,
     name: String,
@@ -36,10 +41,6 @@ export default {
     numberOfSlots: Number,
     policy: Object,
     tournament: Object,
-  },
-  components: {
-    TeamMemberList,
-    Multiselect,
   },
   computed: {
     tournamentPolicy () {
@@ -60,6 +61,7 @@ export default {
     },
     ...mapGetters(['userList']),
   },
+
   methods: {
     cloneTeam () {
       return _.cloneDeep({

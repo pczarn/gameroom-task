@@ -6,11 +6,13 @@ import TournamentForm from './Form'
 export default {
   name: 'TournamentCreate',
   mixins: [TournamentForm],
+
   data () {
     return {
       buttonText: 'Create the tournament',
     }
   },
+
   methods: {
     async submit () {
       await this.$store.dispatch(action.CREATE_TOURNAMENT, this.tournament)

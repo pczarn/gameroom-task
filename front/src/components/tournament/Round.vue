@@ -13,12 +13,14 @@
 import TournamentMatch from './Match'
 
 export default {
+  name: 'TournamentRound',
+  components: {
+    TournamentMatch,
+  },
+
   props: {
     number: Number,
     matches: Array,
-  },
-  components: {
-    TournamentMatch,
   },
 }
 </script>

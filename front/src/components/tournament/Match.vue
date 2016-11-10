@@ -30,12 +30,14 @@ import * as action from 'src/store/action_types'
 import { pickerOption } from 'src/util'
 
 export default {
-  props: {
-    match: Object,
-  },
+  name: 'TournamentMatch',
   components: {
     MatchOverview,
     Datepicker,
+  },
+
+  props: {
+    match: Object,
   },
   data () {
     return {
