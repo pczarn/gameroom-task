@@ -24,14 +24,11 @@ export default {
     MatchCreate,
   },
 
-  props: {
-    user: Object,
-  },
   computed: {
     filteredMatches () {
       let matchList = this.matchList
-      if(this.user) {
-        const userId = this.user.id
+      if(this.filterUser) {
+        const userId = this.filterUser.id
         matchList = matchList.filter(match => {
           return match.owner.id === userId ||
             match.teamOne && match.teamOne.members.some(m => m.id === userId) ||
@@ -46,6 +43,7 @@ export default {
     ...mapGetters({
       matchList: 'matchList',
       game: 'currentGame',
+      filterUser: 'filterUser',
     }),
   },
 }

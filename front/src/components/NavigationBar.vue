@@ -1,20 +1,32 @@
 <template>
-<nav>
+<nav v-if="isLoggedIn">
   <ul>
     <li>
       <router-link to="/">Home</router-link>
     </li>
 
-    <li v-if="isLoggedIn">
+    <li>
       Hi, {{ currentUser.name }} <br>
       <router-link to="/account">Your account</router-link>
       <a href="#" @mouseup="logOut()">
         Log out
       </a>
     </li>
-    <li v-else>
-      <router-link to="/login">Log in</router-link>
-    </li>
+  </ul>
+  <div>
+    <router-link to="/dashboard/tournaments">Your tournaments</router-link>
+    <router-link to="/dashboard/matches">Your matches</router-link>
+    <router-link to="/dashboard/teams">Your teams</router-link>
+    Your stats
+    <router-link to="/teams">Team list</router-link>
+    <router-link to="/tournaments">All tournament list</router-link>
+    <router-link to="/matches">All match list</router-link>
+    <router-link to="/games">Game list</router-link>
+  </div>
+</nav>
+<nav v-else>
+  <ul>
+    <router-link to="/login">Log in</router-link>
   </ul>
 </nav>
 </template>

@@ -28,12 +28,13 @@ export default {
   computed: {
     filteredTeams () {
       let list = this.teamList
-      if(this.user) {
-        list = list.filter(team => team.members.some(m => m.id === this.user.id))
+      if(this.filterUser) {
+        const userId = this.filterUser.id
+        list = list.filter(team => team.members.some(m => m.id === userId))
       }
       return list
     },
-    ...mapGetters(['teamList']),
+    ...mapGetters(['teamList', 'filterUser']),
   },
 }
 </script>

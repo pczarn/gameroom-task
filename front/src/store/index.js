@@ -60,6 +60,11 @@ export const store = new Vuex.Store({
         return getters.teamMap.get(id)
       }
     },
+    filterUser (state, getters) {
+      if(state.route.path.startsWith('/dashboard')) {
+        return getters.currentUser
+      }
+    },
   },
   mutations: {
     [mutation.SET_EVERYTHING] (state, lists) {

@@ -20,9 +20,6 @@ import TournamentCreate from './Create'
 
 export default {
   name: 'TournamentList',
-  props: {
-    user: Object,
-  },
   components: {
     TournamentOverview,
     TournamentCreate,
@@ -35,10 +32,11 @@ export default {
   computed: {
     filteredTournaments () {
       let list = this.tournamentList
-      if(this.user) {
+      if(this.filterUser) {
+        const userId = this.filterUser.id
         list = list.filter(tournament =>
-          tournament.teams.some(team => team.members.some(m => m.id === this.user.id)) ||
-          tournament.owner.id === this.user.id
+          tournament.teams.some(team => team.members.some(m => m.id === userId)) ||
+          tournament.owner.id === userId
         )
       }
       if(this.game) {
@@ -49,6 +47,7 @@ export default {
     ...mapGetters({
       tournamentList: 'tournamentList',
       game: 'currentGame',
+      filterUser: 'filterUser',
     }),
   },
 }
