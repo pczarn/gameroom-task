@@ -21,17 +21,26 @@ module Api
       def update
         if params[:friendly_match_id]
           authorize_update friendly_match
-          team = update_lineup_service.in_friendly_match(friendly_match).replace
+          service = ReplaceFriendlyMatchLineup.new(
+            friendly_match,
+            team,
+            member_ids: member_ids_param,
+          )
         elsif params[:tournament_id]
           authorize_update team_tournament
-          team = update_lineup_service.in_tournament(tournament).replace
+          service = ReplaceTournamentLineup.new(
+            tournament,
+            team,
+            member_ids: member_ids_param,
+          )
         end
-        render json: TeamRepresenter.new(team).basic
+        updated_team = service.perform
+        render json: TeamRepresenter.new(updated_team).basic
       end
 
       def destroy
         authorize team_tournament
-        update_lineup_service.in_tournament(tournament).destroy
+        DestroyTournamentLineup.new(tournament, team, member_ids: member_ids_param).perform
         head :ok
       end
 
@@ -47,10 +56,6 @@ module Api
         end
       end
 
-      def update_lineup_service
-        UpdateLineup.new(team, member_ids: params[:team] && team_params[:member_ids])
-      end
-
       def leaving?
         team.members.size == team_params[:member_ids].size + 1 &&
           team.members.include?(current_user) &&
@@ -61,6 +66,10 @@ module Api
         team.members.size == team_params[:member_ids].size - 1 &&
           !team.members.include?(current_user) &&
           team_params[:member_ids].map(&:to_i).include?(current_user.id)
+      end
+
+      def member_ids_param
+        params[:team] && team_params[:member_ids]
       end
 
       def add_team_params
