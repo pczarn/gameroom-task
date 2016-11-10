@@ -10,6 +10,7 @@ class TeamRepresenter < BaseRepresenter
       id: team.id,
       name: team.name,
       member_ids: team.member_ids,
+      created_at: team.created_at,
     }
   end
 
