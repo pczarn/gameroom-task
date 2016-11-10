@@ -71,7 +71,10 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
       {
         tournament_id: tournament.id,
         id: team.id,
-        team: { member_ids: set_member_ids },
+        team: {
+          name: "lightning",
+          member_ids: set_member_ids,
+        },
       }
     end
 
@@ -81,13 +84,13 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
 
     let(:tournament_owner) { current_user }
 
-    let(:service) { instance_double(UpdateLineup) }
-
     context "when the tournament is open" do
+      let(:service) { instance_double(ReplaceTournamentLineup) }
+
       context "when the current user owns the tournament" do
         it "uses a service to update the team" do
-          allow(UpdateLineup).to receive(:new).and_return(service)
-          expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+          allow(ReplaceTournamentLineup).to receive(:new).and_return(service)
+          expect(service).to receive(:perform) { build(:team) }
           updating
         end
 
@@ -107,8 +110,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
           it { is_expected.to be_success }
 
           it "uses a service to update the team" do
-            allow(UpdateLineup).to receive(:new).and_return(service)
-            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            allow(ReplaceTournamentLineup).to receive(:new).and_return(service)
+            expect(service).to receive(:perform) { build(:team) }
             updating
           end
 
@@ -129,8 +132,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
           it { is_expected.to be_success }
 
           it "uses a service to update the team" do
-            allow(UpdateLineup).to receive(:new).and_return(service)
-            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            allow(ReplaceTournamentLineup).to receive(:new).and_return(service)
+            expect(service).to receive(:perform) { build(:team) }
             updating
           end
 
@@ -149,8 +152,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
           it { is_expected.to be_success }
 
           it "uses a service to update the team" do
-            allow(UpdateLineup).to receive(:new).and_return(service)
-            expect(service).to receive_messages(in_tournament: service, replace: build(:team))
+            allow(ReplaceTournamentLineup).to receive(:new).and_return(service)
+            expect(service).to receive(:perform) { build(:team) }
             updating
           end
 
@@ -193,11 +196,16 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
       let(:match) { create(:match, team_one: team, owner: match_owner) }
       let(:match_owner) { current_user }
 
+      let(:service) { instance_double(ReplaceFriendlyMatchLineup) }
+
       let(:params) do
         {
           friendly_match_id: match.id,
           id: team.id,
-          team: { member_ids: set_member_ids },
+          team: {
+            name: "lightning",
+            member_ids: set_member_ids,
+          },
         }
       end
 
@@ -205,8 +213,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
         it { is_expected.to be_success }
 
         it "uses a service to update the team" do
-          allow(UpdateLineup).to receive(:new).and_return(service)
-          expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+          allow(ReplaceFriendlyMatchLineup).to receive(:new).and_return(service)
+          expect(service).to receive(:perform) { build(:team) }
           updating
         end
       end
@@ -220,8 +228,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
           it { is_expected.to be_success }
 
           it "uses a service to update the team" do
-            allow(UpdateLineup).to receive(:new).and_return(service)
-            expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+            allow(ReplaceFriendlyMatchLineup).to receive(:new).and_return(service)
+            expect(service).to receive(:perform) { build(:team) }
             updating
           end
         end
@@ -234,8 +242,8 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
           it { is_expected.to be_success }
 
           it "uses a service to update the team" do
-            allow(UpdateLineup).to receive(:new).and_return(service)
-            expect(service).to receive_messages(in_friendly_match: service, replace: build(:team))
+            allow(ReplaceFriendlyMatchLineup).to receive(:new).and_return(service)
+            expect(service).to receive(:perform) { build(:team) }
             updating
           end
 
