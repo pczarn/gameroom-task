@@ -1,9 +1,8 @@
 class ModifyLineup
   attr_reader :current_team
 
-  def initialize(current_team, member_ids:)
+  def initialize(current_team)
     @current_team = current_team
-    @member_ids = member_ids
   end
 
   protected

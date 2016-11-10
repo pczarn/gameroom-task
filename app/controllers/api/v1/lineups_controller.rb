@@ -11,7 +11,7 @@ module Api
         if params[:id]
           service = CreateTournamentLineup.new(tournament, team: team)
         else
-          service = CreateTournamentLineup.new(tournament, params: add_team_params)
+          service = CreateTournamentLineup.new(tournament, params: team_params)
         end
         authorize service.team_tournament
         service.perform
@@ -24,14 +24,14 @@ module Api
           service = ReplaceFriendlyMatchLineup.new(
             friendly_match,
             team,
-            member_ids: member_ids_param,
+            params: team_params,
           )
         elsif params[:tournament_id]
           authorize_update team_tournament
           service = ReplaceTournamentLineup.new(
             tournament,
             team,
-            member_ids: member_ids_param,
+            params: team_params,
           )
         end
         updated_team = service.perform
@@ -40,7 +40,7 @@ module Api
 
       def destroy
         authorize team_tournament
-        DestroyTournamentLineup.new(tournament, team, member_ids: member_ids_param).perform
+        DestroyTournamentLineup.new(tournament, team).perform
         head :ok
       end
 
@@ -72,12 +72,8 @@ module Api
         params[:team] && team_params[:member_ids]
       end
 
-      def add_team_params
-        params.require(:team).permit(:name, member_ids: [])
-      end
-
       def team_params
-        params.require(:team).permit(member_ids: [])
+        params.require(:team).permit(:name, member_ids: [])
       end
 
       def team_tournament
