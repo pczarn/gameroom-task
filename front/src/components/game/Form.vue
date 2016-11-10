@@ -5,6 +5,7 @@
     <template v-for="attrs in schema">
       <label :for="attrs.name">{{ attrs.label }}</label>
       <input v-bind="attrs" v-model="game[attrs.name]">
+      <br>
     </template>
     <button type="submit">{{ buttonText }}</button>
   </fieldset>

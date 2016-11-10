@@ -2,11 +2,6 @@
 <div id="games">
   <h1>Games</h1>
 
-  <template v-if="isAdmin">
-    <h2>Add a game</h2>
-    <game-create></game-create>
-  </template>
-
   <h2>Active games</h2>
   <ul>
     <li v-for="game in activeGames">
@@ -24,6 +19,11 @@
       <button v-if="isAdmin" v-on:click="activate(game)">Activate</button>
     </li>
   </ul>
+
+  <template v-if="isAdmin">
+    <h2>Add a game</h2>
+    <game-create></game-create>
+  </template>
 </div>
 </template>
 
