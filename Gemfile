@@ -59,7 +59,8 @@ gem "pundit", "~> 1.1"
 # Background jobs
 gem "sidekiq", "~> 4.2"
 
-gem "knock", "~> 1.5"
+# Authentication for API, with tokens
+gem "knock", "~> 2.0"
 
 # Allowing CORS for API
 gem "rack-cors", "~> 0.4", require: "rack/cors"
