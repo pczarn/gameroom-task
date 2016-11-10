@@ -9,6 +9,7 @@ class TournamentRepresenter < BaseRepresenter
     {
       id: tournament.id,
       title: tournament.title,
+      description: tournament.description,
       started_at: tournament.started_at,
       status: tournament.status,
       image_url: tournament.image.url,
@@ -20,7 +21,7 @@ class TournamentRepresenter < BaseRepresenter
 
   def with_teams_and_rounds
     basic.merge(
-      rounds: RoundsRepresenter.new(tournament.rounds.sort_by(&:number)).basic,
+      rounds: RoundsRepresenter.new(tournament.rounds.sort_by(&:number)).with_winner_id,
       teams: TeamTournamentsRepresenter.new(tournament.team_tournaments).basic,
     )
   end

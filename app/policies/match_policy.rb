@@ -26,6 +26,14 @@ class MatchPolicy < ApplicationPolicy
     end
   end
 
+  def leave?
+    true
+  end
+
+  def join?
+    true
+  end
+
   def destroy?
     match.round.nil? && (match.owner == user || user.admin?)
   end

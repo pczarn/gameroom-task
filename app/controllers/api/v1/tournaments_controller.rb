@@ -2,11 +2,12 @@ module Api
   module V1
     class TournamentsController < BaseController
       before_action :authenticate
-      before_action :load_tournament, only: [:show, :update, :destroy]
       after_action :verify_authorized, only: [:update, :destroy]
+      expose :tournament, with: :authorize
 
       def index
-        render json: TournamentsRepresenter.new(Tournament.all).with_teams_and_rounds
+        tournaments = TournamentsRepository.new.fetch
+        render json: TournamentsRepresenter.new(tournaments).with_teams_and_rounds
       end
 
       def create
@@ -16,16 +17,16 @@ module Api
       end
 
       def show
-        render json: TournamentRepresenter.new(@tournament).with_teams_and_rounds
+        render json: TournamentRepresenter.new(tournament).with_teams_and_rounds
       end
 
       def update
-        @tournament.update!(tournament_params)
-        render json: TournamentRepresenter.new(@tournament).with_teams_and_rounds
+        tournament.update!(tournament_params)
+        render json: TournamentRepresenter.new(tournament).with_teams_and_rounds
       end
 
       def destroy
-        @tournament.destroy!
+        tournament.destroy!
         head :ok
       end
 

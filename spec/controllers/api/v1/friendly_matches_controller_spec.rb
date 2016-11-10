@@ -19,7 +19,7 @@ shared_examples_for "an action that modifies matches" do
   end
 end
 
-RSpec.describe Api::V1::MatchesController, type: :controller do
+RSpec.describe Api::V1::FriendlyMatchesController, type: :controller do
   let(:current_user) { create(:user) }
 
   before do
@@ -52,21 +52,7 @@ RSpec.describe Api::V1::MatchesController, type: :controller do
 
       it "shows both matches" do
         get_index
-        expect(response_match_ids).to include(my_match.id, other_match.id)
-      end
-
-      context "with an involving_user parameter passed" do
-        let(:params) { { involving_user: player.id } }
-
-        it "shows the match involving the specified user" do
-          get_index
-          expect(response_match_ids).to include(my_match.id)
-        end
-
-        it "does not show matches not involving the specified user" do
-          get_index
-          expect(response_match_ids).not_to include(other_match.id)
-        end
+        expect(response_match_ids).to match_array([my_match.id, other_match.id])
       end
     end
   end
@@ -101,13 +87,6 @@ RSpec.describe Api::V1::MatchesController, type: :controller do
 
     it "updates attributes" do
       expect { action }.to change { match.reload.team_one_score }.to eq(2)
-    end
-
-    it "calls a service to finish the match" do
-      service = instance_double(FinishMatch)
-      allow(FinishMatch).to receive(:new).and_return(service)
-      expect(service).to receive(:perform)
-      action
     end
 
     context "when the user participates in the match" do

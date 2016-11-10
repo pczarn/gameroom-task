@@ -3,14 +3,16 @@ module Api
     class UsersController < BaseController
       before_action :authenticate, only: [:show, :update]
       after_action :verify_authorized, only: :update
+      expose :user, with: :authorize
 
       def create
-        user = User.create!(user_params)
+        user.save!
         render json: UserRepresenter.new(user)
       end
 
       def index
-        render json: UsersRepresenter.new(User.all)
+        users = UsersRepository.new.fetch
+        render json: UsersRepresenter.new(users)
       end
 
       def update
@@ -19,10 +21,6 @@ module Api
       end
 
       private
-
-      def user
-        @user ||= authorize User.find(params[:id])
-      end
 
       def user_params
         params.require(:user).permit(:name, :image, :email, :password, :password_confirmation)

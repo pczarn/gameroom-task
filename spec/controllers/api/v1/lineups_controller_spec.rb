@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Api::V1::TeamTournamentParticipationsController, type: :controller do
+RSpec.describe Api::V1::LineupsController, type: :controller do
   let(:current_user) { create(:user) }
   before { sign_in(current_user) }
 
@@ -41,8 +41,8 @@ RSpec.describe Api::V1::TeamTournamentParticipationsController, type: :controlle
   end
 
   describe "#destroy" do
-    subject(:removing) { post :destroy, params: params }
-    let(:params) { { id: team_tournament.id } }
+    subject(:removing) { delete :destroy, params: params }
+    let(:params) { { tournament_id: team_tournament.tournament.id, id: team_tournament.team.id } }
     let(:team_tournament) { create(:team_tournament) }
 
     let(:tournament) do

@@ -3,16 +3,16 @@ module Api
     class GamesController < BaseController
       before_action :authenticate
       after_action :verify_authorized, only: [:create, :update, :destroy]
+      expose :game, with: :authorize
 
       def create
-        game = Game.new(game_params)
-        authorize game
         game.save!
         render json: GameRepresenter.new(game)
       end
 
       def index
-        render json: GamesRepresenter.new(Game.all)
+        games = GamesRepository.new.fetch
+        render json: GamesRepresenter.new(games)
       end
 
       def show
@@ -30,10 +30,6 @@ module Api
       end
 
       private
-
-      def game
-        @game ||= authorize Game.find(params[:id])
-      end
 
       def game_params
         params.require(:game).permit(
