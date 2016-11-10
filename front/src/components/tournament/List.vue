@@ -7,9 +7,11 @@ j<template>
     </li>
   </ul>
 
-  <h2>Add a tournament</h2>
-  <tournament-create>
-  </tournament-create>
+  <template v-if="notFiltering">
+    <h2>Add a tournament</h2>
+    <tournament-create>
+    </tournament-create>
+  </template>
 </div>
 </template>
 
@@ -43,7 +45,10 @@ export default {
       if(this.game) {
         list = list.filter(tournament => tournament.game.id === this.game.id)
       }
-      return list
+      return list.sort((a, b) => b.createdAt - a.createdAt)
+    },
+    notFiltering () {
+      return this.filterUser === undefined && this.game === undefined
     },
     ...mapGetters({
       tournamentList: 'tournamentList',

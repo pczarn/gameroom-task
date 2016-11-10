@@ -7,8 +7,10 @@
     </li>
   </ul>
 
-  <h2>Add a match</h2>
-  <match-create></match-create>
+  <template v-if="notFiltering">
+    <h2>Add a match</h2>
+    <match-create></match-create>
+  </template>
 </div>
 </template>
 
@@ -39,6 +41,9 @@ export default {
         matchList = matchList.filter(match => match.game.id === this.game.id)
       }
       return matchList
+    },
+    notFiltering () {
+      return this.filterUser === undefined && this.game === undefined
     },
     ...mapGetters({
       matchList: 'matchList',

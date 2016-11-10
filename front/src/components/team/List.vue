@@ -6,7 +6,10 @@
     </li>
   </ul>
 
-  <team-create></team-create>
+  <template v-if="notFiltering">
+    Create a team
+    <team-create></team-create>
+  </template>
 </div>
 </template>
 
@@ -33,6 +36,9 @@ export default {
         list = list.filter(team => team.members.some(m => m.id === userId))
       }
       return list
+    },
+    notFiltering () {
+      return this.filterUser === undefined
     },
     ...mapGetters(['teamList', 'filterUser']),
   },
