@@ -18,13 +18,9 @@ module.exports = {
     'generator-star-spacing': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'comma-dangle': ['warn', {
-      arrays: 'ignore',
-      objects: 'always',
-      imports: 'ignore',
-      exports: 'ignore',
-      functions: 'ignore',
-    }],
+    'keyword-spacing': ['ignore', {
+      after: false,
+    }]
   },
   env: {
     browser: true
