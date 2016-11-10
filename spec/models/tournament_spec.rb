@@ -76,29 +76,21 @@ RSpec.describe Tournament, type: :model do
         it { is_expected.to be_invalid }
       end
 
-      context "when even" do
-        context "when a power of two" do
-          let(:number_of_teams) { 4 }
+      context "when two" do
+        let(:number_of_teams) { 2 }
 
-          it { is_expected.to be_valid }
+        it { is_expected.to be_valid }
 
-          context "when lower than the current number of teams" do
-            before { tournament.teams = create_list(:team, number_of_teams + 1) }
-
-            it { is_expected.to be_invalid }
-          end
-
-          context "when greater than to the current number of teams" do
-            before { tournament.teams = create_list(:team, number_of_teams - 1) }
-
-            it { is_expected.to be_valid }
-          end
-        end
-
-        context "when not a power of two" do
-          let(:number_of_teams) { 6 }
+        context "when lower than the current number of teams" do
+          before { tournament.teams = create_list(:team, number_of_teams + 1) }
 
           it { is_expected.to be_invalid }
+        end
+
+        context "when greater than to the current number of teams" do
+          before { tournament.teams = create_list(:team, number_of_teams - 1) }
+
+          it { is_expected.to be_valid }
         end
       end
     end

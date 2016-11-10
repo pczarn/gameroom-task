@@ -35,8 +35,16 @@ class CreateNextMatch
     @tournament.rounds[@round.number + 1]
   end
 
+  def other_team_in_next_match
+    if other_match_in_pair
+      other_match_in_pair.winning_team if other_match_in_pair.scores.all?
+    else
+      @tournament.teams[(index_in_round + 1) * 2]
+    end
+  end
+
   def other_match_in_pair
-    @round.matches[index_in_round ^ 1]
+    @other_match_in_pair ||= @round.matches[index_in_round ^ 1]
   end
 
   def index_in_round
