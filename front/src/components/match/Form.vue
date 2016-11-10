@@ -14,14 +14,14 @@
     </fieldset>
 
     <fieldset class="row">
-      <select :value="teamOneId" @input="setTeamOne" class="left-col">
+      <select @input="setTeamOne" class="left-col">
         <option disabled :selected="!teamOneId" value> -- select a team -- </option>
         <option v-for="team in teamList" :value="team.id" :selected="team.id === teamOneId">
           {{ team.name }}
         </option>
       </select>
       <span class="middle-col">vs</span>
-      <select :value="teamTwoId" @input="setTeamTwo" class="right-col">
+      <select @input="setTeamTwo" class="right-col">
         <option disabled selected="!teamTwoId" value> -- select a team -- </option>
         <option v-for="team in teamList" :value="team.id" :selected="team.id === teamTwoId">
           {{ team.name }}
