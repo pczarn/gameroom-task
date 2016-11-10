@@ -22,6 +22,7 @@ export default {
 <style>
 html {
   height: 100%;
+  width: 100%;
 }
 
 body {
@@ -29,11 +30,17 @@ body {
   /*align-items: center;
   justify-content: center;*/
   height: 100%;
+  width: 100%;
+}
+
+#main {
+  height: 100%;
+  width: 100%;
 }
 
 #app {
   margin-top: -100px;
-  max-width: 600px;
+  /*max-width: 600px;*/
   font-family: Source Sans Pro, Helvetica, sans-serif;
   text-align: center;
 }
