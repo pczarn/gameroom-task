@@ -11,7 +11,7 @@
       <ul>
         <li v-for="member in team.members">
           {{ member.name }}
-          <button @click.prevent="remove(member)">X</button>
+          <button type="button" @click.prevent="remove(member)">X</button>
         </li>
       </ul>
       <multiselect :options="potentialPlayers"

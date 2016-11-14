@@ -7,7 +7,7 @@
     <li v-for="game in activeGames">
       <game-overview v-bind="game" :editable="isAdmin">
       </game-overview>
-      <button v-if="isAdmin" @click="archivize(game)">Archivize</button>
+      <button type="button" v-if="isAdmin" @click="archivize(game)">Archivize</button>
     </li>
   </ul>
 
@@ -16,7 +16,7 @@
     <li v-for="game in archivizedGames">
       <game-overview v-bind="game" :editable="isAdmin">
       </game-overview>
-      <button v-if="isAdmin" v-on:click="activate(game)">Activate</button>
+      <button type="button" v-if="isAdmin" v-on:click="activate(game)">Activate</button>
     </li>
   </ul>
 

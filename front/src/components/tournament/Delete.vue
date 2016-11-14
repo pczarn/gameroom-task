@@ -1,7 +1,7 @@
 <template>
 <div>
   Delete the tournament.
-  <button v-if="canDestroy" @click="destroy">Delete</button>
+  <button type="button" @click="destroy">Delete</button>
 </div>
 </template>
 
@@ -13,9 +13,6 @@ export default {
   name: TournamentDelete,
 
   computed: {
-    canDestroy () {
-      return policies.tournamentPolicy(this.tournament).destroy
-    },
     ...mapGetters({
       tournament: 'currentTournament',
     }),

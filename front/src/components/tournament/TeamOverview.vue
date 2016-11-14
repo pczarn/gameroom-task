@@ -14,8 +14,8 @@
                :reset-after="true"
   >
   </multiselect>
-  <button v-if="policy.join" @click.prevent="join">Join</button>
-  <button v-if="policy.leave" @click.prevent="leave">Leave</button>
+  <button type="button" v-if="policy.join" @click.prevent="join">Join</button>
+  <button type="button" v-if="policy.leave" @click.prevent="leave">Leave</button>
 </div>
 </template>
 

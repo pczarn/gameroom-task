@@ -22,10 +22,10 @@
     <ul>
       <li v-for="team in tournament.teams">
         Team {{ team.name }}
-        <button @click.prevent="removeTeam(team)">Remove team</button>
+        <button type="button" @click.prevent="removeTeam(team)">Remove team</button>
         <div v-for="member in team.members">
           {{ member.name }}
-          <button @click.prevent="removeMember(team, member)">Remove member</button>
+          <button type="button" @click.prevent="removeMember(team, member)">Remove member</button>
         </div>
         <multiselect :options="potentialPlayers"
                      :searchable="true"

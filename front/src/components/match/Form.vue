@@ -50,7 +50,7 @@
         <ul>
           <li v-for="member in match.teamOne.members">
             {{ member.name }}
-            <button @click.prevent="remove('teamOne', member)">X</button>
+            <button type="button" @click.prevent="remove('teamOne', member)">X</button>
           </li>
         </ul>
         <multiselect :options="potentialPlayers"

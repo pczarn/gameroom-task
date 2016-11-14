@@ -1,7 +1,7 @@
 <template>
 <div>
   Delete the match.
-  <button @click="destroy()">Remove</button>
+  <button type="button" @click="destroy()">Remove</button>
 </div>
 </template>
 
