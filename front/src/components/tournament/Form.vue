@@ -38,32 +38,34 @@
       </li>
     </ul>
 
-    Add a team
-    <br>
-    Choose team:
-    <select @input="setNewTeam" class="right-col">
-      <option disabled selected="!newTeamId" value> -- select a team -- </option>
-      <option v-for="team in teamList" :value="team.id" :selected="team.id === newTeamId">
-        {{ team.name }}
-      </option>
-    </select>
-    <br>
-    Team <input type="text" v-model="newTeam.name" :disabled="!!newTeamId">
-    <div v-for="member in newTeam.members">
-      {{ member.name }}
-      <button type="button" @click.prevent="removeMember(newTeam, member)">X</button>
+    <div v-if="!tournament.status || tournament.status === 'open'">
+      Add a team
+      <br>
+      Choose team:
+      <select @input="setNewTeam" class="right-col">
+        <option disabled selected="!newTeamId" value> -- select a team -- </option>
+        <option v-for="team in potentialTeams" :value="team.id" :selected="team.id === newTeamId">
+          {{ team.name }}
+        </option>
+      </select>
+      <br>
+      Team <input type="text" v-model="newTeam.name" :disabled="!!newTeamId">
+      <div v-for="member in newTeam.members">
+        {{ member.name }}
+        <button type="button" @click.prevent="removeMember(newTeam, member)">X</button>
+      </div>
+      <multiselect :options="potentialPlayersWithNewTeam"
+                   :searchable="true"
+                   label="name"
+                   placeholder="Pick a member"
+                   @input="selectMemberInTeam(newTeam, $event)"
+                   :reset-after="true"
+      >
+      </multiselect>
+      <button type="button" @click="addNewTeam">Add team</button>
     </div>
-    <multiselect :options="potentialPlayers"
-                 :searchable="true"
-                 label="name"
-                 placeholder="Pick a member"
-                 @input="selectMemberInTeam(newTeam, $event)"
-                 :reset-after="true"
-    >
-    </multiselect>
-    <button type="button" @click="addNewTeam">Add team</button>
   </fieldset>
-  <button type="submit">Update tournament</button>
+  <button type="submit">{{ buttonText }}</button>
 </form>
 </template>
 
@@ -108,8 +110,14 @@ export default {
       const teamMemberIds = this.tournament.teams.map(t => t.members.map(m => m.id))
       return new Set([].concat.apply([], teamMemberIds))
     },
+    playerIdsIncludingNewTeam () {
+      return new Set([...this.playerIds, this.newTeam.members.map(m => m.id)])
+    },
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
+    },
+    potentialPlayersWithNewTeam () {
+      return this.userList.filter(user => !this.playerIdsIncludingNewTeam.has(user.id))
     },
     startedAtTime () {
       return { time: this.tournament.startedAt }
@@ -120,6 +128,10 @@ export default {
     newTeamId () {
       const team = this.getTeamByMembers(this.newTeam.members)
       if(team) return team.id
+    },
+    potentialTeams () {
+      const memberNotInTournament = member => !this.playerIds.has(member.id)
+      return this.teamList.filter(team => team.members.every(memberNotInTournament))
     },
     ...mapGetters(['userList', 'gameList', 'currentTournament', 'teamByMemberIdsMap', 'teamList', 'teamMap']),
   },

@@ -143,7 +143,7 @@ export default {
   },
   async updateTournamentLineup (tournament, teamParams) {
     const id = teamParams.id
-    const team = { member_ids: teamParams.member_ids }
+    const team = _.pick(teamParams, ['name', 'member_ids'])
     return (await axios.patch(`/tournaments/${tournament.id}/lineups/${id}`, { team })).data
   },
   destroyTournamentLineup (tournament, team) {

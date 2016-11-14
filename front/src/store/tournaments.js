@@ -3,9 +3,38 @@ import axios from 'axios'
 import api from 'src/api'
 import _ from 'lodash'
 
-import * as mutation from './mutation_types'
-import * as action from './action_types'
-import { enrichTournament, rawTournamentParams, rawTeam, rawTournament, rawMatch } from 'src/store/mapping'
+import {
+  ADD_TEAM,
+  ADD_TEAM_TO_TOURNAMENT,
+  REMOVE_TEAM_FROM_TOURNAMENT,
+  SET_TOURNAMENT_TEAM,
+  SET_TOURNAMENT,
+  SET_TOURNAMENT_MATCH,
+  REMOVE_TOURNAMENT,
+  ADD_TOURNAMENT,
+  SET_TOURNAMENT_LIST,
+
+} from './mutation_types'
+
+import {
+  GET_TOURNAMENTS,
+  CREATE_TOURNAMENT,
+  UPDATE_TOURNAMENT,
+  DESTROY_TOURNAMENT,
+  UPDATE_TOURNAMENT_MATCH,
+  UPDATE_TOURNAMENT_LINEUP_LIST,
+  CREATE_TOURNAMENT_LINEUP,
+  UPDATE_TOURNAMENT_LINEUP,
+  DESTROY_TOURNAMENT_LINEUP,
+} from './action_types'
+
+import {
+  enrichTournament,
+  rawTournamentParams,
+  rawTeam,
+  rawTournament,
+  rawMatch,
+} from 'src/store/mapping'
 
 const state = {
   tournaments: [],
@@ -24,43 +53,45 @@ const getters = {
 }
 
 const mutations = {
-  [mutation.SET_TOURNAMENT_LIST] (state, tournaments) {
+  [SET_TOURNAMENT_LIST] (state, tournaments) {
     state.tournaments = tournaments
   },
 
-  [mutation.ADD_TOURNAMENT] (state, tournament) {
+  [ADD_TOURNAMENT] (state, tournament) {
     state.tournaments.push(tournament)
   },
 
-  [mutation.SET_TOURNAMENT] (state, tournament) {
+  [SET_TOURNAMENT] (state, tournament) {
     const idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
     state.tournaments.splice(idx, 1, tournament)
   },
 
-  [mutation.REMOVE_TOURNAMENT] (state, tournament) {
+  [REMOVE_TOURNAMENT] (state, tournament) {
     const idx = state.tournaments.findIndex(({ id }) => id === tournament.id)
     state.tournaments.splice(idx, 1)
   },
 
-  [mutation.ADD_TEAM_TO_TOURNAMENT] (state, { tournamentId, teamId }) {
+  [ADD_TEAM_TO_TOURNAMENT] (state, { tournamentId, team }) {
     const tournament = state.tournaments.find(({ id }) => id === tournamentId)
-    const team = state.teams.find(({ id }) => id === teamId)
-    tournament.teams.push(team)
+    tournament.teams.push({
+      team_id: team.id,
+      number_of_slots: null,
+    })
   },
 
-  [mutation.REMOVE_TEAM_FROM_TOURNAMENT] (state, { tournamentId, teamId }) {
+  [REMOVE_TEAM_FROM_TOURNAMENT] (state, { tournamentId, team }) {
     const tournament = state.tournaments.find(({ id }) => id === tournamentId)
-    const teamIndex = tournament.teams.findIndex(({ id }) => id === teamId)
+    const teamIndex = tournament.teams.findIndex(({ id }) => id === team.id)
     tournament.teams.splice(teamIndex, 1)
   },
 
-  [mutation.SET_TOURNAMENT_TEAM] (state, { tournamentId, fromTeam, toTeam }) {
+  [SET_TOURNAMENT_TEAM] (state, { tournamentId, fromTeam, toTeam }) {
     const tournament = state.tournaments.find(({ id }) => id === tournamentId)
     const teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
     Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
   },
 
-  [mutation.SET_TOURNAMENT_MATCH] (state, { tournament, match }) {
+  [SET_TOURNAMENT_MATCH] (state, { tournament, match }) {
     tournament = state.tournaments.find(({ id }) => id === tournament.id)
     for(const round of tournament.rounds) {
       const idx = round.findIndex(m => m.id === match.id)
@@ -73,70 +104,97 @@ const mutations = {
 }
 
 const actions = {
-  async [action.GET_TOURNAMENTS] ({ commit }) {
+  async [GET_TOURNAMENTS] ({ commit }) {
     const tournaments = await api.getTournaments()
-    commit(mutation.SET_TOURNAMENT_LIST, tournaments)
+    commit(SET_TOURNAMENT_LIST, tournaments)
   },
-  async [action.CREATE_TOURNAMENT] ({ commit }, tournament) {
+
+  // Creates a tournament, with teams
+  async [CREATE_TOURNAMENT] ({ commit, dispatch }, tournament) {
     tournament = await api.createTournament(rawTournamentParams(tournament))
-    commit(mutation.ADD_TOURNAMENT, tournament)
+    for(const team of tournament.teams) {
+      dispatch(CREATE_TOURNAMENT_LINEUP, [tournament, team])
+    }
+    commit(ADD_TOURNAMENT, tournament)
   },
-  async [action.UPDATE_TOURNAMENT] ({ commit, dispatch, getters }, tournament) {
+
+  // Updates a tournament, with teams that can be added, updated or removed.
+  async [UPDATE_TOURNAMENT] ({ commit, dispatch }, tournament) {
+    await dispatch(UPDATE_TOURNAMENT_LINEUP_LIST, tournament)
+    // watch out for the order of requests. Updating must happen last.
+    const updatedTournament = await api.updateTournament(rawTournamentParams(tournament))
+    commit(SET_TOURNAMENT, updatedTournament)
+  },
+
+  async [DESTROY_TOURNAMENT] ({ commit }, { id }) {
+    await api.destroyTournament({ id })
+    commit(REMOVE_TOURNAMENT, { id })
+  },
+
+  // For match
+
+  async [UPDATE_TOURNAMENT_MATCH] ({ commit, getters }, [tournament, match]) {
+    const newMatch = await api.updateTournamentMatch(tournament, rawMatch(match))
+    commit(SET_TOURNAMENT_MATCH, { tournament, match: newMatch })
+    const rawTournament = await api.getTournament(tournament)
+    commit(SET_TOURNAMENT, rawTournament)
+  },
+
+  // For all lineups
+
+  async [UPDATE_TOURNAMENT_LINEUP_LIST] ({ commit, dispatch, getters }, tournament) {
     const prevTournament = getters.tournamentMap.get(tournament.id)
     const prevTeams = prevTournament.teams
     const newTeams = tournament.teams
     const prevTeamIds = new Set(prevTeams.map(t => t.id))
     const newTeamIds = new Set(newTeams.map(t => t.id))
+    // Finds which teams need to be added, removed or updated.
     const createTeams = [...newTeams].filter(team => !prevTeamIds.has(team.id))
     const destroyTeams = [...prevTeams].filter(team => !newTeamIds.has(team.id))
     const teamsIntersection = [...newTeams].filter(team => prevTeamIds.has(team.id))
     let promises = []
     for(const team of createTeams) {
-      promises.push(api.createTournamentLineup(tournament, rawTeam(team)))
+      promises.push(dispatch(CREATE_TOURNAMENT_LINEUP, [tournament, team]))
     }
     for(const team of destroyTeams) {
-      promises.push(api.destroyTournamentLineup(tournament, rawTeam(team)))
+      promises.push(dispatch(DESTROY_TOURNAMENT_LINEUP, [tournament, team]))
     }
     for(const team of teamsIntersection) {
-      const prevMemberIds = getters.teamMap.get(team.id).members.map(m => m.id)
-      const newMemberIds = team.members.map(m => m.id)
-      if(!_.isEqual(prevMemberIds.sort(), newMemberIds.sort())) {
-        promises.push(api.updateTournamentLineup(tournament, rawTeam(team)))
-      }
+      promises.push(dispatch(UPDATE_TOURNAMENT_LINEUP, [tournament, team]))
     }
-    const updatePromise = api.updateTournament(rawTournamentParams(tournament))
-    promises = [updatePromise, ...promises]
     await axios.all(promises)
-    // do not use the response of updateTournament, because we don't know the order in which
-    // the requests will be processed.
-    commit(mutation.SET_TOURNAMENT, rawTournament(tournament))
   },
-  async [action.DESTROY_TOURNAMENT] ({ commit }, { id }) {
-    await api.destroyTournament({ id })
-    commit(mutation.REMOVE_TOURNAMENT, { id })
-  },
-  async [action.UPDATE_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
-    // let newTeam
-    // if(team.id) {
-    //   newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
-    // } else {
-    //   newTeam = await api.createTeam(rawTeam(team))
-    //   await api.updateTournamentLineup(tournament, { id: team.id, member_ids: newTeam.member_ids })
-    // }
-    const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
 
+  // For individual lineups
+
+  async [CREATE_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
+    const newTeam = await api.createTournamentLineup(tournament, rawTeam(team))
     if(!getters.teamMap.has(newTeam.id)) {
-      commit(mutation.ADD_TEAM, newTeam)
-    } else {
-      commit(mutation.SET_TEAM, newTeam)
+      // The team is new.
+      commit(ADD_TEAM, newTeam)
     }
-    commit(mutation.SET_TOURNAMENT_TEAM, { tournamentId: tournament.id, fromTeam: team, toTeam: newTeam })
+    // If the team is not new, it's reused. A reused team is not changed.
+    commit(ADD_TEAM_TO_TOURNAMENT, { tournamentId: tournament.id, team: newTeam })
   },
-  async [action.UPDATE_TOURNAMENT_MATCH] ({ commit, getters }, [tournament, match]) {
-    const newMatch = await api.updateTournamentMatch(tournament, rawMatch(match))
-    commit(mutation.SET_TOURNAMENT_MATCH, { tournament, match: newMatch })
-    const rawTournament = await api.getTournament(tournament)
-    commit(mutation.SET_TOURNAMENT, rawTournament)
+
+  async [UPDATE_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
+    const prevMemberIds = getters.teamMap.get(team.id).members.map(m => m.id)
+    const newMemberIds = team.members.map(m => m.id)
+    if(!_.isEqual(prevMemberIds.sort(), newMemberIds.sort())) {
+      console.log(team, rawTeam(team))
+      const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
+      if(!getters.teamMap.has(newTeam.id)) {
+        // The team is new.
+        commit(ADD_TEAM, newTeam)
+      }
+      // If the team is not new, it's reused. A reused team is not changed.
+      commit(SET_TOURNAMENT_TEAM, { tournamentId: tournament.id, fromTeam: team, toTeam: newTeam })
+    }
+  },
+
+  async [DESTROY_TOURNAMENT_LINEUP] ({ commit, getters }, [tournament, team]) {
+    await api.destroyTournamentLineup(tournament, rawTeam(team))
+    commit(REMOVE_TEAM_FROM_TOURNAMENT, { tournamentId: tournament.id, team: team })
   },
 }
 
