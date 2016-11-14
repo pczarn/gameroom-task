@@ -12,6 +12,7 @@ class CreateTournamentLineup
   def perform
     team_tournament
     @tournament.save!
+    team
   end
 
   private
