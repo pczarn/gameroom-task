@@ -120,10 +120,10 @@ export function enrichGame(game) {
     archivized: game.archivized,
     image_url: game.image_url,
     image_thumb_url: game.image_thumb_url,
-    stats: game.stats.map(([userId, value]) => {
+    stats: game.stats.map(({ user_id, mean }) => {
       return {
-        user: store.getters.userMap.get(userId),
-        value,
+        user: store.getters.userMap.get(user_id),
+        value: mean,
       }
     }),
   }
