@@ -17,7 +17,7 @@ class GameRepresenter < BaseRepresenter
 
   def with_stats
     basic.merge(
-      stats: game.game_users.order(mean: :desc).map do |game_user|
+      stats: game.game_users.map do |game_user|
         GameUserRepresenter.new(game_user).basic
       end,
     )

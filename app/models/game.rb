@@ -3,7 +3,7 @@
 class Game < ApplicationRecord
   has_many :matches, dependent: :destroy
   has_many :tournaments, dependent: :destroy
-  has_many :game_users, dependent: :destroy
+  has_many :game_users, -> { order(mean: :desc) }, dependent: :destroy
 
   enum state_archivized: {
     archivized: true,
