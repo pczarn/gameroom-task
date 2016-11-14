@@ -11,7 +11,7 @@ module Api
         if params[:id]
           service = CreateTournamentLineup.new(tournament, team: team)
         else
-          service = CreateTournamentLineup.new(tournament, params: add_team_params)
+          service = CreateTournamentLineup.new(tournament, params: team_params)
         end
         authorize service.team_tournament
         service.perform
@@ -21,17 +21,26 @@ module Api
       def update
         if params[:friendly_match_id]
           authorize_update friendly_match
-          team = update_lineup_service.in_friendly_match(friendly_match).replace
+          service = ReplaceFriendlyMatchLineup.new(
+            friendly_match,
+            team,
+            params: team_params,
+          )
         elsif params[:tournament_id]
           authorize_update team_tournament
-          team = update_lineup_service.in_tournament(tournament).replace
+          service = ReplaceTournamentLineup.new(
+            tournament,
+            team,
+            params: team_params,
+          )
         end
-        render json: TeamRepresenter.new(team).basic
+        updated_team = service.perform
+        render json: TeamRepresenter.new(updated_team).basic
       end
 
       def destroy
         authorize team_tournament
-        update_lineup_service.in_tournament(tournament).destroy
+        DestroyTournamentLineup.new(tournament, team).perform
         head :ok
       end
 
@@ -47,10 +56,6 @@ module Api
         end
       end
 
-      def update_lineup_service
-        UpdateLineup.new(team, member_ids: params[:team] && team_params[:member_ids])
-      end
-
       def leaving?
         team.members.size == team_params[:member_ids].size + 1 &&
           team.members.include?(current_user) &&
@@ -63,12 +68,12 @@ module Api
           team_params[:member_ids].map(&:to_i).include?(current_user.id)
       end
 
-      def add_team_params
-        params.require(:team).permit(:name, member_ids: [])
+      def member_ids_param
+        params[:team] && team_params[:member_ids]
       end
 
       def team_params
-        params.require(:team).permit(member_ids: [])
+        params.require(:team).permit(:name, member_ids: [])
       end
 
       def team_tournament

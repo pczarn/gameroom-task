@@ -1,8 +1,9 @@
 class ReplaceTournamentLineup < ModifyLineup
   attr_reader :tournament
 
-  def initialize(tournament, team, member_ids:)
-    super(team, member_ids: member_ids)
+  def initialize(tournament, team, params:)
+    super(team)
+    @params = params
     @tournament = tournament
     @team_tournament = tournament.team_tournaments.find_by(team: current_team)
     if tournament.started?
@@ -14,7 +15,7 @@ class ReplaceTournamentLineup < ModifyLineup
 
   def perform
     ActiveRecord::Base.transaction do
-      team = CreateOrReuseTeam.new(name: current_team.name, member_ids: @member_ids).perform
+      team = CreateOrReuseTeam.new(@params).perform
       replace_team_in_tournament_with(team)
       replace_team_in_matches_with(team)
       team
