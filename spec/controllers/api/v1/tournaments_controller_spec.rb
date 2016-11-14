@@ -31,14 +31,14 @@ RSpec.describe Api::V1::TournamentsController, type: :controller do
     end
 
     context "with wrong params" do
-      let(:tournament_params) { attr_for_tournament.merge(number_of_teams: 111) }
+      let(:tournament_params) { attr_for_tournament.merge(number_of_teams: 0) }
 
       it { is_expected.to be_unprocessable }
 
       it "responds with an error" do
         creation
         expect(parsed_body["error"])
-          .to include("Number of teams must be a power of 2")
+          .to include("Number of teams must be greater than or equal to 2")
       end
 
       it "does not store a new match" do
