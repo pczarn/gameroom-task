@@ -6,6 +6,9 @@ class GameUserRepresenter < BaseRepresenter
   end
 
   def basic
-    [game_user.user_id, game_user.mean]
+    {
+      user_id: game_user.user_id,
+      mean: game_user.mean,
+    }
   end
 end

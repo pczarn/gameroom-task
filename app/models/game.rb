@@ -1,9 +1,9 @@
 # Games are video games, foosball, beer pong etc.
 #
 class Game < ApplicationRecord
-  has_many :matches
-  has_many :tournaments
-  has_many :game_users
+  has_many :matches, dependent: :destroy
+  has_many :tournaments, dependent: :destroy
+  has_many :game_users, dependent: :destroy
 
   enum state_archivized: {
     archivized: true,
