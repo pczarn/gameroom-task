@@ -132,7 +132,6 @@ export default {
     teamOneId () {
       const team = this.getTeamByMembers(this.match.teamOne.members)
       if(team) return team.id
-
     },
     teamTwoId () {
       const team = this.getTeamByMembers(this.match.teamTwo.members)

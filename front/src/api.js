@@ -136,7 +136,7 @@ export default {
 
   async createTournamentLineup (tournament, team) {
     if(team.id !== undefined) {
-      return (await axios.post(`tournaments/${tournament.id}/lineups`, { team_id: team.id })).data
+      return (await axios.post(`tournaments/${tournament.id}/lineups`, { id: team.id })).data
     } else {
       return (await axios.post(`tournaments/${tournament.id}/lineups`, { team })).data
     }

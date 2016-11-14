@@ -8,9 +8,6 @@
       </tournament-team-overview>
     </li>
   </ul>
-
-  <select-team :tournament="tournament" @input="addTeam">
-  </select-team>
 </div>
 </template>
 

@@ -20,12 +20,6 @@ export default {
   },
   methods: {
     async submit () {
-      const newTeams = this.tournament.teams.filter(team => team.id === undefined)
-      const promises = newTeams.map(team => this.$store.dispatch(action.CREATE_TEAM))
-      const createdTeams = await axios.all(promises)
-      for(const team of createdTeams) {
-        this.tournament.teams.push(team)
-      }
       this.updateTournament(this.tournament)
     },
     ...mapActions({
