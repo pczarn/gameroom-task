@@ -65,7 +65,7 @@ RSpec.describe UpdateMatch do
 
           before do
             rounds = Array.new(2) { |i| build(:round, tournament: tournament, number: i) }
-            rounds.first.matches << build(
+            rounds.first.matches << create(
               :match,
               team_one: tournament.teams[0],
               team_two: tournament.teams[1],
