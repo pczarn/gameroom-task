@@ -1,4 +1,5 @@
 export const SET_ERROR = 'SET_ERROR'
+export const CLEAR_ERRORS = 'CLEAR_ERRORS'
 export const CLEAR_FORM_ERRORS = 'CLEAR_FORM_ERRORS'
 
 export const GET_GAMES = 'GET_GAMES'

@@ -49,11 +49,13 @@ const actions = {
   async [action.CREATE_TEAM] ({ commit }, team) {
     team = await api.createTeam(rawTeam(team))
     commit(mutation.ADD_TEAM, team)
+    dispatch(action.CLEAR_ERRORS)
     return team
   },
   async [action.UPDATE_TEAM] ({ commit }, team) {
     team = await api.updateTeam(rawTeam(team))
     commit(mutation.SET_TEAM, team)
+    dispatch(action.CLEAR_ERRORS)
   },
 }
 

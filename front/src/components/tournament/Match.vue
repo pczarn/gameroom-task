@@ -1,18 +1,21 @@
 <template>
 <match-overview v-bind="match">
   <form v-if="editable" @submit.prevent="update">
-    <fieldset class="row">
+    <p v-for="err in formErrors.played_at || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: formErrors.played_at }">
       <label for="playedAt">Played at</label>
       <datepicker :date="playedAtTime" :option="pickerOption" @change="setPlayedAt"></datepicker>
     </fieldset>
 
+    <p v-for="err in formErrors.team_one_score || []">{{ err }}</p>
+    <p v-for="err in formErrors.team_two_score || []">{{ err }}</p>
     <fieldset class="row scores">
       <div class="left-col">
-        <input type="number" v-model="form.teamOneScore">
+        <input type="number" v-model="form.teamOneScore" :class="{ err: formErrors.team_one_score }">
       </div>
       <span class="middle-col">:</span>
       <div class="right-col">
-        <input type="number" v-model="form.teamTwoScore">
+        <input type="number" v-model="form.teamTwoScore" :class="{ err: formErrors.team_two_score }">
       </div>
     </fieldset>
 
@@ -59,8 +62,10 @@ export default {
     },
     ...mapGetters({
       tournament: 'currentTournament',
+      formErrors: 'formErrors',
     }),
   },
+
   methods: {
     update () {
       this.$store.dispatch(action.UPDATE_TOURNAMENT_MATCH, [this.tournament, this.form])

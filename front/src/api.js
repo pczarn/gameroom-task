@@ -47,7 +47,7 @@ export default {
     return (await axios.post('/users', { user })).data
   },
   async updateUser (userParams) {
-    const id = user.id
+    const id = userParams.id
     const user = _.pick(userParams, [
       'name',
       'email',

@@ -88,6 +88,7 @@ const actions = {
     }
     match = await api.createFriendlyMatch(rawFriendlyMatch(match))
     commit(mutation.ADD_FRIENDLY_MATCH, match)
+    dispatch(action.CLEAR_ERRORS)
   },
   async [action.UPDATE_FRIENDLY_MATCH] ({ commit, dispatch, getters }, match) {
     const teamOneMemberIds = match.teamOne.members.map(m => m.id).sort()
@@ -107,6 +108,7 @@ const actions = {
     rawMatch.team_two_id = undefined
     match = await api.updateFriendlyMatch(rawMatch)
     commit(mutation.SET_FRIENDLY_MATCH, match)
+    dispatch(action.CLEAR_ERRORS)
   },
   async [action.UPDATE_FRIENDLY_MATCH_LINEUP] ({ commit, getters }, [match, team]) {
     const newTeam = await api.updateFriendlyMatchLineup(match, rawTeam(team))
