@@ -11,19 +11,20 @@ module ExceptionsHandler
   protected
 
   def not_authorized(exception)
-    render json: { error: exception.message }, status: 403
+    render json: { error: { message: exception.message } }, status: 403
   end
 
   def record_invalid(exception)
-    render json: { error: exception.message }, status: 422
+    error = { message: exception.message, field_messages: exception.record.errors.messages }
+    render json: { error: error }, status: 422
   end
 
   def record_not_found
-    render json: { error: "Record not found" }, status: 404
+    render json: { error: { message: "Record not found" } }, status: 404
   end
 
   def error_occured(exception)
     raise exception if Rails.env.development? || Rails.env.test?
-    render json: { error: "Something went wrong" }, status: 500
+    render json: { error: { message: "Something went wrong" } }, status: 500
   end
 end

@@ -11,6 +11,7 @@ class CreateTournamentLineup
 
   def perform
     team_tournament
+    team.validate!
     @tournament.save!
     team
   end

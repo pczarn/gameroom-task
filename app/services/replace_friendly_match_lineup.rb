@@ -9,6 +9,7 @@ class ReplaceFriendlyMatchLineup < ModifyLineup
   def perform
     ActiveRecord::Base.transaction do
       team = CreateOrReuseTeam.new(@params).perform
+      team.save!
       replace_team_in_matches_with(team)
       team
     end
