@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import _ from 'lodash'
 
 import api from 'src/api'
 
@@ -12,8 +13,15 @@ import tournaments from 'src/store/tournaments'
 import users from 'src/store/users'
 import alert from 'src/store/alert'
 
-import * as mutation from './mutation_types'
-import * as action from './action_types'
+import {
+  SET_EVERYTHING,
+  SET_FORM_ERRORS,
+} from './mutation_types'
+
+import {
+  GET_EVERYTHING,
+  CLEAR_FORM_ERRORS,
+} from './action_types'
 
 Vue.use(Vuex)
 
@@ -34,6 +42,9 @@ export const store = new Vuex.Store({
     tournaments,
     users,
     alert,
+  },
+  state: {
+    formErrors: {},
   },
   getters: {
     currentMatch (state, getters) {
@@ -65,18 +76,24 @@ export const store = new Vuex.Store({
         return getters.currentUser
       }
     },
+    formErrors (state) {
+      return state.formErrors
+    },
   },
   mutations: {
-    [mutation.SET_EVERYTHING] (state, lists) {
+    [SET_EVERYTHING] (state, lists) {
       state.games.games = lists.games
       state.teams.teams = lists.teams
       state.friendlyMatches.matches = lists.friendlyMatches
       state.tournaments.tournaments = lists.tournaments
       state.users.users = lists.users
     },
+    [SET_FORM_ERRORS] (state, formErrors) {
+      state.formErrors = formErrors
+    }
   },
   actions: {
-    async [action.GET_EVERYTHING] ({ commit }) {
+    async [GET_EVERYTHING] ({ commit }) {
       const lists = await axios.all([
         api.getGames(),
         api.getTeams(),
@@ -84,13 +101,18 @@ export const store = new Vuex.Store({
         api.getTournaments(),
         api.getUsers(),
       ])
-      commit(mutation.SET_EVERYTHING, {
+      commit(SET_EVERYTHING, {
         games: lists[0],
         teams: lists[1],
         friendlyMatches: lists[2],
         tournaments: lists[3],
         users: lists[4],
       })
+    },
+    [CLEAR_FORM_ERRORS] ({ commit, getters }) {
+      if(!_.isEmpty(getters.formErrors)) {
+        commit(SET_FORM_ERRORS, {})
+      }
     },
   },
 })

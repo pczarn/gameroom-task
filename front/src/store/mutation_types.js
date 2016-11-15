@@ -1,4 +1,5 @@
 export const SET_EVERYTHING = 'SET_EVERYTHING'
+export const SET_FORM_ERRORS = 'SET_FORM_ERRORS'
 
 export const SET_ERROR = 'SET_ERROR'
 

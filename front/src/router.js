@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import store from 'src/store'
 import auth from 'src/auth'
+import { CLEAR_FORM_ERRORS } from 'src/store/action_types'
 
 import GameList from 'components/game/List'
 import Game from 'components/game/Show'
@@ -202,6 +203,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
+  store.dispatch(CLEAR_FORM_ERRORS, {})
 })
 
 export default router
