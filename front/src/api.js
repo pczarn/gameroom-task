@@ -1,14 +1,26 @@
+import ActionCable from 'actioncable'
 import axios from 'axios'
 import _ from 'lodash'
+
 import auth from 'src/auth'
 import store from 'src/store'
 
 import { SET_FORM_ERRORS } from 'src/store/mutation_types'
 
+import * as mutation from 'src/store/mutation_types'
 import * as action from 'src/store/action_types'
 
-const API_URL = 'http://localhost:3000/api/v1/'
+const API_BASE_URL = 'http://localhost:3000'
+const API_CABLE_URL = API_BASE_URL + '/api/v1/cable'
+const API_URL = API_BASE_URL + '/api/v1/'
 const TOKEN_TYPE = 'Bearer '
+
+const cable = ActionCable.createConsumer(API_CABLE_URL)
+cable.subscriptions.create('TournamentsChannel', {
+  received (data) {
+    store.commit(mutation.SET_TOURNAMENT, data)
+  },
+})
 
 axios.defaults.baseURL = API_URL
 
