@@ -1,7 +1,8 @@
 <template>
 <div>
   <form @submit.prevent="prepareAndSubmit" v-if="match && match.teamOne && match.teamTwo">
-    <fieldset class="row">
+    <p v-for="err in formErrors.game || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: formErrors.game }">
       <legend>Choose game</legend>
       <select v-model="match.game.id">
         <option v-for="game in gameList" :value="game.id">{{ game.name }}</option>
@@ -49,8 +50,9 @@
       </div>
     </fieldset>
 
-    <p v-for="err in formErrors.members || []">{{ err }}</p>
-    <fieldset class="row" :class="{ err: !!formErrors.members }">
+    <p v-for="err in formErrors.team_one || []">{{ err }}</p>
+    <p v-for="err in formErrors.team_two || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: !!formErrors.team_one || !!formErrors.team_two }">
       <div class="left-col">
         <ul>
           <li v-for="member in match.teamOne.members">

@@ -18,8 +18,10 @@ const mutations = {
 }
 
 const actions = {
-  [action.SET_ERROR] ({ commit }, alert) {
-    commit(mutation.SET_ERROR, alert)
+  [action.SET_ERROR] ({ commit, getters }, alert) {
+    if(getters.alert !== alert) {
+      commit(mutation.SET_ERROR, alert)
+    }
   },
 }
 

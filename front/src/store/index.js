@@ -20,6 +20,8 @@ import {
 
 import {
   GET_EVERYTHING,
+  SET_ERROR,
+  CLEAR_ERRORS,
   CLEAR_FORM_ERRORS,
 } from './action_types'
 
@@ -108,6 +110,10 @@ export const store = new Vuex.Store({
         tournaments: lists[3],
         users: lists[4],
       })
+    },
+    [CLEAR_ERRORS] ({ dispatch }) {
+      dispatch(CLEAR_FORM_ERRORS)
+      dispatch(SET_ERROR, '')
     },
     [CLEAR_FORM_ERRORS] ({ commit, getters }) {
       if(!_.isEmpty(getters.formErrors)) {

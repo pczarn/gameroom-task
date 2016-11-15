@@ -1,12 +1,14 @@
 <template>
 <div>
   <form @submit.prevent="submit">
-    <fieldset class="row">
+    <fieldset class="row" :class="{ err: formErrors.name }">
+      <p v-for="err in formErrors.name || []">{{ err }}</p>
       <legend>Name</legend>
       <input type="text" name="name" v-model="team.name">
     </fieldset>
 
-    <fieldset class="row">
+    <fieldset class="row" :class="{ err: formErrors.members }">
+      <p v-for="err in formErrors.members || []">{{ err }}</p>
       <legend>Members</legend>
       <ul>
         <li v-for="member in team.members">

@@ -116,6 +116,7 @@ const actions = {
       dispatch(CREATE_TOURNAMENT_LINEUP, [tournament, team])
     }
     commit(ADD_TOURNAMENT, tournament)
+    dispatch(action.CLEAR_ERRORS)
   },
 
   // Updates a tournament, with teams that can be added, updated or removed.
@@ -124,6 +125,7 @@ const actions = {
     // watch out for the order of requests. Updating must happen last.
     const updatedTournament = await api.updateTournament(rawTournamentParams(tournament))
     commit(SET_TOURNAMENT, updatedTournament)
+    dispatch(action.CLEAR_ERRORS)
   },
 
   async [DESTROY_TOURNAMENT] ({ commit }, { id }) {

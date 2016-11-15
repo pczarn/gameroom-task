@@ -13,8 +13,8 @@ export default {
   },
 
   methods: {
-    submit () {
-      this.$store.dispatch(action.CREATE_FRIENDLY_MATCH, this.match)
+    async submit () {
+      await this.$store.dispatch(action.CREATE_FRIENDLY_MATCH, this.match)
       this.match = this.$options.data().match
     },
   },

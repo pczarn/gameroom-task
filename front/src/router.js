@@ -3,7 +3,11 @@ import VueRouter from 'vue-router'
 
 import store from 'src/store'
 import auth from 'src/auth'
-import { CLEAR_FORM_ERRORS } from 'src/store/action_types'
+
+import {
+  CLEAR_FORM_ERRORS,
+  SET_ERROR,
+} from 'src/store/action_types'
 
 import GameList from 'components/game/List'
 import Game from 'components/game/Show'
