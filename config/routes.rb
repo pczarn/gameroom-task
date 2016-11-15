@@ -1,8 +1,12 @@
+require "sidekiq/web"
+
 Rails.application.routes.draw do
-  root to: "root#index"
+  mount Sidekiq::Web => "/sidekiq"
 
   namespace :api do
     namespace :v1 do
+      mount ActionCable.server => "/cable"
+
       post "user_token" => "user_token#create"
 
       resources :users, only: [:create, :index, :update]

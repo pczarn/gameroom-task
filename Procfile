@@ -1,4 +1,4 @@
 redis: redis-server
 web: bin/rails s -p 3000
 front: npm run dev
-worker: sidekiq
+worker: bundle exec sidekiq
