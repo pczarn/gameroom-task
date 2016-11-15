@@ -11,6 +11,7 @@ class TournamentRepresenter < BaseRepresenter
       title: tournament.title,
       description: tournament.description,
       started_at: tournament.started_at,
+      created_at: tournament.created_at,
       status: tournament.status,
       image_url: tournament.image.url,
       number_of_teams: tournament.number_of_teams,

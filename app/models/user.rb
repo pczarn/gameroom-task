@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :teams, through: :user_teams
   has_many :team_tournaments
   has_many :tournaments, through: :team_tournaments
+  has_many :game_users
 
   has_many :owned_matches, class_name: Match,
                            foreign_key: :owner_id,

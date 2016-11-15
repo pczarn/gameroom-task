@@ -7,21 +7,21 @@ module Api
 
       def create
         game.save!
-        render json: GameRepresenter.new(game)
+        render json: GameRepresenter.new(game).with_stats
       end
 
       def index
         games = GamesRepository.new.fetch
-        render json: GamesRepresenter.new(games)
+        render json: GamesRepresenter.new(games).with_stats
       end
 
       def show
-        render json: GameRepresenter.new(game)
+        render json: GameRepresenter.new(game).with_stats
       end
 
       def update
         game.update!(game_params)
-        render json: GameRepresenter.new(game)
+        render json: GameRepresenter.new(game).with_stats
       end
 
       def destroy

@@ -10,6 +10,7 @@ class MatchRepresenter < BaseRepresenter
       id: match.id,
       game_id: match.game_id,
       played_at: match.played_at,
+      created_at: match.created_at,
       team_one_score: match.team_one_score,
       team_two_score: match.team_two_score,
       team_one_id: match.team_one_id,

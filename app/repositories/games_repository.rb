@@ -1,5 +1,5 @@
 class GamesRepository
   def fetch
-    Game.all
+    Game.includes(:game_users)
   end
 end
