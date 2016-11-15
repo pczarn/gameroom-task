@@ -15,7 +15,11 @@ module ExceptionsHandler
   end
 
   def record_invalid(exception)
-    error = { message: exception.message, field_messages: exception.record.errors.messages }
+    field_messages = {}
+    exception.record.errors.keys.each do |field|
+      field_messages[field] = exception.record.errors.full_messages_for(field)
+    end
+    error = { message: exception.message, field_messages: field_messages }
     render json: { error: error }, status: 422
   end
 
