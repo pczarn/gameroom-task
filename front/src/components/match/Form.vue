@@ -8,7 +8,8 @@
       </select>
     </fieldset>
 
-    <fieldset class="row">
+    <p v-for="err in formErrors.played_at || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: formErrors.played_at }">
       <label for="playedAt">Played at</label>
       <datepicker :date="playedAtTime" :option="pickerOption" @change="setPlayedAt"></datepicker>
     </fieldset>
@@ -29,23 +30,27 @@
       </select>
     </fieldset>
 
-    <fieldset class="row">
+    <p v-for="err in formErrors.name || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: !!formErrors.name }">
       <input type="text" v-model="match.teamOne.name" :disabled="!!teamOneId" class="left-col">
       <span class="middle-col">vs</span>
       <input type="text" v-model="match.teamTwo.name" :disabled="!!teamTwoId" class="right-col">
     </fieldset>
 
+    <p v-for="err in formErrors.team_one_score || []">{{ err }}</p>
+    <p v-for="err in formErrors.team_two_score || []">{{ err }}</p>
     <fieldset class="row scores">
       <div class="left-col">
-        <input type="number" v-model="match.teamOneScore">
+        <input type="number" v-model="match.teamOneScore" :class="{ err: !!formErrors.team_one_score }">
       </div>
       <span class="middle-col">:</span>
       <div class="right-col">
-        <input type="number" v-model="match.teamTwoScore">
+        <input type="number" v-model="match.teamTwoScore" :class="{ err: !!formErrors.team_two_score }">
       </div>
     </fieldset>
 
-    <fieldset class="row">
+    <p v-for="err in formErrors.members || []">{{ err }}</p>
+    <fieldset class="row" :class="{ err: !!formErrors.members }">
       <div class="left-col">
         <ul>
           <li v-for="member in match.teamOne.members">
@@ -144,6 +149,7 @@ export default {
       'teamByMemberIdsMap',
       'gameList',
       'userList',
+      'formErrors',
     ]),
   },
 
@@ -206,5 +212,9 @@ export default {
 
 .scores input {
   width: 60px;
+}
+
+.err {
+  border-color: red;
 }
 </style>

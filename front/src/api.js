@@ -2,6 +2,9 @@ import axios from 'axios'
 import _ from 'lodash'
 import auth from 'src/auth'
 import store from 'src/store'
+
+import { SET_FORM_ERRORS } from 'src/store/mutation_types'
+
 import * as action from 'src/store/action_types'
 
 const API_URL = 'http://localhost:3000/api/v1/'
@@ -18,7 +21,9 @@ axios.interceptors.response.use(
         auth.logOut()
       }
     } else if(error.response.status === 422) {
-      store.dispatch(action.SET_ERROR, error.response.data.error)
+      const errorPayload = error.response.data.error
+      store.dispatch(action.SET_ERROR, errorPayload.message)
+      store.commit(SET_FORM_ERRORS, errorPayload.field_messages)
     }
     return Promise.reject(error)
   })

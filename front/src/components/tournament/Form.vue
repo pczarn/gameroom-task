@@ -13,11 +13,13 @@
   </fieldset>
   <fieldset v-if="tournament.game">
     <legend>Choose game</legend>
-    <select v-model="tournament.game.id">
+    <p v-for="err in formErrors.game || []">{{ err }}</p>
+    <select v-model="tournament.game.id" :class="{ err: !!formErrors.game }">
       <option v-for="game in gameList" :value="game.id">{{ game.name }}</option>
     </select>
   </fieldset>
-  <fieldset>
+  <p v-for="err in formErrors.name || []">{{ err }}</p>
+  <fieldset :class="{ err: !!formErrors.name }">
     <legend>Choose teams</legend>
     <ul>
       <li v-for="(team, idx) in tournament.teams">
@@ -133,7 +135,15 @@ export default {
       const memberNotInTournament = member => !this.playerIds.has(member.id)
       return this.teamList.filter(team => team.members.every(memberNotInTournament))
     },
-    ...mapGetters(['userList', 'gameList', 'currentTournament', 'teamByMemberIdsMap', 'teamList', 'teamMap']),
+    ...mapGetters([
+      'userList',
+      'gameList',
+      'currentTournament',
+      'teamByMemberIdsMap',
+      'teamList',
+      'teamMap',
+      'formErrors',
+    ]),
   },
 
   methods: {
@@ -193,3 +203,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.err {
+  border-color: red;
+}
+</style>
