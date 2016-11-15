@@ -11,8 +11,7 @@ class EndTournament
   end
 
   def broadcast_tournament
-    ActionCable.server.broadcast "tournaments",
-                                 TournamentRepresenter.new(@tournament).with_teams_and_rounds
+    TournamentsChannel.update(@tournament)
   end
 
   def self.notify_about_tournament_end(tournament_id, winning_team_id)

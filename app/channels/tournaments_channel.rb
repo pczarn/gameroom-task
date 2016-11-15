@@ -3,7 +3,7 @@ class TournamentsChannel < ApplicationCable::Channel
     stream_from "tournaments"
   end
 
-  def self.update
+  def self.update(tournament)
     ActionCable.server.broadcast "tournaments",
                                  TournamentRepresenter.new(tournament).with_teams_and_rounds
   end
