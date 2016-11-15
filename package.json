@@ -13,6 +13,7 @@
     "lint": "eslint --ext .js,.vue src front/test/unit/specs front/test/e2e/specs"
   },
   "dependencies": {
+    "actioncable": "^5.0.0",
     "axios": "^0.14.0",
     "css-loader": "^0.25.0",
     "express-http-proxy": "^0.10.0",
