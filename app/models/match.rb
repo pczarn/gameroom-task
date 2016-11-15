@@ -9,7 +9,7 @@ class Match < ApplicationRecord
 
   scope :friendly, -> { where(round: nil) }
 
-  scope :involving, -> (user_id) do
+  scope :involving, ->(user_id) do
     joins(team_one: :user_teams, team_two: :user_teams)
       .where(user_teams: { user_id: user_id })
       .distinct
