@@ -27,3 +27,4 @@ npm-debug.log*
 /front/test/unit/coverage
 /front/test/e2e/reports
 selenium-debug.log
+dump.rdb
