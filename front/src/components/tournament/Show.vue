@@ -4,6 +4,8 @@
 
   <h2>Tournament {{ tournament.title }}</h2>
 
+  <img :src="tournament.imageUrl">
+
   <p>{{ tournament.description }}</p>
 
   Owner {{ tournament.owner.name }}<br>
