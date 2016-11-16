@@ -1,6 +1,6 @@
 <template>
 <div class="game">
-  <img :src="image_thumb_url">
+  <img :src="imageThumbUrl">
   <router-link :to="{ name: 'game', params: { id: id } }">
     <strong>{{ name }}</strong>
   </router-link>
@@ -13,8 +13,8 @@ export default {
     id: Number,
     name: String,
     archivized: Boolean,
-    image_url: String,
-    image_thumb_url: String,
+    imageUrl: String,
+    imageThumbUrl: String,
   },
 }
 </script>

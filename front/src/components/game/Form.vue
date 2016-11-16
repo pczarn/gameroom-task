@@ -2,13 +2,21 @@
 <form @submit.prevent="submit">
   <fieldset>
     <legend>Properties</legend>
-    <template v-for="attrs in schema">
-    <div :class="{ err: !!formErrors.password }">
-      <p v-for="err in formErrors[attrs.name] || []">{{ err }}</p>
-      <label :for="attrs.name">{{ attrs.label }}</label>
-      <input v-bind="attrs" v-model="game[attrs.name]" :class="{ err: !!formErrors[attrs.name] }">
-      <br>
-    </template>
+    <div>
+      <p v-for="err in formErrors.name || []">{{ err }}</p>
+      <label for="name">Name</label>
+      <input type="text" name="name" v-model="game.name" :class="{ err: !!formErrors.name }">
+    </div>
+    <div>
+      <p v-for="err in formErrors.image || []">{{ err }}</p>
+      <label for="image">Image</label>
+      <input type="file"
+             name="image"
+             accept="image/*"
+             ref="image"
+             @change="setImage"
+             :class="{ err: !!formErrors.image }">
+    </div>
     <button type="submit">{{ buttonText }}</button>
   </fieldset>
 </form>
@@ -20,15 +28,18 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      schema: [
-        { name: 'name', label: 'Name', type: 'text' },
-        { name: 'image', label: 'Image', type: 'file', accept: 'image/*' },
-      ],
       game: {},
     }
   },
   computed: {
     ...mapGetters(['formErrors']),
+  },
+
+  methods: {
+    setImage () {
+      const file = this.$refs.image.files[0]
+      this.game.image = file
+    },
   },
 }
 </script>

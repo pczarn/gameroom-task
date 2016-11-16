@@ -73,7 +73,10 @@ export default {
     return (await axios.get('/games')).data
   },
   async createGame (game) {
-    return (await axios.post('/games', { game })).data
+    const gameFormData = new FormData()
+    gameFormData.append('game[name]', game.name)
+    gameFormData.append('game[image]', game.image)
+    return (await axios.post('/games', gameFormData)).data
   },
   async updateGame (game) {
     const id = game.id

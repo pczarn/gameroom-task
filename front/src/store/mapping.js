@@ -1,5 +1,7 @@
 import { store } from 'src/store'
 
+const IMG_BASE_URL = '//localhost:3000'
+
 export function enrichMatch(match) {
   return {
     id: match.id,
@@ -41,7 +43,7 @@ export function enrichTournament(tournament) {
     startedAt: tournament.started_at,
     createdAt: tournament.created_at,
     status: tournament.status,
-    imageUrl: tournament.image_url,
+    imageUrl: IMG_BASE_URL + tournament.image_url,
     owner: store.getters.userMap.get(tournament.owner_id),
     game: store.getters.gameMap.get(tournament.game_id),
     rounds: tournament.rounds.map(matches => matches.map(enrichMatch)),
@@ -84,7 +86,6 @@ export function rawTournamentParams(tournament) {
     number_of_teams: tournament.numberOfTeams,
     number_of_members_per_team: tournament.numberOfMembersPerTeam,
     started_at: tournament.startedAt,
-    image_url: tournament.imageUrl,
     game_id: tournament.game.id,
   }
 }
@@ -118,8 +119,8 @@ export function enrichGame(game) {
     id: game.id,
     name: game.name,
     archivized: game.archivized,
-    image_url: game.image_url,
-    image_thumb_url: game.image_thumb_url,
+    imageUrl: IMG_BASE_URL + game.image_url,
+    imageThumbUrl: IMG_BASE_URL + game.image_thumb_url,
     stats: game.stats.map(({ user_id, mean }) => {
       return {
         user: store.getters.userMap.get(user_id),

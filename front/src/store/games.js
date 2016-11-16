@@ -17,12 +17,12 @@ const getters = {
     return new Map(getters.gameList.map(game => [game.id, game]))
   },
 
-  activeGames (state) {
-    return state.games.filter(game => !game.archivized)
+  activeGames (state, getters) {
+    return getters.gameList.filter(game => !game.archivized)
   },
 
-  archivizedGames (state) {
-    return state.games.filter(game => game.archivized)
+  archivizedGames (state, getters) {
+    return getters.gameList.filter(game => game.archivized)
   },
 }
 
