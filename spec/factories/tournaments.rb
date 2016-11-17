@@ -4,7 +4,7 @@ FactoryGirl.define do
       number_of_rounds { Faker::Number.between(1, 3) }
     end
 
-    title { "Tournament #{Faker::Space.star_cluster}" }
+    title { |n| "Tournament #{Faker::Space.star_cluster} #{n}" }
     game
     association :owner, factory: :user
     number_of_teams { 2**number_of_rounds }
