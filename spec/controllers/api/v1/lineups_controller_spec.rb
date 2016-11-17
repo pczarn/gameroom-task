@@ -55,8 +55,16 @@ RSpec.describe Api::V1::LineupsController, type: :controller do
       end
     end
 
-    context "when the tournament is not open" do
+    context "when the tournament is started" do
       before { tournament.started! }
+
+      it "removes the team" do
+        expect { removing }.to change { tournament.teams.count }.by(-1)
+      end
+    end
+
+    context "when the tournament is ended" do
+      before { tournament.ended! }
 
       it { is_expected.to be_forbidden }
     end
