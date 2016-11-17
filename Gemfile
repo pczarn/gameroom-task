@@ -13,9 +13,7 @@ gem "uglifier", ">= 1.3.0"
 
 group :test, :development do
   gem "pry-rails"
-end
 
-group :test do
   # Factories
   gem "factory_girl_rails"
   gem "faker"
