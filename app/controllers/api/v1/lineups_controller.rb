@@ -14,8 +14,8 @@ module Api
           service = CreateTournamentLineup.new(tournament, params: team_params)
         end
         authorize service.team_tournament
-        service.perform
-        render json: TournamentRepresenter.new(tournament)
+        created_team = service.perform
+        render json: TeamRepresenter.new(created_team)
       end
 
       def update

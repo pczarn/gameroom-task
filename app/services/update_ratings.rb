@@ -9,7 +9,7 @@ class UpdateRatings
   end
 
   def perform
-    score_diff = @scores[0] - @scores[1]
+    score_diff = @scores[0].to_i - @scores[1].to_i
     team_one_stats = team_members_and_stats(@match.game, @match.team_one)
     team_two_stats = team_members_and_stats(@match.game, @match.team_two)
     team_one = team_ratings(team_one_stats)
