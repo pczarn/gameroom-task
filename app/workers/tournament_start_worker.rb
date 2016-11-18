@@ -24,6 +24,7 @@ class TournamentStartWorker
       tournament.started!
       tournament.save!
     end
+    TournamentsChannel.update(tournament)
     notify_members_about_start(tournament)
   end
 
