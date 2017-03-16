@@ -1,5 +1,6 @@
 <template>
 <div v-if="tournament">
+  <h2>Teams</h2>
   <ul>
     <li v-for="(team, idx) in teams">
       size {{ team.numberOfSlots || 'no limit' }}
@@ -8,6 +9,9 @@
       </tournament-team-overview>
     </li>
   </ul>
+</div>
+<div v-else>
+  spinner
 </div>
 </template>
 

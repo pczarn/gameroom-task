@@ -56,13 +56,13 @@ const actions = {
     commit(mutation.SET_GAME_LIST, games)
   },
 
-  async [action.CREATE_GAME] ({ commit }, game) {
+  async [action.CREATE_GAME] ({ commit, dispatch }, game) {
     game = await api.createGame(game)
     commit(mutation.ADD_GAME, game)
     dispatch(action.CLEAR_ERRORS)
   },
 
-  async [action.UPDATE_GAME] ({ commit }, game) {
+  async [action.UPDATE_GAME] ({ commit, dispatch }, game) {
     game = await api.updateGame(game)
     commit(mutation.SET_GAME, game)
     dispatch(action.CLEAR_ERRORS)

@@ -1,5 +1,6 @@
 <template>
 <div v-if="teamList">
+  <h1>Teams</h1>
   <ul>
     <li v-for="team in filteredTeams">
       <team-overview v-bind="team"></team-overview>
@@ -10,6 +11,9 @@
     Create a team
     <team-create></team-create>
   </template>
+</div>
+<div v-else>
+  loading
 </div>
 </template>
 
