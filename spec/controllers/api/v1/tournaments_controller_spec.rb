@@ -37,7 +37,7 @@ RSpec.describe Api::V1::TournamentsController, type: :controller do
 
       it "responds with an error" do
         creation
-        expect(parsed_body["error"])
+        expect(parsed_body["error"]["message"])
           .to include("Number of teams must be greater than or equal to 2")
       end
 

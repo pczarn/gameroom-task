@@ -9,13 +9,13 @@ class Match < ApplicationRecord
 
   scope :friendly, -> { where(round: nil) }
 
-  scope :involving, -> (user_id) do
+  scope :involving, ->(user_id) do
     joins(team_one: :user_teams, team_two: :user_teams)
       .where(user_teams: { user_id: user_id })
       .distinct
   end
 
-  validates :team_one, :team_two, presence: true
+  validates :game, :team_one, :team_two, presence: true
   validates :team_one_score, :team_two_score, numericality: { greater_than_or_equal_to: 0 },
                                               allow_nil: true
 

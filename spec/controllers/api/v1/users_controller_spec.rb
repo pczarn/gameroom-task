@@ -24,7 +24,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       it "responds with an error message" do
         creation
-        expect(parsed_body["error"])
+        expect(parsed_body["error"]["message"])
           .to include("Password confirmation doesn't match Password")
       end
 
@@ -58,7 +58,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
         it "responds with an error message" do
           update
-          expect(parsed_body["error"])
+          expect(parsed_body["error"]["message"])
             .to include("Password confirmation doesn't match Password")
         end
       end
@@ -80,7 +80,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
         it "responds with an error message" do
           update
-          expect(parsed_body["error"]).to include("Name can't be blank")
+          expect(parsed_body["error"]["message"]).to include("Name can't be blank")
         end
       end
     end

@@ -1,5 +1,5 @@
 class FriendlyMatchesRepository
   def fetch
-    Match.friendly
+    Match.friendly.includes(:team_one, :team_two)
   end
 end

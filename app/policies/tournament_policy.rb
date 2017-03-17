@@ -39,6 +39,6 @@ class TournamentPolicy < ApplicationPolicy
   end
 
   def destroy_team?
-    update_open?
+    update?
   end
 end
