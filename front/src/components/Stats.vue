@@ -1,5 +1,6 @@
 <template>
 <div>
+  <h1>Statistics</h1>
   <div v-for="stat in stats">
     In game
     <router-link :to="{ name: 'game stats', params: { id: stat.game.id } }">

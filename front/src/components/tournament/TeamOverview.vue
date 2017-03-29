@@ -59,7 +59,7 @@ export default {
     potentialPlayers () {
       return this.userList.filter(user => !this.playerIds.has(user.id))
     },
-    ...mapGetters(['userList']),
+    ...mapGetters(['userList', 'currentUser']),
   },
 
   methods: {

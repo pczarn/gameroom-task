@@ -1,5 +1,6 @@
 <template>
 <div>
+  <h1>Statistics for {{ currentGame.name }}</h1>
   <table>
     <thead>
       <tr>

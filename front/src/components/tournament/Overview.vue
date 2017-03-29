@@ -86,8 +86,11 @@ export default {
       return {
         size: this.rounds.length,
         slots: this.rounds.map((round, idx) => {
-          const numberOfMatches = Math.pow(2, this.rounds.length - 1 - idx)
-          return [round.length, numberOfMatches]
+          const finishedMatches = round.filter(match => {
+            return match.teamOneScore !== undefined && match.teamTwoScore !== undefined
+          })
+          const numberOfSlots = Math.pow(2, this.rounds.length - 1 - idx)
+          return [finishedMatches.length, numberOfSlots]
         }),
       }
     },

@@ -89,7 +89,11 @@ const mutations = {
   [SET_TOURNAMENT_TEAM] (state, { tournamentId, fromTeam, toTeam }) {
     const tournament = state.tournaments.find(({ id }) => id === tournamentId)
     const teamIndex = tournament.teams.findIndex(team => team.team_id === fromTeam.id)
-    Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
+    console.log(tournament.teams[teamIndex].team_id, toTeam.id)
+    tournament.teams.splice(teamIndex, 1)
+    // tournament.teams[teamIndex].team_id = toTeam.id
+    // Vue.set(tournament.teams, teamIndex, tournament.teams[teamIndex])
+    // Vue.set(tournament.teams[teamIndex], 'team_id', toTeam.id)
   },
 
   [SET_TOURNAMENT_MATCH] (state, { tournament, match }) {
@@ -184,7 +188,6 @@ const actions = {
     const prevMemberIds = getters.teamMap.get(team.id).members.map(m => m.id)
     const newMemberIds = team.members.map(m => m.id)
     if(!_.isEqual(prevMemberIds.sort(), newMemberIds.sort())) {
-      console.log(team, rawTeam(team))
       const newTeam = await api.updateTournamentLineup(tournament, rawTeam(team))
       if(!getters.teamMap.has(newTeam.id)) {
         // The team is new.
