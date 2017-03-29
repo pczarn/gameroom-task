@@ -1,24 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Installation
 
-Things you may want to cover:
+```
+rvm global 2.3.3
+bundle
+yarn
+bundle exec rake db:setup
+```
 
-* Ruby version
+## Resetting
 
-* System dependencies
+```
+bundle exec rake db:reset
+```
 
-* Configuration
+## Running
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+foreman start
+```
