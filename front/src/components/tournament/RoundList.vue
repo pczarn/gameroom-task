@@ -1,6 +1,7 @@
 <template>
 <div>
   <round v-for="(round, index) in tournament.rounds"
+         :key="index",
          :matches="round"
          :number="index">
   </round>
